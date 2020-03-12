@@ -1,0 +1,15 @@
+---
+# tasks file for test-role
+
+
+- debug: msg="test ansible user file creation "
+
+- name: "create /tmp/justatestfile.txt"
+  copy:
+    content: '# test file'
+    dest: /tmp/justatestfile.txt
+    owner: root
+    group: root
+    mode: '0640'
+    validate: /usr/bin/grep "test file" %s
+  become: true

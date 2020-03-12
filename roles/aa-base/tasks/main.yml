@@ -1,0 +1,88 @@
+---
+# tasks file for aa-base
+
+
+- name: 'Running the role: '
+  debug: msg=" {{ role_path|basename }} "
+
+
+- name: 'Set timezone to Sydney'
+  timezone:
+    name: Australia/Sydney
+  become: true
+
+
+- name: 'check "Create common folders" vars are defined'
+  assert:
+    that:
+      - common_dir is defined
+- name: 'Create common folders'
+  file:
+    path: "{{ item.dir }}"
+    state: directory
+    mode: "{{ item.mode }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+  with_items: "{{ common_dir }}"
+  become: true
+
+
+- name: 'dot files to home dir'
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0640
+  with_items: "{{ dotfiles }}"
+
+
+- name: 'install these packages in our default repos'
+  package:
+    name: "{{ item.add_tool }}"
+    state: present
+  retries: 2
+  with_items: "{{ package_add_tool }}"
+  become: true
+
+
+- name: 'use pip to install virtualenv'
+  pip:
+    name: virtualenv
+    executable: pip3.6
+  become: true
+
+
+- name: 'install /vagrant/requirements.txt into ~/venv'
+  pip:
+    requirements: /vagrant/requirements.txt
+    virtualenv: /home/vagrant/venv
+
+
+- name: 'auto activate venv via bashrc'
+  lineinfile:
+    path: /home/vagrant/.bashrc
+    line: source ~/venv/bin/activate
+    insertafter: # User specific aliases and functions
+    create: no
+
+
+- name: 'auto deactivate venv via bashrc'
+  lineinfile:
+    path: /home/vagrant/.bash_logout
+    line: '[ "$VIRTUAL_ENV" ] && deactivate'
+    insertafter: # ~/.bash_logout
+    create: no
+
+
+- name: 'aa-i alias to invoke'
+  lineinfile:
+    path: /home/vagrant/.bash_aliases
+    line: alias aa-i='invoke --search-root=/vagrant/'
+    create: yes
+
+
+- name: 'readme.txt template'
+  template:
+    src: readme_txt.j2
+    dest: ~/readme.txt
+    mode: 0644
+  changed_when: false

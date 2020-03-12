@@ -1,0 +1,6 @@
+---
+    
+- name: setup ansible controller environment
+  hosts: all
+  roles:
+    - aa-base

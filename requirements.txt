@@ -1,0 +1,10 @@
+invoke
+ansible
+ansible-runner
+ansible-cmdb
+ansible-lint
+molecule
+python-vagrant
+redis
+docker
+dnspython

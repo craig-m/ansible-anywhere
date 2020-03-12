@@ -1,0 +1,40 @@
+---
+# vars file for aa-base
+
+common_dir: [
+ { dir: '/home/{{ ansible_user_id }}/downloads/', mode: '0770', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
+ { dir: '/home/{{ ansible_user_id }}/code/', mode: '0750', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
+ { dir: '/home/{{ ansible_user_id }}/.config/htop/', mode: '0750', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
+ { dir: '/home/{{ ansible_user_id }}/tmp/', mode: '0750', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
+ { dir: '/etc/ansible/', mode: '0755', owner: 'root', group: 'root' },
+ { dir: '/etc/ansible/facts.d/', mode: '0755', owner: 'root', group: 'root' },
+ { dir: '/etc/ansible/inventory', mode: '0755', owner: '{{ ansible_user_id }}', group: '{{ ansible_user_id }}' },
+ { dir: '/root/bin/', mode: '0750', owner: 'root', group: 'root' },
+ { dir: '/root/tmp/', mode: '0750', owner: 'root', group: 'root' },
+ { dir: '/mnt/sshfs/', mode: '0755', owner: 'root', group: 'root' }
+]
+
+dotfiles: [
+ {src: 'files/dotfiles/screenrc', dest: '~/.screenrc'},
+ {src: 'files/dotfiles/vimrc', dest: '~/.vimrc'}
+]
+
+package_add_tool: [
+  {add_tool: 'python3'},
+  {add_tool: 'python3-pip'},
+  {add_tool: 'python3-devel'},
+  {add_tool: 'htop'},
+  {add_tool: 'tcpdump'},
+  {add_tool: 'tmux'},
+  {add_tool: 'screen'},
+  {add_tool: 'curl'},
+  {add_tool: 'wget'},
+  {add_tool: 'whois'},
+  {add_tool: 'socat'},
+  {add_tool: 'vim'},
+  {add_tool: 'nano'},
+  {add_tool: 'nmap'},
+  {add_tool: 'rsync'},
+  {add_tool: 'multitail'},
+  {add_tool: 'traceroute'}
+]

@@ -1,0 +1,22 @@
+---
+# run a single ansible role, on specified hosts.
+#
+# Note: if there are any other roles in the meta/main.yml dependencies they will also be pulled in and run.
+#
+# Example usage:
+# 
+# First deal with inventory. Your inventory file could look something like:
+#
+# [ubuntu]
+# vm001 ansible_ssh_host=x.x.x.x ansible_become_method=su ansible_become_user=root ansible_become_password=password ansible_user=vagrant ansible_password=vagrant ansible_ssh_common_args='-o StrictHostKeyChecking=no -o PubkeyAuthentication=no'
+#
+#
+# And then run Ansible:
+#
+# ansible-playbook -i ~/inventory/ubuntu_1910.ini playbook-run-single-role.yml -v -e "runtherole=rclone"
+
+- name: single role
+  hosts: all
+  gather_facts: True
+  roles:
+    - "{{ runtherole }}"

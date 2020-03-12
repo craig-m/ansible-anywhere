@@ -1,0 +1,6 @@
+# keep these out of git
+.DS_Store
+# project files we do not want in git
+.vagrant
+runner-output/artifacts/*
+git-ignore/*
