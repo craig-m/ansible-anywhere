@@ -6,7 +6,7 @@ I really like it for some tasks that would otherwise be manual (or painful to do
 
 The use cases of for configuration management tools are broard:
 
-* setting up standalone machines (desktops or servers, on physical hardware or virtual machines)
+* setting up standalone machines (desktops or servers, on physical hardware)
 * creating more [complex systems](https://github.com/donnemartin/system-design-primer) (cloud or local dev, just learning demo or production)
 * Managing Firewalls, Switches, WiFi - there are [Network Modules](https://docs.ansible.com/ansible/latest/network/index.html) for physical and virtual (cloud) networks
 
