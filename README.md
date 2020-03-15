@@ -2,13 +2,13 @@
 
 Ansible is a pretty good tool 🔧
 
-I really like it for some tasks that would otherwise be manual (or painful to do in bash). 
+I really like it for some tasks that would otherwise be manual (or painful to do in bash).
 
 The use cases of for configuration management tools are broard:
 
-* setting up standalone machines (desktops or servers, on physical hardware)
+* setting up standalone machines (desktops or servers, physical or virtual)
 * creating more [complex systems](https://github.com/donnemartin/system-design-primer) (cloud or local dev, just learning demo or production)
-* Managing Firewalls, Switches, WiFi - there are [Network Modules](https://docs.ansible.com/ansible/latest/network/index.html) for physical and virtual (cloud) networks
+* managing Firewalls, Switches, WiFi - there are [Network Modules](https://docs.ansible.com/ansible/latest/network/index.html) for physical and virtual networks
 
 Doing things in Ansible can be better ⚙
 
@@ -21,7 +21,7 @@ In 2015 Red Hat acquired Ansible for a significant amount of money [[1](https://
 
 ## Virtual Machines
 
-There are other tools I want to use Ansible with (like DB or Web server), but I do not want to run these kinds of services on my host system. 
+There are other tools I want to use Ansible with (like DB or Web server), but I do not want to run these kinds of services on my host system.
 
 I need to run these daemons in isolation, and have my different projects stay private from each other, while keeping my Desktop/Laptop as clean of crummy software as possible (all code is bad code).
 
@@ -49,11 +49,17 @@ To bootstrap the environment 🚀
 ```
 git clone https://github.com/craig-m/ansible-anywhere.git
 cd ansible-anywhere/
+```
+
+If you use [Visual Studio Code](https://code.visualstudio.com/) you can use [tasks](https://code.visualstudio.com/docs/editor/tasks) to avoid logging into the VM or typing commands.
+
+```
 vagrant up
 vagrant ssh
 cd /vagrant/
 invoke -l
 ```
+
 
 From this point I can pull in code  (mine or [others](https://galaxy.ansible.com/)), and get on with my work 🛠
 
@@ -67,7 +73,7 @@ Is this an opinionated setup? Maybe. I find Ansible works better while also usin
 
 Of the various [cache plugins](https://docs.ansible.com/ansible/latest/plugins/cache.html) available, I opted for [Redis](https://redis.io/). Perfomance seemed slightly better when managing a large inventory over the default memory plugin.
 
-From the Synopsis _"This cache uses JSON formatted, per host records saved in Redis"_, great so other programs/code can query this too. 
+From the Synopsis _"This cache uses JSON formatted, per host records saved in Redis"_, great so other programs/code can query this too.
 
 
 #### molecule
@@ -85,7 +91,7 @@ The [ansible-runner](https://github.com/ansible/ansible-runner) code is describe
 
 _"a tool and python library that helps when interfacing with Ansible directly or as part of another system whether that be through a container image interface, as a standalone tool, or as a Python module that can be imported"_
 
-This is a component of [AWX](https://github.com/ansible/awx) and [Tower](https://www.ansible.com/products/tower). 
+This is a component of [AWX](https://github.com/ansible/awx) and [Tower](https://www.ansible.com/products/tower).
 
 _"AWX provides a web-based user interface, REST API, and task engine built on top of Ansible. It is the upstream project for Tower, a commercial derivative of AWX."_
 

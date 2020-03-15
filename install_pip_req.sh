@@ -19,8 +19,8 @@ pipget_local="${pipget_temp}/${pipget_file}"
 # Sanity checks
 #
 if [[ root = "$(whoami)" ]]; then
-  echo "ERROR: do not run as root";
-  exit 1;
+    echo "ERROR: do not run as root";
+    exit 1;
 fi
 sudo true
 if [ $? -eq 0 ]; then
