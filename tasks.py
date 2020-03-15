@@ -1,22 +1,45 @@
+#!/usr/bin/env python3
+# AnsibleAnywhere VM tasks file - Powered by Invoke https://www.pyinvoke.org/
+# To use run "invoke -l"
+
 """
-AnsibleAnywhere tasks
-powered by Invoke, a Python task execution tool https://www.pyinvoke.org/
+main
 """
 
 import os
+import sys
 import platform
 import time
 import subprocess
+
+def aai_env_check():
+    """ no root """
+    userid = os.getuid()
+    if userid == 0:
+        print ("ERROR do not run as root.")
+        sys.exit(1)
+    """ check the python version """
+    if not (sys.version_info.major == 3 and sys.version_info.minor >= 5):
+        print("Requires Python 3.5 or higher!")
+        print("You have: {}.{}.".format(sys.version_info.major, sys.version_info.minor))
+        sys.exit(1)
+
+def aai_env_setup():
+    dirstore = '/vagrant/gitignore/'
+    if not os.path.exists(dirstore):
+        os.makedirs(dirstore)
+
+# AA-I
+print('\n --===[ AnsibleAnywhere Invoke tasks ]===-- \n')
+aai_env_check()
+aai_env_setup()
 import ansible_runner
 from invoke import *
 
-user = os.getuid()
-if user == 0:
-    print ("Do not run as root.")
-    quit()
 
-print('\n --===[ AnsibleAnywhere tasks ]===-- \n')
-
+"""
+AA-I Tasks
+"""
 
 @task
 def aa_update(c):
@@ -25,8 +48,8 @@ def aa_update(c):
     c.run('sudo yum update -y')
     print("updating python pip packages")
     with c.cd('/vagrant/'):
-        c.run('ls -la requirements.txt')
-        c.run('pip3 install update')
+        c.run('python3 -m pip install update --user')
+        c.run('pip install --upgrade pip --user')
 
 @task
 def aa_rm_artifact(c):
@@ -39,29 +62,33 @@ def aa_rm_artifact(c):
 @task
 def aa_play(c):
     """ run the playbook that configures AnsibleAnywhere VM """
-    print("Using ansbile-runner to call playbook-controlvm.yml")
-    r = ansible_runner.run(private_data_dir='/vagrant/runner-output/', 
+    print("Using ansible_runner lib to run playbook-controlvm.yml on localhost")
+    r = ansible_runner.run(
+        private_data_dir='/vagrant/runner-output/', 
         inventory='/vagrant/localhost.ini', 
-        playbook='/vagrant/playbook-controlvm.yml')
-    print("{}: {}".format(r.status, r.rc))
-    print("Final status of :")
+        playbook='/vagrant/playbook-controlvm.yml',
+        quiet='true')
+    print("\nFinal status:")
     print(r.stats)
-    print("\n\n")
+    with c.cd('/vagrant/runner-output/artifacts'):
+        print("uuid of run: ")
+        c.run('ls -td -- */ | head -n 1')
+    print("\n")
 
 
-# The next two tasks run a role from "/vagrant/roles/ <supplied name> /" on this local VM.
+# The next two tasks both run a role from "/vagrant/roles/ <supplied name> /" on this local VM.
 
 # ansible-runner https://ansible-runner.readthedocs.io/en/latest/standalone.html
 @task
 def aa_role_run(c, rolename):
-    """ Run a single role on AnsibleAnywhere VM with ansible-runner """
+    """ Run a single role on AnsibleAnywhere VM with ansible-runner bin """
     print("running the role %s with ansible-runner" % rolename)
     with c.cd('/vagrant/'):
-        c.run('ansible-runner run --inventory /vagrant/localhost.ini --rotate-artifacts 50 -r %s -v --roles-path /vagrant/roles/ --artifact-dir /vagrant/runner-output/artifacts/ /home/vagrant/tmp/' % rolename, pty=True)
-    print("output from run saved to: /vagrant/runner-output/ ")
+        c.run('ansible-runner run --quiet --inventory /vagrant/localhost.ini --rotate-artifacts 50 -r %s -v --roles-path /vagrant/roles/ --artifact-dir /vagrant/runner-output/artifacts/ /home/vagrant/tmp/' % rolename, pty=True)
     with c.cd('/vagrant/runner-output/artifacts'):
+        print("uuid of run: ")
         c.run('ls -td -- */ | head -n 1')
-    print("\n\n")
+    print("\n")
 
 # ansible-playbook https://docs.ansible.com/ansible/latest/cli/ansible-playbook.html
 @task

@@ -1,26 +1,40 @@
 # ansible-anywhere
 
-Ansible is a pretty good tool, I really like it for some tasks that would otherwise be manual (or done in awful scripts). For either standalone machines, or more [complex systems](https://github.com/donnemartin/system-design-primer), or even a rough proof-of-concept projects, doing things in Ansible can be better.
+Ansible is a pretty good tool 🔧
+
+I really like it for some tasks that would otherwise be manual (or painful to do in bash). 
+
+The use cases of for configuration management tools are broard:
+
+* setting up standalone machines (desktops or servers, on physical hardware or virtual machines)
+* creating more [complex systems](https://github.com/donnemartin/system-design-primer) (cloud or local dev, just learning demo or production)
+* Managing Firewalls, Switches, WiFi - there are [Network Modules](https://docs.ansible.com/ansible/latest/network/index.html) for physical and virtual (cloud) networks
+
+Doing things in Ansible can be better ⚙
 
 Ansible cannot run on a Windows host natively, you need A macOS, Linux or *BSD operating system.
 
-The [CentOS project](https://en.wikipedia.org/wiki/CentOS) has been around for about 15 years, they are  offically partnered with [Red Hat](https://en.wikipedia.org/wiki/Red_Hat) (whose parent company as of 2019 is [IBM](https://en.wikipedia.org/wiki/IBM)). Back in 2015 Red Hat acquired Ansible for a significant amount of money, so running Ansible from CentOS seems like a good idea.
+The [CentOS project](https://en.wikipedia.org/wiki/CentOS) has been around for about 15 years, they  offically partnered [[1](https://www.redhat.com/en/about/press-releases/red-hat-and-centos-join-forces)] with [Red Hat](https://en.wikipedia.org/wiki/Red_Hat) back in 2014 (whose parent company as of 2019 is [IBM](https://en.wikipedia.org/wiki/IBM)).
+
+In 2015 Red Hat acquired Ansible for a significant amount of money [[1](https://www.redhat.com/en/about/press-releases/red-hat-acquire-it-automation-and-devops-leader-ansible)], so running Ansible from CentOS seems like a good idea. Using RHEL incurs a cost [[1](https://access.redhat.com/articles/11258), [2](https://www.redhat.com/en/resources/Linux-rhel-subscription-guide)], and I might want to patch/update my VM.
 
 
 ## Virtual Machines
 
-There are other tools I want to use Ansible with (like DB or Web server), but I do not want to run these kinds of services on my host system. I need to run these daemons in isolation, and have my different projects stay private from each other, while keeping my Desktop/Laptop as clean of crummy software as possible.
+There are other tools I want to use Ansible with (like DB or Web server), but I do not want to run these kinds of services on my host system. 
 
-This is why I am using a VM, the offical [CentOS 7](https://app.vagrantup.com/centos/boxes/7/versions/1905.1) Vagrant box, which is built for:
+I need to run these daemons in isolation, and have my different projects stay private from each other, while keeping my Desktop/Laptop as clean of crummy software as possible (all code is bad code).
 
-* VirtualBox
+This is why I am using a VM, the offical [CentOS 7](https://app.vagrantup.com/centos/boxes/7/versions/1905.1) [Vagrant](https://www.vagrantup.com/) box, which is built for:
+
+* VirtualBox (MacOS, Linux, Win, FreeBSD)
 * VMWare desktop
-* libvirt
-* Hyper-v
+* [libvirt](https://en.wikipedia.org/wiki/Libvirt) (Red Hat developed, manages KVM, Xen, VMware ESXi, QEMU)
+* Hyper-V (Win 8-10, Server 2012)
 
-You also need one of these virtualization programs installed on your desktop or server, and [Vagrant](https://www.vagrantup.com/downloads.html) of course. Really this is ansible-anywhere you can run a VM.
+You also need one of these virtualization programs installed on your desktop or server, and [Vagrant](https://www.vagrantup.com/downloads.html) of course. Really this is ansible-anywhere you can run a VM - because I **need** a VM on whatever desktop OS I happen to be using (a few).
 
-As per their [box release notes](https://blog.centos.org/2019/07/updated-centos-vagrant-images-available-v1905-01/) we also need this plugin if we use VirtualBox:
+As per their [box release notes](https://blog.centos.org/2019/07/updated-centos-vagrant-images-available-v1905-01/) we also need this plugin if we use VirtualBox. If you use LibVirt you'll need a plugin.
 
 
 ```
@@ -28,20 +42,20 @@ vagrant plugin install vagrant-vbguest
 ```
 
 
-### setup
+## setup
 
-To bootstrap the environment:
+To bootstrap the environment 🚀
 
 ```
 git clone https://github.com/craig-m/ansible-anywhere.git
 cd ansible-anywhere/
 vagrant up
 vagrant ssh
+cd /vagrant/
+invoke -l
 ```
 
-Not a single BASH script was executed for any of this system setup :-)
-
-From this point I can pull in code  (mine or [others](https://galaxy.ansible.com/)), and get on with my Ansible work 🔧
+From this point I can pull in code  (mine or [others](https://galaxy.ansible.com/)), and get on with my work 🛠
 
 
 ## complementary tools
@@ -51,92 +65,40 @@ Is this an opinionated setup? Maybe. I find Ansible works better while also usin
 
 #### redis
 
-Of the various [cache plugins](https://docs.ansible.com/ansible/latest/plugins/cache.html) available, I opted for Redis. Perfomance seemed slightly better when managing a large inventory over the default memory plugin.
+Of the various [cache plugins](https://docs.ansible.com/ansible/latest/plugins/cache.html) available, I opted for [Redis](https://redis.io/). Perfomance seemed slightly better when managing a large inventory over the default memory plugin.
 
 From the Synopsis _"This cache uses JSON formatted, per host records saved in Redis"_, great so other programs/code can query this too. 
 
 
 #### molecule
 
-[Molecule](https://molecule.readthedocs.io/en/latest/) is really, increadibly, useful when working on roles.
+[Molecule](https://molecule.readthedocs.io/en/latest/) is really, increadibly, useful when working on roles. Initially started by the Ansible community, the project was officially adopted by the Ansible project ([src](https://www.ansible.com/practical-ansible-testing-with-molecule)).
 
 _"Molecule project is designed to aid in the development and testing of Ansible roles."_
 
 Consider working on a role and being able to run it on two different distros (deb and rpm), and run the role twice so it tests for idempotence. Having specific pytests for the role, all run automatically.
 
 
-#### ara
-
-[ara](https://github.com/ansible-community/ara) provides a nice web interface and reporting to Ansible.
-
-_"ARA Records Ansible playbooks and makes them easier to understand and troubleshoot."_
-
-
 #### ansible-runner
 
-The [ansible-runner](https://github.com/ansible/ansible-runner) code is described as
+The [ansible-runner](https://github.com/ansible/ansible-runner) code is described as:
 
 _"a tool and python library that helps when interfacing with Ansible directly or as part of another system whether that be through a container image interface, as a standalone tool, or as a Python module that can be imported"_
 
-This is a component of [AWX](https://github.com/ansible/awx) and [Tower](https://www.ansible.com/products/tower). I use this to capture all output from Ansible (and info about the state of the system at runtime - like facts). Ansible on its own has horrible logging and reporting, and does not log everything.
+This is a component of [AWX](https://github.com/ansible/awx) and [Tower](https://www.ansible.com/products/tower). 
+
+_"AWX provides a web-based user interface, REST API, and task engine built on top of Ansible. It is the upstream project for Tower, a commercial derivative of AWX."_
+
+
+There is the "Red Hat® Ansible® Automation Platform" if you do not want, or unable to, host Tower yourself.
+
+* https://www.redhat.com/en/resources/ansible-automation-platform-datasheet
+* https://www.ansible.com/products/pricing
+
+
+I use ansible-runner to capture all output from Ansible (and info about the state of the system at runtime - like facts). Ansible on its own has horrible logging and reporting, and does not log everything.
 
 
 #### invoke
 
-[Invoke](http://www.pyinvoke.org/) is a Python task execution tool & library. It can make our workflows easier.
-
-
-#### ansible-cmdb
-
-[ansible-cmdb](https://ansible-cmdb.readthedocs.io/en/latest/usage/) takes the output of Ansible's fact gathering and converts it into a static HTML overview page.
-
-
----
-
-# alternatives 
-
-Explorations in portability.
-
-
-### WSL
-
-Ansible runs under the Windows Subsystem for Linux just fine.
-
-However there are no CentOS or RHEL distributions available in the MS store. We could [roll our own WSL](https://github.com/Microsoft/WSL-DistroLauncher), but it seems like hard work.
-
-The [lack of systemd](https://github.com/microsoft/WSL/issues/994) can be another annoying thing to code around - like this BASH snippet:
-
-```
-      case $MY_HOST_TYPE in
-        vagrant)
-          echo "[*] start Redis via systemd";
-          systemctl start redis-server;
-          systemctl enable redis-server;
-        ;;
-        wsl)
-          echo "[*] start Redis via init.d";
-          /etc/init.d/redis-server start;
-          update-rc.d redis-server enable;
-        ;;
-      esac
-```
-
-Having the same systemd commands work on RHEL/CentOS or Ubuntu/Debian etc was a win for me, and WSL went backwards there. I thought we had depreciated init.d on Linux? Remember for a bit there when Ubuntu had upstart instead, sometimes I don't know what is going on anymore - but environment specific hacks become unwieldy fast (we want nice things, like clean portable code).
-
-But anyway WSL1 is not quite a real Linux, nor can I run WSL on one (for portability and testing sake).
-
-
-### Docker
-
-Containers are sometimes very useful, but I choose not to run Ansible from inside a container.
-
-I like using Redis to hold the Ansible fact cache, so this means using a multi-container system. Using Docker-Compose is fine, but not all container systems use this - like Podman (sure there are solutions to this like [podman-compose](https://github.com/containers/podman-compose)).
-
-I have tried running different services accross containers for Ansible and it became cumbersome. I also feel that if I need to install systemd or a ssh-server into my containers I have defeated the point in using them.
-
-If you are solely using Ansible, then running it from a container is probably a good option for you - check out [Ansible-silo](https://groupon.github.io/ansible-silo/).
-
-
-### conclusion
-
-WSL and docker work just fine for running Ansible. But these are not full Linux operating systems, somtimes you want minimalism and other times you need an entire kitchen.
+[Invoke](http://www.pyinvoke.org/) is a Python task execution tool & library. This can make our workflows easier - Invoke rules. You do not need to be particularly proficient in Python to use it.

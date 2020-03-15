@@ -20,13 +20,11 @@ dotfiles: [
 ]
 
 package_add_tool: [
-  {add_tool: 'python3'},
-  {add_tool: 'python3-pip'},
-  {add_tool: 'python3-devel'},
-  {add_tool: 'htop'},
+  {add_tool: 'strace'},
   {add_tool: 'tcpdump'},
   {add_tool: 'tmux'},
   {add_tool: 'screen'},
+  {add_tool: 'git'},
   {add_tool: 'curl'},
   {add_tool: 'wget'},
   {add_tool: 'whois'},
@@ -35,6 +33,5 @@ package_add_tool: [
   {add_tool: 'nano'},
   {add_tool: 'nmap'},
   {add_tool: 'rsync'},
-  {add_tool: 'multitail'},
   {add_tool: 'traceroute'}
 ]

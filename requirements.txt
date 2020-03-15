@@ -1,7 +1,9 @@
+#
+# The tools/libs we want from The Python Package Index (PyPI)
+#
 invoke
 ansible
 ansible-runner
-ansible-cmdb
 ansible-lint
 molecule
 python-vagrant
