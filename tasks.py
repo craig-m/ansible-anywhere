@@ -30,7 +30,7 @@ def aai_env_setup():
         os.makedirs(dirstore)
 
 # AA-I
-print('\n --===[ AnsibleAnywhere Invoke tasks ]===-- \n')
+# print('\n --===[ AnsibleAnywhere Invoke tasks ]===-- \n')
 aai_env_check()
 aai_env_setup()
 import ansible_runner
@@ -54,12 +54,26 @@ def aa_update(c):
 @task
 def aa_rm_artifact(c):
     """ clean ansible-runner artifacts dir """
-    print("deleting /vagrant/runner-output/artifacts/*")
+    print("cleaning up: \n")
+    path = "/vagrant/runner-output/artifacts/"
+    files = os.listdir( path )
+    for aaaa in files:
+        print (aaaa)
     c.run('rm -rf -- /vagrant/runner-output/artifacts/*')
-    print("done\n")
-
+    print("\ndone.\n")
 
 @task
+def runnerlastrun(c):
+    """ find last ansible-runner artifacts """
+    path = "/vagrant/runner-output/artifacts/"
+    os.chdir(path)
+    artdir = sorted(os.listdir(os.getcwd()), key=os.path.getmtime)
+    #oldest = artdir[0]
+    newest = artdir[-1]
+    print("artifacts:", newest)
+
+
+@task(post=[runnerlastrun])
 def aa_play(c):
     """ run the playbook that configures AnsibleAnywhere VM """
     print("Using ansible_runner lib to run playbook-controlvm.yml on localhost")
@@ -70,25 +84,18 @@ def aa_play(c):
         quiet='true')
     print("\nFinal status:")
     print(r.stats)
-    with c.cd('/vagrant/runner-output/artifacts'):
-        print("uuid of run: ")
-        c.run('ls -td -- */ | head -n 1')
-    print("\n")
 
 
 # The next two tasks both run a role from "/vagrant/roles/ <supplied name> /" on this local VM.
 
 # ansible-runner https://ansible-runner.readthedocs.io/en/latest/standalone.html
-@task
+@task(post=[runnerlastrun])
 def aa_role_run(c, rolename):
     """ Run a single role on AnsibleAnywhere VM with ansible-runner bin """
-    print("running the role %s with ansible-runner" % rolename)
+    print("ansible-runner: /vagrant/roles/%s on localhost" % rolename)
     with c.cd('/vagrant/'):
         c.run('ansible-runner run --quiet --inventory /vagrant/localhost.ini --rotate-artifacts 50 -r %s -v --roles-path /vagrant/roles/ --artifact-dir /vagrant/runner-output/artifacts/ /home/vagrant/tmp/' % rolename, pty=True)
-    with c.cd('/vagrant/runner-output/artifacts'):
-        print("uuid of run: ")
-        c.run('ls -td -- */ | head -n 1')
-    print("\n")
+
 
 # ansible-playbook https://docs.ansible.com/ansible/latest/cli/ansible-playbook.html
 @task

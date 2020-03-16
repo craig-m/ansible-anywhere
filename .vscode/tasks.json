@@ -4,7 +4,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "vmup",
+            "label": "vmpro",
             "type": "shell",
             "command": "vagrant provision",
             "problemMatcher": [],
@@ -22,7 +22,15 @@
         {
             "label": "vmstatus",
             "type": "shell",
-            "command": "vagrant status",
+            "osx": {
+                "command": "vagrant status"
+            },
+            "linux": {
+                "command": "vagrant status"
+            },
+            "windows": {
+                "command": "vagrant.exe status"
+            },
             "problemMatcher": []
         },
         {
@@ -30,6 +38,13 @@
             "type": "shell",
             "command": "vagrant ssh",
             "problemMatcher": []
+        },
+        {
+            "label": "vmssh-conf",
+            "type": "shell",
+            "command": "vagrant ssh-config",
+            "problemMatcher": []
         }
+
     ]
 }
