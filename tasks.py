@@ -56,10 +56,9 @@ def aa_rm_artifact(c):
     """ clean ansible-runner artifacts dir """
     print("cleaning up: \n")
     path = "/vagrant/runner-output/artifacts/"
-    files = os.listdir( path )
-    for aaaa in files:
-        print (aaaa)
-    c.run('rm -rf -- /vagrant/runner-output/artifacts/*')
+    files = os.listdir(path)
+    for artrm in files:
+        c.run('rm -rf -- /vagrant/runner-output/artifacts/%r' % artrm)
     print("\ndone.\n")
 
 @task

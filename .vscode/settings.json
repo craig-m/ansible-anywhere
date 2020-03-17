@@ -1,0 +1,5 @@
+{
+    "files.trimFinalNewlines": true,
+    "window.openFilesInNewWindow": true,
+    "workbench.panel.defaultLocation": "bottom"
+}

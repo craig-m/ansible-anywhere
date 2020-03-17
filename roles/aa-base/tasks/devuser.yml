@@ -1,0 +1,21 @@
+---
+# tasks file for aa-base
+
+
+- name: 'Ensure group "developers" exists'
+  group:
+    name: developers
+    state: present
+  become: true
+
+
+# does not have sudo
+- name: 'create dev01'
+  user:
+    name: dev01
+    shell: /bin/bash
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
+    ssh_key_file: .ssh/id_rsa
+    create_home: true
+  become: true

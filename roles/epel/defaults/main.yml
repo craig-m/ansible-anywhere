@@ -1,0 +1,4 @@
+---
+# defaults file for epel
+
+epelinstdir: "/home/vagrant/downloads"

@@ -65,6 +65,9 @@ Vagrant.configure("2") do |config|
     end
     # --- VMWare Fusion ---
     config.vm.provider :vmware_desktop do |vmd, override|
+        override.vm.box_download_checksum_type = "sha256"
+        override.vm.box_download_checksum = "8749ba6b2d96e7ad861079113e30e78fa6d12ca17e2e1d78471b02d5d7fb35b2"
+        override.vm.box_url = "https://cloud.centos.org/centos/7/vagrant/x86_64/images/CentOS-7-x86_64-Vagrant-1905_01.VMwareFusion.box"
         vmd.memory = MY_VM_RAM
         vmd.gui = false
         override.vm.synced_folder ".", MY_CODE_PATH, type: "rsync", mount_options: ["dmode=775,fmode=644"]
@@ -73,11 +76,12 @@ Vagrant.configure("2") do |config|
     config.vm.provider :libvirt do |libv, override|
         override.vm.box_download_checksum_type = "sha256"
         override.vm.box_download_checksum = "fb64ff0b466a897d457753c92485907f62f38ec9301ebf1cce1d4904272a5c34"
-        override.vm.box_url = "https://cloud.centos.org/centos/7/vagrant/x86_64/images/CentOS-7-x86_64-Vagrant-1905_01.LibVirt.box"
+        override.vm.box_url = "https://cloud.centos.org/centos/7/vagrant/x86_64/images/CentOS-7-x86_64-Vagrant-1905_01.Libvirt.box"
         libv.memory = MY_VM_RAM
         libv.cpus = MY_VM_CPU
         libv.disk_bus = "virtio"
-        override.vm.synced_folder ".", MY_CODE_PATH, type: "rsync", mount_options: ["dmode=775,fmode=644"]
+        #override.vm.synced_folder ".", MY_CODE_PATH, type: "rsync", mount_options: ["dmode=775,fmode=644"]
+        config.vm.synced_folder ".", MY_CODE_PATH, type: "nfs", mount_options: ["dmode=775,fmode=644"]
     end  
 
 
@@ -96,11 +100,13 @@ Vagrant.configure("2") do |config|
     config.vm.provision :shell,
         :privileged => false,
         inline: "echo 'Hello, lets setup this VM.'"
+
     config.vm.provision :shell,
         :privileged => false,
         :path => "install_pip_req.sh",
         :binary => true,
         name: "script to instal ansible in VM"
+    
     config.vm.provision "ansible_local" do |ansible|
         ansible.playbook = "playbook-controlvm.yml"
         ansible.install = false

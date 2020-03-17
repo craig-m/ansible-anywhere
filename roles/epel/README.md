@@ -1,27 +1,25 @@
-aa-base
+Role Name
 =========
 
-The base role to configure the Ansible control machine.
+A role to setup [EPEL](https://fedoraproject.org/wiki/EPEL) for CentOS 6/7/8
 
-This role was created with the command `molecule init role test-role`.
+Created by: `[vagrant@ansibleanywhere roles]$ molecule init role epel`
 
 
 Requirements
 ------------
 
-None. There should be nothing CenOS specific - any linux should do.
-
+CentOS 6/7/8
 
 Role Variables
 --------------
 
-See vars dir.
-
+none
 
 Dependencies
 ------------
 
-None.
+None
 
 Example Playbook
 ----------------

@@ -27,6 +27,7 @@ package_add_tool: [
   {add_tool: 'git'},
   {add_tool: 'curl'},
   {add_tool: 'wget'},
+  {add_tool: 'dos2unix'},
   {add_tool: 'whois'},
   {add_tool: 'socat'},
   {add_tool: 'vim'},

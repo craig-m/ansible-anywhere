@@ -1,0 +1,56 @@
+---
+# tasks file for epel
+
+
+- name: 'check our OS is supported'
+  assert:
+    that:
+      - ansible_distribution == "CentOS"
+
+
+- name: 'check our vars are defined'
+  assert:
+    that:
+    - epelrpm is defined
+    - epelinstdir is defined
+
+
+- name: 'check we have setup rpm'
+  stat:
+    path: "{{ epelinstdir }}/{{ epelrpm }}"
+  register: epelhaverpm
+  failed_when: false
+
+
+- name: 'setup epel'
+  block:
+    - name: 'get and check rpm'
+      get_url:
+        url: "https://dl.fedoraproject.org/pub/epel/{{ epelrpm }}"
+        dest: "{{ epelinstdir }}"
+        checksum:  "{{ lookup('vars', 'epelsha{{ ansible_distribution_major_version }}') }}"
+    - name: 'install the rpm'
+      yum:
+        name: "{{ epelinstdir }}/{{ epelrpm }}"
+        state: present
+      become: true
+  when: not epelhaverpm.stat.exists
+
+
+- name: 'check epel files'
+  block:
+    - name: 'yum yum.repos.d file '
+      stat:
+        path: "/etc/yum.repos.d/epel.repo"
+      register: epelcheck_repo
+    - name: 'file in /etc/pki/rpm-gpg'
+      stat:
+        path: "/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}"
+      register: epelcheck_gpg
+
+
+- name: 'check rpm installed ok'
+  assert:
+    that:
+        - epelcheck_repo.stat.exists
+        - epelcheck_gpg.stat.exists

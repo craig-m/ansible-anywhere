@@ -32,13 +32,21 @@ This is why I am using a VM, the offical [CentOS 7](https://app.vagrantup.com/ce
 * [libvirt](https://en.wikipedia.org/wiki/Libvirt) (Red Hat developed, manages KVM, Xen, VMware ESXi, QEMU)
 * Hyper-V (Win 8-10, Server 2012)
 
-You also need one of these virtualization programs installed on your desktop or server, and [Vagrant](https://www.vagrantup.com/downloads.html) of course. Really this is ansible-anywhere you can run a VM - because I **need** a VM on whatever desktop OS I happen to be using (a few).
+You also need one of these virtualization programs installed on your desktop or server, and [Vagrant](https://www.vagrantup.com/downloads.html) of course. Really this is ansible-anywhere you can run a VM - because I **need** a VM on whatever OS I happen to be using (a few).
 
-As per their [box release notes](https://blog.centos.org/2019/07/updated-centos-vagrant-images-available-v1905-01/) we also need this plugin if we use VirtualBox. If you use LibVirt you'll need a plugin.
+##### plugins
 
+As per their [box release notes](https://blog.centos.org/2019/07/updated-centos-vagrant-images-available-v1905-01/) we also need this [plugin](https://www.vagrantup.com/docs/plugins/) if we use VirtualBox.
 
 ```
 vagrant plugin install vagrant-vbguest
+```
+
+If you use LibVirt you'll need a plugin:
+
+```
+vagrant plugin install vagrant-libvirt
+vagrant up --provider=libvirt
 ```
 
 

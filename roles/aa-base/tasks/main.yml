@@ -44,6 +44,10 @@
   become: true
 
 
+- name: 'create a user for dev'
+  include: devuser.yml
+
+
 - name: 'readme.txt template'
   template:
     src: readme_txt.j2

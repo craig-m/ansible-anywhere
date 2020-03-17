@@ -4,9 +4,9 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "vmpro",
+            "label": "vm-up",
             "type": "shell",
-            "command": "vagrant provision",
+            "command": "vagrant up",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
@@ -14,13 +14,7 @@
             }
         },
         {
-            "label": "vmsetup",
-            "type": "shell",
-            "command": "vagrant ssh -c 'cd /vagrant && invoke aa-play'",
-            "problemMatcher": []
-        },
-        {
-            "label": "vmstatus",
+            "label": "vm-status",
             "type": "shell",
             "osx": {
                 "command": "vagrant status"
@@ -34,17 +28,42 @@
             "problemMatcher": []
         },
         {
-            "label": "vmssh",
+            "label": "vm-suspend",
+            "type": "shell",
+            "command": "vagrant suspend",
+            "problemMatcher": []
+        },
+        {
+            "label": "vm-ssh",
             "type": "shell",
             "command": "vagrant ssh",
             "problemMatcher": []
         },
         {
-            "label": "vmssh-conf",
+            "label": "vm-destroy",
+            "type": "shell",
+            "command": "vagrant destroy",
+            "problemMatcher": []
+        },
+        {
+            "label": "vm-ssh-conf",
             "type": "shell",
             "command": "vagrant ssh-config",
             "problemMatcher": []
+        },
+        {
+            "label": "vm-aa-play",
+            "type": "shell",
+            "command": "vagrant ssh -c 'cd /vagrant && invoke aa-play'",
+            "problemMatcher": []
+        },
+        {
+            // ssh connect to vagrant (with open tunnel) and start python web server
+            "isBackground": true,
+            "label": "vm-ssh-websrv",
+            "type": "shell",
+            "command": "vagrant ssh -c 'cd /vagrant && python3 -m http.server --bind 127.0.0.1 10888' -- -L 127.0.0.1:10888:127.0.0.1:10888",
+            "problemMatcher": []
         }
-
     ]
 }
