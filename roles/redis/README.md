@@ -1,35 +1,41 @@
 Redis
 =====
 
-Install Redis, start + enable + test the service. Simple.
+Simple role to install Redis, then start + enable + test the service.
 
-Assumes redis is in your local apt/yum repo (installs with 'package' module).
+Created by: `[vagrant@ansibleanywhere roles]$ molecule init role redis`
 
 
 Requirements
 ------------
 
-None.
+That redis is in your apt/yum/other repository. This role installs with the 'package' module.
 
 Role Variables
 --------------
 
-None.
+No vars or defaults.
 
 Dependencies
 ------------
 
 None.
 
-Example Playbook
-----------------
+Example
+-------
 
-None.
+To connect to redis and list keys that, for example,  are ansible fact cache related:
+
+```
+redis-cli
+KEYS ansible*
+quit
+```
 
 License
 -------
 
-BSD
+None.
 
 Author Information
 ------------------

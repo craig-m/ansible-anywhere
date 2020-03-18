@@ -1,5 +1,6 @@
-" vim config
-" {{ ansible_managed }}
+"
+" vim config for ansible anywhee
+"
 
 :set smartindent
 :syntax on

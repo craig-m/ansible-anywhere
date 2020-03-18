@@ -33,7 +33,9 @@ But anyway WSL1 is not a real Linux (WSL2 not quite yet), nor can I run WSL1 on 
 
 ## Docker
 
-Containers are sometimes very useful, but I choose not to run Ansible from inside a container (inside the VM Docker is super useful). On Win10 Docker Desktop on runs under Hyper-V (when Hyper-V is enabled, VirtualBox no longer works).
+Containers are sometimes very useful, but I choose not to run Ansible from inside a container (inside the VM Docker is super useful).
+
+On Windows 10 Docker Desktop on runs in a VM under Hyper-V (when Hyper-V is enabled, VirtualBox no longer works). You can run Docker alongside Vagrant, unless you want to use VirtualBox boxes.
 
 I like using Redis to hold the Ansible fact cache, so this means using a multi-container system. Using Docker-Compose is fine, but not all container systems use this - like Podman (sure there are solutions to this like [podman-compose](https://github.com/containers/podman-compose)).
 

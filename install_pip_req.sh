@@ -16,17 +16,26 @@ pipget_local="${pipget_temp}/${pipget_file}"
 
 
 #
+# func
+#
+logit() {
+  echo -e "$1 \\n";
+  logger "$1";
+}
+
+
+#
 # Sanity checks
 #
 if [[ root = "$(whoami)" ]]; then
-    echo "ERROR: do not run as root";
+    logit "ERROR: do not run as root";
     exit 1;
 fi
 sudo true
 if [ $? -eq 0 ]; then
     echo "can sudo ok"
 else
-    echo "ERROR: no sudo"
+    logit "ERROR: no sudo"
 fi
 
 
@@ -45,11 +54,11 @@ if [ -x "$(command -v apt)" ]; then
 fi
 # check
 if ! [ -x "$(command -v python3)" ]; then
-    echo "ERROR: python3 not in path" | logger
+    logit "ERROR: python3 not in path" | logger
     exit 1
 else
     pyver=$(python3 --version)
-    echo "We are using ${pyver}" | logger
+    logit "We are using ${pyver}" | logger
 fi
 
 
@@ -62,9 +71,9 @@ if [ ! -f "~/.local/bin/pip" ]; then
     # download installer into temp dir
     curl --silent ${pipget_url} -o ${pipget_local}
     if [ $? -eq 0 ]; then
-        echo "saved ${pipget_local}" | logger
+        logit "saved ${pipget_local}"
     else
-        echo "ERROR: failed to get ${pipget_file}" | logger
+        logit "ERROR: failed to get ${pipget_file}"
     fi
 
     # verify
@@ -84,15 +93,16 @@ fi
 
 # install requirements.txt
 ~/.local/bin/pip install -r /vagrant/requirements.txt --user
+~/.local/bin/pip list
 
 
 #
 # test and exit
 #
 if ! [ -x "$(command -v ansible-playbook --version)" ]; then
-    echo "ERROR: can not execute ansible-playbook" | logger
+    logit "ERROR: can not execute ansible-playbook"
     exit 1
 else
     whereis ansible
-    echo "finished install ansible" | logger
+    logit "finished installing pip req"
 fi

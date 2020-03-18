@@ -6,6 +6,8 @@ common_dir: [
  { dir: '/home/{{ ansible_user_id }}/code/', mode: '0750', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
  { dir: '/home/{{ ansible_user_id }}/.config/htop/', mode: '0750', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
  { dir: '/home/{{ ansible_user_id }}/tmp/', mode: '0750', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
+ { dir: '/home/{{ ansible_user_id }}/tmp/runner/', mode: '0750', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
+ { dir: '/home/{{ ansible_user_id }}/project/', mode: '0775', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
  { dir: '/etc/ansible/', mode: '0755', owner: 'root', group: 'root' },
  { dir: '/etc/ansible/facts.d/', mode: '0755', owner: 'root', group: 'root' },
  { dir: '/etc/ansible/inventory', mode: '0755', owner: '{{ ansible_user_id }}', group: '{{ ansible_user_id }}' },

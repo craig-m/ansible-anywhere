@@ -23,7 +23,6 @@ SCRIPT
 
 Vagrant.configure("2") do |config|
     config.vm.box = "centos/7"
-
     config.vm.box_check_update = false
     config.vm.hostname = "ansibleanywhere"
     config.vm.boot_timeout = 300
@@ -106,9 +105,11 @@ Vagrant.configure("2") do |config|
         :path => "install_pip_req.sh",
         :binary => true,
         name: "script to instal ansible in VM"
-    
+
     config.vm.provision "ansible_local" do |ansible|
+        ansible.compatibility_mode = "2.0"
         ansible.playbook = "playbook-controlvm.yml"
+        ansible.config_file = "/vagrant/ansible_vagrant.cfg"
         ansible.install = false
         ansible.verbose = false
     end
@@ -119,5 +120,6 @@ Vagrant.configure("2") do |config|
         t.run_remote = {inline: $inlinescript_post, :upload_path => "/home/vagrant/.inlinescript_post.sh", :privileged => false}
     end
 
+    # Finished
     config.vm.post_up_message = "----- AnsibleAnywhere VM is up -----"
 end

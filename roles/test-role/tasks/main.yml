@@ -2,14 +2,22 @@
 # tasks file for test-role
 
 
-- debug: msg="test ansible user file creation "
+- debug: msg="test role for ansible"
 
-- name: "create /tmp/justatestfile.txt"
-  copy:
-    content: '# test file'
-    dest: /tmp/justatestfile.txt
+
+- name: 'test file template'
+  template:
+    src: testfile_txt.j2
+    dest: "{{ testfileloc }}"
     owner: root
-    group: root
-    mode: '0640'
-    validate: /usr/bin/grep "test file" %s
+    group: "{{ ansible_user_id }}"
+    mode: 0664
+    validate: 'grep "test file" %s'
   become: true
+
+
+- name: "Wait {{ testfileloc }}"
+  wait_for:
+    path: "{{ testfileloc }}"
+    delay: 2
+# it exists, so we have a n second delay

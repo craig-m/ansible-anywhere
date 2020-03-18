@@ -12,19 +12,21 @@
   become: true
 
 
-- name: 'check "Create common folders" vars are defined'
-  assert:
-    that:
-      - common_dir is defined
-- name: 'Create common folders'
-  file:
-    path: "{{ item.dir }}"
-    state: directory
-    mode: "{{ item.mode }}"
-    owner: "{{ item.owner }}"
-    group: "{{ item.group }}"
-  with_items: "{{ common_dir }}"
-  become: true
+- name: 'setup folders'
+  block:
+    - name: 'check folder vars are set'
+      assert:
+        that:
+          - common_dir is defined
+    - name: 'Create common folders'
+      file:
+        path: "{{ item.dir }}"
+        state: directory
+        mode: "{{ item.mode }}"
+        owner: "{{ item.owner }}"
+        group: "{{ item.group }}"
+      with_items: "{{ common_dir }}"
+      become: true
 
 
 - name: 'dot files to home dir'
@@ -35,14 +37,8 @@
   with_items: "{{ dotfiles }}"
 
 
-- name: 'install these packages in our default repos'
-  package:
-    name: "{{ item.add_tool }}"
-    state: present
-  retries: 2
-  with_items: "{{ package_add_tool }}"
-  become: true
-
+- name: 'install tools from '
+  include: packages.yml
 
 - name: 'create a user for dev'
   include: devuser.yml

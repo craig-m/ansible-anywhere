@@ -1,0 +1,11 @@
+---
+# tasks file for aa-base
+
+
+- name: 'install these packages from default repo'
+  package:
+    name: "{{ item.add_tool }}"
+    state: present
+  retries: 3
+  with_items: "{{ package_add_tool }}"
+  become: true

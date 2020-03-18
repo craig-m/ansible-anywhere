@@ -1,2 +1,4 @@
 ---
 # vars file for test-role
+
+testfileloc: "/tmp/testfile.txt"

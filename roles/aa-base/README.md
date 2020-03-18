@@ -3,13 +3,13 @@ aa-base
 
 The base role to configure the Ansible control machine.
 
-This role was created with the command `molecule init role test-role`.
+Created by: `[vagrant@ansibleanywhere roles]$ molecule init role aa-base`
 
 
 Requirements
 ------------
 
-None. There should be nothing CenOS specific - any linux should do.
+None.
 
 
 Role Variables

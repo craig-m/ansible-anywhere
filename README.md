@@ -21,20 +21,25 @@ In 2015 Red Hat acquired Ansible for a significant amount of money [[1](https://
 
 ## Virtual Machines
 
-There are other tools I want to use Ansible with (like DB or Web server), but I do not want to run these kinds of services on my host system.
+There are other tools I want to use Ansible with (like DB or Web servers), but I do not want to run these kinds of services on my host system.
 
 I need to run these daemons in isolation, and have my different projects stay private from each other, while keeping my Desktop/Laptop as clean of crummy software as possible (all code is bad code).
 
-This is why I am using a VM, the offical [CentOS 7](https://app.vagrantup.com/centos/boxes/7/versions/1905.1) [Vagrant](https://www.vagrantup.com/) box, which is built for:
+This is why I am using a VM, the offical [CentOS 7](https://app.vagrantup.com/centos/boxes/7/versions/1905.1) [Vagrant](https://github.com/hashicorp/vagrant) box, which is built for:
 
-* VirtualBox (MacOS, Linux, Win, FreeBSD)
-* VMWare desktop
+* [VirtualBox](https://www.virtualbox.org/) (MacOS, Linux, Win, FreeBSD)
+* [VMwareFusion](https://www.vmware.com/au/products/fusion.html)
 * [libvirt](https://en.wikipedia.org/wiki/Libvirt) (Red Hat developed, manages KVM, Xen, VMware ESXi, QEMU)
-* Hyper-V (Win 8-10, Server 2012)
+* [Hyper-V](https://docs.microsoft.com/en-us/windows-server/virtualization/hyper-v/hyper-v-technology-overview) (Win 8-10, Server 2012)
 
-You also need one of these virtualization programs installed on your desktop or server, and [Vagrant](https://www.vagrantup.com/downloads.html) of course. Really this is ansible-anywhere you can run a VM - because I **need** a VM on whatever OS I happen to be using (a few).
+_"Vagrant is a tool for building and distributing development environments."_
 
-##### plugins
+This is an abstraction layer on top of virtualisation, vagrant is a wrapper that allows us to use Virtual Machines in a more portable way.
+
+So we need one of these virtualization programs installed on our desktop or server, and [Vagrant](https://www.vagrantup.com/downloads.html) of course. Really this is ansible-anywhere you can run a VM - because I **need** a VM on whatever OS I happen to be using (a few). See `doc/alternatives.md`.
+
+
+##### Vagrant plugins
 
 As per their [box release notes](https://blog.centos.org/2019/07/updated-centos-vagrant-images-available-v1905-01/) we also need this [plugin](https://www.vagrantup.com/docs/plugins/) if we use VirtualBox.
 

@@ -3,7 +3,7 @@ Role Name
 
 An ansible test-role. For testing ansible is working, that we can connect to the host, and that we can use molecule.
 
-This role was created with the command `molecule init role test-role`
+Created by: `[vagrant@ansibleanywhere roles]$ molecule init role test-role`
 
 
 Requirements
@@ -15,7 +15,9 @@ Ansible.
 Role Variables
 --------------
 
-None.
+```
+testfileloc: "/tmp/testfile.txt"
+```
 
 
 Dependencies
