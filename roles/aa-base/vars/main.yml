@@ -9,11 +9,12 @@ common_dir: [
  { dir: '/home/{{ ansible_user_id }}/tmp/runner/', mode: '0750', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
  { dir: '/home/{{ ansible_user_id }}/project/', mode: '0775', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
  { dir: '/etc/ansible/', mode: '0755', owner: 'root', group: 'root' },
- { dir: '/etc/ansible/facts.d/', mode: '0755', owner: 'root', group: 'root' },
- { dir: '/etc/ansible/inventory', mode: '0755', owner: '{{ ansible_user_id }}', group: '{{ ansible_user_id }}' },
- { dir: '/root/bin/', mode: '0750', owner: 'root', group: 'root' },
+ { dir: '/etc/ansible/facts.d/', mode: '0775', owner: 'root', group: '{{ ansible_user_id }}' },
+ { dir: '/etc/ansible/inventory', mode: '0775', owner: '{{ ansible_user_id }}', group: '{{ ansible_user_id }}' },
+ { dir: '/root/log/', mode: '0770', owner: 'root', group: 'root' },
+ { dir: '/root/script/', mode: '0770', owner: 'root', group: 'root' },
  { dir: '/root/tmp/', mode: '0750', owner: 'root', group: 'root' },
- { dir: '/mnt/sshfs/', mode: '0755', owner: 'root', group: 'root' }
+ { dir: '/mnt/sshfs/', mode: '0775', owner: 'root', group: '{{ ansible_user_id }}' }
 ]
 
 dotfiles: [
@@ -22,6 +23,7 @@ dotfiles: [
 ]
 
 package_add_tool: [
+  {add_tool: 'lsof'},
   {add_tool: 'strace'},
   {add_tool: 'tcpdump'},
   {add_tool: 'tmux'},

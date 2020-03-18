@@ -50,3 +50,13 @@
     dest: ~/readme.txt
     mode: 0644
   changed_when: false
+
+
+- name: 'custom fact'
+  copy:
+    src: "etc/ansible/facts.d/vm-type-py.fact"
+    dest: "/etc/ansible/facts.d/vm-type-py.fact"
+    mode: 0755
+
+- name: "get new custom facts"
+  setup: ~

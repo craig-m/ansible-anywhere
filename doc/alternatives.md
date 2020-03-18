@@ -1,6 +1,6 @@
 # Alternatives to VM
 
-Explorations in portability.
+Explorations in portability 🔭
 
 
 ## WSL
@@ -33,7 +33,7 @@ But anyway WSL1 is not a real Linux (WSL2 not quite yet), nor can I run WSL1 on 
 
 ## Docker
 
-Containers are sometimes very useful, but I choose not to run Ansible from inside a container (inside the VM Docker is super useful).
+Containers are sometimes very useful, but I choose not to run Ansible from inside a container (inside the VM Docker is super useful) 📦
 
 On Windows 10 Docker Desktop on runs in a VM under Hyper-V (when Hyper-V is enabled, VirtualBox no longer works). You can run Docker alongside Vagrant, unless you want to use VirtualBox boxes.
 
