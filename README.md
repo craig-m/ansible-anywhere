@@ -121,3 +121,11 @@ I use ansible-runner to capture all output from Ansible (and info about the stat
 #### invoke
 
 [Invoke](http://www.pyinvoke.org/) is a Python task execution tool & library. This can make our workflows easier - Invoke rules. You do not need to be particularly proficient in Python to use it.
+
+Reasons to use Invoke:
+
+* run pre (eg: linting) or post (eg: tests) jobs with your task.
+* turn really long commands into short ones - often I run ansible with the same sets of parameters.
+* easily create some magic alias like `invoke deploy staging` for a chain of commands.
+
+I tried makefiles and invoke suited my needs here so much better.

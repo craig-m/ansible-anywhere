@@ -30,7 +30,8 @@ Vagrant.configure("2") do |config|
     config.ssh.forward_agent = false
 
 
-    # provider specific configs. Not really the spirit of Vagrant, but there are only a few providers.
+    #
+    # vm.provider specific configs
     #
     # * we want to verify the integrity of the images, using the command "vagrant box add centos/7" does not do this.
     # * need synced_folder flexibility for different OS/Provider combos.
@@ -84,7 +85,9 @@ Vagrant.configure("2") do |config|
     end  
 
 
+    #
     # Provisioning tasks for this VM.
+    #
 
     # If you let Vagrant handle the installation of Ansible for you, it first installs pip. Like this:
     #
@@ -108,18 +111,29 @@ Vagrant.configure("2") do |config|
 
     config.vm.provision "ansible_local" do |ansible|
         ansible.compatibility_mode = "2.0"
-        ansible.playbook = "playbook-controlvm.yml"
+        ansible.playbook = "playbook-aa-vm.yml"
         ansible.config_file = "/vagrant/ansible_vagrant.cfg"
         ansible.install = false
         ansible.verbose = false
     end
 
 
+    #
     # Triggers
+    #
+
     config.trigger.after [:up, :provision, :resume, :reload] do |t|
         t.run_remote = {inline: $inlinescript_post, :upload_path => "/home/vagrant/.inlinescript_post.sh", :privileged => false}
     end
 
-    # Finished
+    config.trigger.before :destroy do |t|
+        t.warn = "removing /vagrant/runner-output/artifacts/*"
+        t.run_remote = {inline: "rm -rf -- /vagrant/runner-output/artifacts/*"}
+    end
+
+
+    #
+    # Finished - VM Up message
+    #
     config.vm.post_up_message = "----- AnsibleAnywhere VM is up -----"
 end

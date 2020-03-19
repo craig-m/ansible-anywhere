@@ -1,7 +1,7 @@
 Role Name
 =========
 
-An ansible test-role. For testing ansible is working, that we can connect to the host, and that we can use molecule.
+An ansible test-role. For testing ansible is working, that we can connect to the host and priv esc (create a temp file as root), and that we can use molecule.
 
 Created by: `[vagrant@ansibleanywhere roles]$ molecule init role test-role`
 
@@ -32,14 +32,14 @@ Example Playbook
 None. All this role does is create one file:
 
 ```
-- name: "create /tmp/justatestfile.txt"
-  copy:
-    content: '# test file'
-    dest: /tmp/justatestfile.txt
+- name: 'test file template'
+  template:
+    src: testfile_txt.j2
+    dest: "{{ testfileloc }}"
     owner: root
-    group: root
-    mode: '0640'
-    validate: /usr/bin/grep "test file" %s
+    group: "{{ ansible_user_id }}"
+    mode: 0664
+    validate: 'grep "test file" %s'
   become: true
 ```
 

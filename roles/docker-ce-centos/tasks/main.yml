@@ -1,0 +1,94 @@
+---
+# tasks file for docker-ce-centos
+
+- name: 'check our OS is supported'
+  assert:
+    that:
+      - ansible_distribution == "CentOS"
+
+- name: 'remove old docker if any exists'
+  yum:
+    state: absent 
+    name: 
+      - docker
+      - docker-client
+      - docker-client-latest
+      - docker-common
+      - docker-latest
+      - docker-latest-logrotate
+      - docker-logrotate
+      - docker-engine
+  become: true
+
+
+- name: 'install Docker requirements'
+  yum:
+    name: 
+      - yum-utils
+      - device-mapper-persistent-data
+      - lvm2
+    state: present 
+  become: true
+
+
+- name: 'copy yum repo folder'
+  copy:
+    src: "docker-ce.repo"
+    dest: "/etc/yum.repos.d/docker-ce.repo"
+    mode: 0644
+    owner: root
+    group: root
+  become: true
+
+
+- name: 'copy gpg key'
+  copy:
+    src: "gpg"
+    dest: "/etc/pki/rpm-gpg/RPM-GPG-KEY-DockerCE"
+  become: true
+
+
+# Verify the key, using a fingerprint, before import
+- rpm_key:
+    key: "/etc/pki/rpm-gpg/RPM-GPG-KEY-DockerCE"
+    fingerprint: 060A 61C5 1B55 8A7F 742B 77AA C52F EB6B 621E 9F35
+  become: true
+
+
+- name: 'install DockerCE'
+  yum:
+    name: 
+      - docker-ce
+      - docker-ce-cli 
+      - containerd.io
+    state: present 
+  become: true
+
+
+- name: 'adding ansible user to docker group'
+  user:
+    name: '{{ ansible_user_id }}'
+    groups: docker
+    append: true
+  become: true
+
+
+# test docker runs
+- name: 'check docker version'
+  command: "docker --version"
+  register: dockerver
+  changed_when: false
+
+- name: check docker works
+  assert:
+    that:
+      - "'Docker version' in dockerver.stdout"
+      - "dockerver.rc == 0"
+
+
+- name: 'start docker'
+  service:
+    name: docker.service
+    enabled: true
+    state: started
+  become: true

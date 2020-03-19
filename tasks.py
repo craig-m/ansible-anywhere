@@ -77,11 +77,14 @@ def aa_run_last_id(c):
 @task(post=[aa_run_last_id])
 def aa_play(c):
     """ run playbook that configures AnsibleAnywhere VM """
-    print("Using ansible_runner python interface to run playbook-controlvm.yml on localhost")
+    print("checking playbook-aa-vm.yml")
+        with c.cd('/vagrant/'):
+            c.run('ansible-lint playbook-aa-vm.yml -v', pty=True)
+    print("Using ansible_runner python interface to run playbook-aa-vm.yml on localhost")
     r = ansible_runner.run(
         private_data_dir='/vagrant/runner-output/', 
         inventory='/vagrant/localhost.ini', 
-        playbook='/vagrant/playbook-controlvm.yml',
+        playbook='/vagrant/playbook-aa-vm.yml',
         quiet='true')
     print("\nFinal status:")
     print(r.stats)
@@ -119,4 +122,4 @@ def mol(c, rolename):
     """ test an Ansible role with molecule """
     print("testing %s" % rolename)
     with c.cd('/vagrant/roles/%s' % rolename):
-        c.run('molecule test')
+        c.run('molecule test', pty=True)
