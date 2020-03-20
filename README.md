@@ -10,7 +10,7 @@ The use cases of for configuration management tools are broard:
 * creating more [complex systems](https://github.com/donnemartin/system-design-primer) (cloud or local dev, just learning demo or production)
 * managing Firewalls, Switches, WiFi - there are [Network Modules](https://docs.ansible.com/ansible/latest/network/index.html) for physical and virtual networks
 
-Doing things in Ansible can be better ⚙
+Doing things in Ansible can be better ⚙️
 
 Ansible cannot run on a Windows host natively, you need A macOS, Linux or *BSD operating system.
 
@@ -32,11 +32,22 @@ This is why I am using a VM, the offical [CentOS 7](https://app.vagrantup.com/ce
 * [libvirt](https://en.wikipedia.org/wiki/Libvirt) (Red Hat developed, manages KVM, Xen, VMware ESXi, QEMU)
 * [Hyper-V](https://docs.microsoft.com/en-us/windows-server/virtualization/hyper-v/hyper-v-technology-overview) (Win 8-10, Server 2012)
 
+
+### vagrant
+
 _"Vagrant is a tool for building and distributing development environments."_
 
 This is an abstraction layer on top of virtualisation, vagrant is a wrapper that allows us to use Virtual Machines in a more portable way 🌏
 
-So we need one of these virtualization programs installed on our desktop or server, and [Vagrant](https://www.vagrantup.com/downloads.html) of course. Really this is ansible-anywhere you can run a VM - because I **need** a VM on whatever OS I happen to be using (a few). See `doc/alternatives.md`.
+So we need one of these virtualization programs installed on our desktop or server, and [Vagrant](https://www.vagrantup.com/downloads.html) of course. Really this is ansible-anywhere you can run a VM - because I **need** a VM on whatever OS I happen to be using (a few). 
+
+See `doc/alternatives.md`
+
+##### packer
+
+The tool [packer](https://packer.io/) is how boxes are made 🏭
+
+You can build the same box and run it locally on VirtualBox, then ship it to the cloud (Azure, AWS EC2, Google) - if you have the need.
 
 
 ##### Vagrant plugins

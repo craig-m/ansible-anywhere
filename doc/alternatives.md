@@ -46,4 +46,4 @@ If you are solely using Ansible, then running it from a container is probably a 
 
 ## conclusion
 
-WSL and docker work just fine for running Ansible. But these are not full Linux operating systems, somtimes you want minimalism and other times you need an entire kitchen.
+WSL and docker work just fine for running Ansible. But these are not full Linux operating systems, sometimes you want minimalism and other times you need an entire kitchen.

@@ -1,15 +1,18 @@
 Redis
 =====
 
-Simple role to install Redis, then start + enable + test the service.
+Simple role to install [Redis](https://redis.io/), then start + enable + test the service.
 
-Created by: `[vagrant@ansibleanywhere roles]$ molecule init role redis`
+Created by: `[vagrant@ansibleanywhere roles]$  redis`
 
+Using Redis to hold ansible fact cache improves perfomance.
 
 Requirements
 ------------
 
 That redis is in your apt/yum/other repository. This role installs with the 'package' module.
+
+On CentOS you can run `epel` role first.
 
 Role Variables
 --------------

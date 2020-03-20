@@ -51,7 +51,7 @@ def aa_update(c):
     print("updating python pip packages")
     with c.cd('/vagrant/'):
         c.run('python3 -m pip install update --user')
-        c.run('pip install --upgrade pip --user')
+        c.run('~/.local/bin/pip install --upgrade pip --user')
 
 @task
 def aa_run_del_art(c):

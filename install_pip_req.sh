@@ -1,18 +1,9 @@
 #!/usr/bin/env bash
 
+
 # This script will install system wide python3 with the OS package manager.
 # It will then get + run get-pip.py to install pip (for the local user),
 # and then install requirements.txt (under local users path).
-
-
-#
-# Variables
-#
-pipget_file="get-pip.py"
-pipget_url="https://bootstrap.pypa.io/3.4/${pipget_file}"
-pipget_sha512_expect="3272604fc1d63725266e6bef87faa4905d06018839ecfdbe8d162b7175a9b3d56004c4eb7e979fe85e884fc3b8dcc509a6b26e7893eaf33b0efe608b444d64cf"
-pipget_temp=$(mktemp -d)
-pipget_local="${pipget_temp}/${pipget_file}"
 
 
 #
@@ -40,6 +31,8 @@ fi
 
 
 #
+# Get packages from dnf/apt/yum
+#
 # Ansible is written in Python. 
 # Python is written in C, so we need compiler too.
 #
@@ -66,8 +59,16 @@ fi
 # do the things
 #
 
-# install pip
-if [ ! -f "~/.local/bin/pip" ]; then
+# install pip if missing
+if [ ! -f ~/.local/bin/pip ]; then
+
+    # vars
+    pipget_file="get-pip.py"
+    pipget_url="https://bootstrap.pypa.io/3.4/${pipget_file}"
+    pipget_sha512_expect="3272604fc1d63725266e6bef87faa4905d06018839ecfdbe8d162b7175a9b3d56004c4eb7e979fe85e884fc3b8dcc509a6b26e7893eaf33b0efe608b444d64cf"
+    pipget_temp=$(mktemp -d)
+    pipget_local="${pipget_temp}/${pipget_file}"
+
     # download installer into temp dir
     curl --silent ${pipget_url} -o ${pipget_local}
     if [ $? -eq 0 ]; then
@@ -85,14 +86,19 @@ if [ ! -f "~/.local/bin/pip" ]; then
         exit 1
     fi
 
-    # install pip
+    # install pip with get-pip.py
     cd ${pipget_temp}
     python3 ${pipget_file} --user
-    ~/.local/bin/pip --version
+    ~/.local/bin/pip --version | grep "python 3." \
+        || { logit "pip using wrong python version"; exit 1; }
+
 fi
 
 # install requirements.txt
-~/.local/bin/pip install -r /vagrant/requirements.txt --user
+~/.local/bin/pip install -r /vagrant/requirements.txt --user \
+    || { logit "pip could not install requirements.txt"; exit 1; }
+
+# installed pacakges:
 ~/.local/bin/pip list
 
 
@@ -104,5 +110,5 @@ if ! [ -x "$(command -v ansible-playbook --version)" ]; then
     exit 1
 else
     whereis ansible
-    logit "finished installing pip req"
+    logit "finished installing requirements.txt"
 fi

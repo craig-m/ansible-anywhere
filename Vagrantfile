@@ -107,7 +107,7 @@ Vagrant.configure("2") do |config|
         :privileged => false,
         :path => "install_pip_req.sh",
         :binary => true,
-        name: "script to instal ansible in VM"
+        name: "use python to install pip and requirements.txt"
 
     config.vm.provision "ansible_local" do |ansible|
         ansible.compatibility_mode = "2.0"
@@ -129,6 +129,7 @@ Vagrant.configure("2") do |config|
     config.trigger.before :destroy do |t|
         t.warn = "removing /vagrant/runner-output/artifacts/*"
         t.run_remote = {inline: "rm -rf -- /vagrant/runner-output/artifacts/*"}
+        t.on_error = :continue
     end
 
 

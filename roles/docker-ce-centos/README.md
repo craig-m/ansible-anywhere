@@ -1,7 +1,7 @@
 Role Name
 =========
 
-This Installs [Docker-CE](https://docs.docker.com/install/linux/docker-ce/centos/) (community edition) on CentOS 7.
+This role installs [Docker-CE](https://docs.docker.com/install/linux/docker-ce/centos/) (community edition) on CentOS 7.
 
 Created with: `[vagrant@ansibleanywhere roles]$ molecule init role docker-ce-centos`
 
@@ -19,7 +19,7 @@ CentOS 7.
 Role Variables
 --------------
 
-None.
+None. No defaults or vars.
 
 
 Dependencies
@@ -31,17 +31,14 @@ CentOS 7.
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
-
+```
+    - docker-ce-centos
+```
 
 License
 -------
 
-BSD
+None.
 
 
 Author Information
