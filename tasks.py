@@ -78,8 +78,8 @@ def aa_run_last_id(c):
 def aa_play(c):
     """ run playbook that configures AnsibleAnywhere VM """
     print("checking playbook-aa-vm.yml")
-        with c.cd('/vagrant/'):
-            c.run('ansible-lint playbook-aa-vm.yml -v', pty=True)
+    with c.cd('/vagrant/'):
+        c.run('ansible-lint playbook-aa-vm.yml -v', pty=True)
     print("Using ansible_runner python interface to run playbook-aa-vm.yml on localhost")
     r = ansible_runner.run(
         private_data_dir='/vagrant/runner-output/', 
