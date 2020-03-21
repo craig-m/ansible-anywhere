@@ -7,7 +7,7 @@
 
 
 #
-# func
+# functions
 #
 logit() {
   echo -e "$1 \\n";
@@ -31,10 +31,8 @@ fi
 
 
 #
-# Get packages from dnf/apt/yum
-#
-# Ansible is written in Python. 
-# Python is written in C, so we need compiler too.
+# Get Python3 packages from dnf/apt/yum repo
+# Ansible is written in Python, which is written in C, so we need a C compiler.
 #
 if [ -x "$(command -v dnf)" ]; then
     sudo dnf install -y gcc python3 python3-devel
@@ -80,9 +78,9 @@ if [ ! -f ~/.local/bin/pip ]; then
     # verify
     pipget_sha512_unknown=$(sha512sum ${pipget_local} | awk '{print $1}')
     if [ $pipget_sha512_unknown == $pipget_sha512_expect ]; then
-        echo "good"
+        echo "good sha512 of get-pip.py"
     else
-        echo "bad checksum"
+        echo "BAD checksum of get-pip.py"
         exit 1
     fi
 
@@ -94,8 +92,21 @@ if [ ! -f ~/.local/bin/pip ]; then
 
 fi
 
+# location of requirements.txt
+if [ -f ./requirements.txt ]; then
+    pipreqloc="./requirements.txt"
+elif [ -f /vagrant/requirements.txt ]; then
+    pipreqloc="/vagrant/requirements.txt"
+elif [ -f $HOME/requirements.txt ]; then
+    pipreqloc="$HOME/requirements.txt"
+else
+    logit "could not find requirements.txt in any expected places"; 
+fi
+
+
 # install requirements.txt
-~/.local/bin/pip install -r /vagrant/requirements.txt --user \
+logit "installing ${pipreqloc}"
+~/.local/bin/pip install -r ${pipreqloc} --user \
     || { logit "pip could not install requirements.txt"; exit 1; }
 
 # installed pacakges:
@@ -105,10 +116,10 @@ fi
 #
 # test and exit
 #
-if ! [ -x "$(command -v ansible-playbook --version)" ]; then
-    logit "ERROR: can not execute ansible-playbook"
+if ! [ -x "$(command -v invoke)" ]; then
+    logit "ERROR: can not execute invoke bin"
     exit 1
 else
-    whereis ansible
+    whereis invoke
     logit "finished installing requirements.txt"
 fi

@@ -105,8 +105,8 @@ Vagrant.configure("2") do |config|
 
     config.vm.provision :shell,
         :privileged => false,
-        :path => "install_pip_req.sh",
         :binary => true,
+        :path => "install_pip_req.sh",
         name: "use python to install pip and requirements.txt"
 
     config.vm.provision "ansible_local" do |ansible|

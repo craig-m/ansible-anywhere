@@ -52,7 +52,7 @@
   changed_when: false
 
 
-- name: 'custom fact'
+- name: 'upload custom fact script'
   copy:
     src: "etc/ansible/facts.d/vm-type-py.fact"
     dest: "/etc/ansible/facts.d/vm-type-py.fact"

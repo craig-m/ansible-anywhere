@@ -19,7 +19,7 @@ def aai_env_check():
         sys.exit(1)
     # check the x.x min version of python we can run under
     pyvmax = 3
-    pyvmin = 5
+    pyvmin = 6
     curpyvmax = sys.version_info.major
     curpyvmin = sys.version_info.minor
     if not (curpyvmax == pyvmax and curpyvmin >= pyvmin):
@@ -56,12 +56,12 @@ def aa_update(c):
 @task
 def aa_run_del_art(c):
     """ clean ansible-runner artifacts dir """
-    print("cleaning up: \n")
     path = "/vagrant/runner-output/artifacts/"
+    print("cleaning up:", path ,"folders.")
     files = os.listdir(path)
     for artrm in files:
-        c.run('rm -rf -- /vagrant/runner-output/artifacts/%r' % artrm)
-    print("\ndone.\n")
+        c.run('rm -rf -- /vagrant/runner-output/artifacts/' + artrm )
+    print("done.")
 
 @task
 def aa_run_last_id(c):
@@ -69,9 +69,12 @@ def aa_run_last_id(c):
     path = "/vagrant/runner-output/artifacts/"
     os.chdir(path)
     artdir = sorted(os.listdir(os.getcwd()), key=os.path.getmtime)
-    oldest = artdir[0]
-    newest = artdir[-1]
-    print("artifacts:", newest)
+    if len(artdir) == 0:
+        print("no folders found.")
+    else:
+        oldest = artdir[0]
+        newest = artdir[-1]
+        print("run id:",newest)
 
 
 @task(post=[aa_run_last_id])
@@ -97,29 +100,29 @@ def aa_play(c):
 @task(post=[aa_run_last_id])
 def aa_role_run(c, rolename):
     """ Run a single role on localhost with ansible-runner bin """
-    print("ansible-runner: /vagrant/roles/%s on localhost" % rolename)
+    print("ansible-runner: /vagrant/roles/" + rolename + "/ on localhost")
     with c.cd('/vagrant/'):
         c.run('ansible-runner \
             run --quiet --inventory /vagrant/localhost.ini \
-            --rotate-artifacts 50 -r %s -v \
+            --rotate-artifacts 20 -r ' + rolename + ' -v \
             --roles-path /vagrant/roles/ \
             --artifact-dir /vagrant/runner-output/artifacts/ \
-            /home/vagrant/tmp/' % rolename, pty=True)
+            /home/vagrant/tmp/', pty=True)
 
 # ansible-playbook
 # doc https://docs.ansible.com/ansible/latest/cli/ansible-playbook.html
 @task
 def aa_role_play(c, rolename):
     """ Run a single role on localhost with ansible-playbook """
-    print("using %s role in playbook-run-single-role.yml" % rolename)
+    print("using '" + rolename + "' role in playbook-run-single-role.yml")
     with c.cd('/vagrant/'):
-        c.run('ansible-playbook -i localhost.ini -e "runtherole=%s" -v \
-            playbook-run-single-role.yml' % rolename, pty=True)
+        c.run('ansible-playbook -i localhost.ini -e "runtherole=' + rolename + '" -v \
+            playbook-run-single-role.yml', pty=True)
 
 
 @task
 def mol(c, rolename):
     """ test an Ansible role with molecule """
-    print("testing %s" % rolename)
-    with c.cd('/vagrant/roles/%s' % rolename):
+    print("testing",rolename)
+    with c.cd('/vagrant/roles/' + rolename):
         c.run('molecule test', pty=True)
