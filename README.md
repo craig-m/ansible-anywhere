@@ -12,7 +12,7 @@ The use cases of for configuration management tools are broard:
 
 Doing things in Ansible can be better ⚙️
 
-Ansible cannot run on a Windows host natively, you need A macOS, Linux or *BSD operating system.
+Ansible (written in [python](https://www.python.org/)) cannot run on a Windows host natively, you need A macOS, Linux or *BSD operating system.
 
 The [CentOS project](https://en.wikipedia.org/wiki/CentOS) has been around for about 15 years, they  offically partnered [[1](https://www.redhat.com/en/about/press-releases/red-hat-and-centos-join-forces)] with [Red Hat](https://en.wikipedia.org/wiki/Red_Hat) back in 2014 (whose parent company as of 2019 is [IBM](https://en.wikipedia.org/wiki/IBM)).
 

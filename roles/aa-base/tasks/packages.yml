@@ -4,8 +4,17 @@
 
 - name: 'install these packages from default repo'
   package:
-    name: "{{ item.add_tool }}"
+    name: "{{ item.add_item }}"
     state: present
   retries: 3
-  with_items: "{{ package_add_tool }}"
+  with_items: "{{ package_install }}"
   become: true
+
+
+- name: 'no mail servers'
+  package:
+    state: absent
+    name: "{{ item.remove_item }}"
+  with_items: "{{ package_remove }}"
+  become: true
+  failed_when: false

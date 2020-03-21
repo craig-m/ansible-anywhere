@@ -90,7 +90,10 @@ if [ ! -f ~/.local/bin/pip ]; then
     ~/.local/bin/pip --version | grep "python 3." \
         || { logit "pip using wrong python version"; exit 1; }
 
+else
+    echo "pip already installed at ~/.local/bin/pip"
 fi
+
 
 # location of requirements.txt
 if [ -f ./requirements.txt ]; then

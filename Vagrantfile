@@ -10,6 +10,7 @@ MY_VM_CPU = "4"
 MY_CODE_PATH = "/vagrant"
 
 
+# Script to run during Vagrant config.trigger.after
 $inlinescript_post = <<-SCRIPT
 echo '--------------------------------------------------------------------';
 uname -a;
@@ -22,6 +23,10 @@ SCRIPT
 
 
 Vagrant.configure("2") do |config|
+
+    #
+    # Box and VM config
+    #
     config.vm.box = "centos/7"
     config.vm.box_check_update = false
     config.vm.hostname = "ansibleanywhere"
@@ -101,7 +106,7 @@ Vagrant.configure("2") do |config|
 
     config.vm.provision :shell,
         :privileged => false,
-        inline: "echo 'Hello, lets setup this VM.'"
+        inline: "echo 'Hello, provisioning AnsibleAnywhere VM.'"
 
     config.vm.provision :shell,
         :privileged => false,

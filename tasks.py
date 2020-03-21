@@ -9,39 +9,11 @@ import os
 import sys
 import platform
 import time
-import subprocess
-
-def aai_env_check():
-    # do not run as root user
-    userid = os.getuid()
-    if userid == 0:
-        print ("ERROR do not run as root.")
-        sys.exit(1)
-    # check the x.x min version of python we can run under
-    pyvmax = 3
-    pyvmin = 6
-    curpyvmax = sys.version_info.major
-    curpyvmin = sys.version_info.minor
-    if not (curpyvmax == pyvmax and curpyvmin >= pyvmin):
-        print("You have python: \t{}.{}".format(curpyvmax, curpyvmin))
-        print("Required at least: \t{}.{}".format(pyvmax, pyvmin))
-        print("ERROR. Bye!")
-        sys.exit(1)
-
-def aai_env_setup():
-    dirstore = '/vagrant/gitignore/'
-    if not os.path.exists(dirstore):
-        os.makedirs(dirstore)
-
-# AA-I
-aai_env_check()
-aai_env_setup()
-
-import ansible_runner
+# aa.py
+import aa
 from invoke import *
 
 # Tasks ----------------------------------------------------------------------
-
 
 @task
 def aa_update(c):
@@ -84,6 +56,7 @@ def aa_play(c):
     with c.cd('/vagrant/'):
         c.run('ansible-lint playbook-aa-vm.yml -v', pty=True)
     print("Using ansible_runner python interface to run playbook-aa-vm.yml on localhost")
+    import ansible_runner
     r = ansible_runner.run(
         private_data_dir='/vagrant/runner-output/', 
         inventory='/vagrant/localhost.ini', 
@@ -123,6 +96,9 @@ def aa_role_play(c, rolename):
 @task
 def mol(c, rolename):
     """ test an Ansible role with molecule """
-    print("testing",rolename)
+    if not os.path.exists('/vagrant/roles/' + rolename):
+        print("No role called " + rolename + " exists!")
+        sys.exit(1)
+    print("testing " + rolename)
     with c.cd('/vagrant/roles/' + rolename):
         c.run('molecule test', pty=True)

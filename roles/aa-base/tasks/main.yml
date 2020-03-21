@@ -6,9 +6,9 @@
   debug: msg=" {{ role_path|basename }} "
 
 
-- name: 'Set timezone to Sydney'
+- name: 'change timezone'
   timezone:
-    name: Australia/Sydney
+    name: "{{ aavm_timezone }}"
   become: true
 
 
@@ -29,7 +29,7 @@
       become: true
 
 
-- name: 'dot files to home dir'
+- name: 'copy dot files to home dir'
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -37,10 +37,10 @@
   with_items: "{{ dotfiles }}"
 
 
-- name: 'install tools from '
+- name: 'install and remove packages'
   include: packages.yml
 
-- name: 'create a user for dev'
+- name: 'create a user for dev work'
   include: devuser.yml
 
 
@@ -52,11 +52,5 @@
   changed_when: false
 
 
-- name: 'upload custom fact script'
-  copy:
-    src: "etc/ansible/facts.d/vm-type-py.fact"
-    dest: "/etc/ansible/facts.d/vm-type-py.fact"
-    mode: 0755
-
-- name: "get new custom facts"
-  setup: ~
+- name: 'custom fact scripts'
+  include: aafacts.yml
