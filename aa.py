@@ -11,6 +11,7 @@ def aai_env_check():
         print ("ERROR do not run as root.")
         sys.exit(1)
     # check the x.x min version of python we can run under
+    # https://docs.python.org/3.6/contents.html
     pyvmax = 3
     pyvmin = 6
     curpyvmax = sys.version_info.major

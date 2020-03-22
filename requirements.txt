@@ -1,5 +1,6 @@
 #
-# The tools/libs we want from The Python Package Index (PyPI)
+# The tools/libs we want from The Python Package Index (PyPI).
+# PyPI is hosted by the Python Software Foundation (psf).
 #
 invoke
 ansible

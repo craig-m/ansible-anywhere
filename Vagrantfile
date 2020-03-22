@@ -2,23 +2,24 @@
 # AnsibleAnywhere Vagrantfile
 #
 Vagrant.require_version ">= 2.2.7"
-VAGRANT_API_VER = "2"
-VAGRANT_DISABLE_VBOXSYMLINKCREATE = 1
 
 MY_VM_RAM = "2048"
 MY_VM_CPU = "4"
 MY_CODE_PATH = "/vagrant"
+MY_MNT_OPT = ["dmode=775,fmode=644"]
+VAGRANT_API_VER = "2"
+VAGRANT_DISABLE_VBOXSYMLINKCREATE = 1
 
 
 # Script to run during Vagrant config.trigger.after
 $inlinescript_post = <<-SCRIPT
-echo '--------------------------------------------------------------------';
+echo '-------------------------------------------------------------------';
 uname -a;
 myip=$(ip addr show eth0 | grep inet | grep -v "inet6" | awk '{print $2}')
 echo "My IP: ${myip}";
 myroute=$(ip route show | grep default)
 echo "Route: ${myroute}";
-echo '--------------------------------------------------------------------';
+echo '-------------------------------------------------------------------';
 SCRIPT
 
 
@@ -38,8 +39,10 @@ Vagrant.configure("2") do |config|
     #
     # vm.provider specific configs
     #
-    # * we want to verify the integrity of the images, using the command "vagrant box add centos/7" does not do this.
-    # * need synced_folder flexibility for different OS/Provider combos.
+    # * we want to verify the integrity of the images, 
+    #   using the command "vagrant box add centos/7" does not do this.
+    #
+    # * need synced_folder flexibility for different OS / Provider combos.
     #
     config.vm.synced_folder ".", "/vagrant", disabled: true
     #
@@ -52,7 +55,7 @@ Vagrant.configure("2") do |config|
         vbox.cpus = MY_VM_CPU
         vbox.gui = false
         vbox.name = "ansibleanywhere"
-        override.vm.synced_folder ".", MY_CODE_PATH, type: "virtualbox", mount_options: ["dmode=775,fmode=644"]
+        override.vm.synced_folder ".", MY_CODE_PATH, type: "virtualbox", mount_options: MY_MNT_OPT
     end
     # --- Windows Hyper-V ---
     # Tested on: Windows 10 enterprise 1903
@@ -65,8 +68,8 @@ Vagrant.configure("2") do |config|
         hpv.cpus = MY_VM_CPU
         hpv.vmname = "ansibleanywhere"
         hpv.enable_virtualization_extensions = true
-        override.vm.synced_folder ".", MY_CODE_PATH, type: "rsync", mount_options: ["dmode=775,fmode=644"]
-        #override.vm.synced_folder ".", MY_CODE_PATH, type: "smb", mount_options: ["dmode=775,fmode=644,vers=3.0"], create: true
+        override.vm.synced_folder ".", MY_CODE_PATH, type: "rsync", mount_options: MY_MNT_OPT
+        #override.vm.synced_folder ".", MY_CODE_PATH, type: "smb", mount_options: MY_MNT_OPT, create: true
     end
     # --- VMWare Fusion ---
     config.vm.provider :vmware_desktop do |vmd, override|
@@ -75,7 +78,7 @@ Vagrant.configure("2") do |config|
         override.vm.box_url = "https://cloud.centos.org/centos/7/vagrant/x86_64/images/CentOS-7-x86_64-Vagrant-1905_01.VMwareFusion.box"
         vmd.memory = MY_VM_RAM
         vmd.gui = false
-        override.vm.synced_folder ".", MY_CODE_PATH, type: "rsync", mount_options: ["dmode=775,fmode=644"]
+        override.vm.synced_folder ".", MY_CODE_PATH, type: "rsync", mount_options: MY_MNT_OPT
     end
     # --- Libvirt ---
     config.vm.provider :libvirt do |libv, override|
@@ -85,8 +88,8 @@ Vagrant.configure("2") do |config|
         libv.memory = MY_VM_RAM
         libv.cpus = MY_VM_CPU
         libv.disk_bus = "virtio"
-        #override.vm.synced_folder ".", MY_CODE_PATH, type: "rsync", mount_options: ["dmode=775,fmode=644"]
-        config.vm.synced_folder ".", MY_CODE_PATH, type: "nfs", mount_options: ["dmode=775,fmode=644"]
+        #override.vm.synced_folder ".", MY_CODE_PATH, type: "rsync", mount_options: MY_MNT_OPT
+        config.vm.synced_folder ".", MY_CODE_PATH, type: "nfs", mount_options: MY_MNT_OPT
     end  
 
 
@@ -106,7 +109,14 @@ Vagrant.configure("2") do |config|
 
     config.vm.provision :shell,
         :privileged => false,
-        inline: "echo 'Hello, provisioning AnsibleAnywhere VM.'"
+        inline: "echo 'Hello, AnsibleAnywhere vm.provision tasks running.'"
+
+    config.vm.provision :shell, 
+        :privileged => true, 
+        :path => "vagrant_vm_setup.sh", 
+        :upload_path => "/root/vagrant_vm_setup.sh", 
+        :binary => true, 
+        name: "root setup script"
 
     config.vm.provision :shell,
         :privileged => false,
@@ -128,7 +138,9 @@ Vagrant.configure("2") do |config|
     #
 
     config.trigger.after [:up, :provision, :resume, :reload] do |t|
-        t.run_remote = {inline: $inlinescript_post, :upload_path => "/home/vagrant/.inlinescript_post.sh", :privileged => false}
+        t.run_remote = {inline: $inlinescript_post, 
+            :upload_path => "/home/vagrant/.inlinescript_post.sh", 
+            :privileged => false}
     end
 
     config.trigger.before :destroy do |t|
@@ -136,6 +148,12 @@ Vagrant.configure("2") do |config|
         t.run_remote = {inline: "rm -rf -- /vagrant/runner-output/artifacts/*"}
         t.on_error = :continue
     end
+
+
+    #
+    # SSH Port Forwards to VM
+    #
+    config.vm.network :forwarded_port, guest: 10880, host: 8080, id: 'websrv'
 
 
     #

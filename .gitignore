@@ -4,7 +4,7 @@
 .vagrant/
 
 # python files
-__pycache__/
+**/__pycache__/
 aa.pyc
 
 # copy local_vars.example.yml to:
@@ -13,8 +13,9 @@ local_vars.yml
 gitignore/
 runner-output/artifacts/*
 
-# VS Code
+# VS Code ignore
 .vscode/*
+# do not ignore:
 !.vscode/settings.json
 !.vscode/tasks.json
 

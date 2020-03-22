@@ -39,7 +39,7 @@ _"Vagrant is a tool for building and distributing development environments."_
 
 This is an abstraction layer on top of virtualisation, vagrant is a wrapper that allows us to use Virtual Machines in a more portable way 🌏
 
-So we need one of these virtualization programs installed on our desktop or server, and [Vagrant](https://www.vagrantup.com/downloads.html) of course. Really this is ansible-anywhere you can run a VM - because I **need** a VM on whatever OS I happen to be using (a few). 
+So we need one of these virtualization programs installed on our desktop or server, and [Vagrant](https://www.vagrantup.com/downloads.html) of course. Really this is ansible-anywhere you can run a VM - because I **need** a VM on whatever OS I happen to be using (a few).
 
 See `doc/alternatives.md`
 

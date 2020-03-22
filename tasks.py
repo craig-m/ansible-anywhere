@@ -1,17 +1,27 @@
 #!/usr/bin/env python3
 
 #-----------------------------------------------------------------------------
-# AnsibleAnywhere VM tasks.py - Powered by Invoke https://www.pyinvoke.org
-# To list tasks run "invoke -l" in this file's directory.
+# AnsibleAnywhere tasks.py
+# To list tasks run "invoke -l" in this file's directory. Usually "/vagrant/"
 #-----------------------------------------------------------------------------
 
+# standard python functions
 import os
 import sys
 import platform
 import time
+import json
 # aa.py
 import aa
+# Invoke https://www.pyinvoke.org
 from invoke import *
+
+def aai_checkroledir(rolename):
+    """ check role exists before using it """
+    rolebase = '/vagrant/roles/'
+    if not os.path.exists(rolebase + rolename):
+        print("The role '" + rolename + "' in " + rolebase + " does not exist!")
+        sys.exit(1)
 
 # Tasks ----------------------------------------------------------------------
 
@@ -29,7 +39,7 @@ def aa_update(c):
 def aa_run_del_art(c):
     """ clean ansible-runner artifacts dir """
     path = "/vagrant/runner-output/artifacts/"
-    print("cleaning up:", path ,"folders.")
+    print("cleaning up:",path)
     files = os.listdir(path)
     for artrm in files:
         c.run('rm -rf -- /vagrant/runner-output/artifacts/' + artrm )
@@ -55,7 +65,7 @@ def aa_play(c):
     print("checking playbook-aa-vm.yml")
     with c.cd('/vagrant/'):
         c.run('ansible-lint playbook-aa-vm.yml -v', pty=True)
-    print("Using ansible_runner python interface to run playbook-aa-vm.yml on localhost")
+    print("Using ansible_runner py int to run playbook-aa-vm.yml on localhost")
     import ansible_runner
     r = ansible_runner.run(
         private_data_dir='/vagrant/runner-output/', 
@@ -63,17 +73,20 @@ def aa_play(c):
         playbook='/vagrant/playbook-aa-vm.yml',
         quiet='true')
     print("\nFinal status:")
-    print(r.stats)
+    import pprint
+    pp = pprint.PrettyPrinter(indent=4)
+    pp.pprint(r.stats)
+    print('\n')
 
-
-# The next two tasks run a role from "/vagrant/roles/<role name>" on localhost
+# next 2 tasks run a role from "/vagrant/roles/<rolename>" on localhost
 
 # ansible-runner bin
-# doc https://ansible-runner.readthedocs.io/en/latest/standalone.html
+# https://ansible-runner.readthedocs.io/en/latest/standalone.html
 @task(post=[aa_run_last_id])
 def aa_role_run(c, rolename):
     """ Run a single role on localhost with ansible-runner bin """
-    print("ansible-runner: /vagrant/roles/" + rolename + "/ on localhost")
+    print("ansible-runner: /vagrant/roles/" + rolename + "/")
+    aai_checkroledir(rolename)
     with c.cd('/vagrant/'):
         c.run('ansible-runner \
             run --quiet --inventory /vagrant/localhost.ini \
@@ -83,22 +96,22 @@ def aa_role_run(c, rolename):
             /home/vagrant/tmp/', pty=True)
 
 # ansible-playbook
-# doc https://docs.ansible.com/ansible/latest/cli/ansible-playbook.html
+# https://docs.ansible.com/ansible/latest/cli/ansible-playbook.html
 @task
 def aa_role_play(c, rolename):
-    """ Run a single role on localhost with ansible-playbook """
-    print("using '" + rolename + "' role in playbook-run-single-role.yml")
+    """ Run a single role on localhost with ansible-playbook bin """
+    print("using '" + rolename + "' in playbook-run-single-role.yml")
+    aai_checkroledir(rolename)
     with c.cd('/vagrant/'):
-        c.run('ansible-playbook -i localhost.ini -e "runtherole=' + rolename + '" -v \
-            playbook-run-single-role.yml', pty=True)
+        c.run('ansible-playbook -i localhost.ini \
+            -e "runtherole=' + rolename + '" \
+            -v playbook-run-single-role.yml', pty=True)
 
 
 @task
 def mol(c, rolename):
     """ test an Ansible role with molecule """
-    if not os.path.exists('/vagrant/roles/' + rolename):
-        print("No role called " + rolename + " exists!")
-        sys.exit(1)
+    aai_checkroledir(rolename)
     print("testing " + rolename)
     with c.cd('/vagrant/roles/' + rolename):
         c.run('molecule test', pty=True)
