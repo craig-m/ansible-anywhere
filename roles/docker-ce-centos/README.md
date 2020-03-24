@@ -1,5 +1,5 @@
-Role Name
-=========
+docker-ce-centos
+================
 
 This role installs [Docker-CE](https://docs.docker.com/install/linux/docker-ce/centos/) (community edition) on CentOS 7.
 

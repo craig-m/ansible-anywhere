@@ -47,7 +47,7 @@ See `doc/alternatives.md`
 
 The tool [packer](https://packer.io/) is how boxes are made 🏭
 
-You can build the same box and run it locally on VirtualBox, then ship it to the cloud (Azure, AWS EC2, Google) - if you have the need.
+You can build a box and run it locally, then then build another box (with the same base config) for a cloud hosting provider (Azure, AWS EC2, Google) - if you have the need.
 
 
 ##### Vagrant plugins

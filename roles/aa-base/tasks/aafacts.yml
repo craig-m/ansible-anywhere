@@ -13,7 +13,6 @@
       import sys
       import platform
       import datetime
-      import subprocess
       import json
 
       date = str(datetime.datetime.now())

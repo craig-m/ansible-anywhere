@@ -1,5 +1,5 @@
-Role Name
-=========
+epel
+=====
 
 A role to setup the [EPEL](https://fedoraproject.org/wiki/EPEL) (Extra Packages for Enterprise Linux) Yum repository on CentOS 6/7/8.
 

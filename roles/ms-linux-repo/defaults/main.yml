@@ -1,0 +1,4 @@
+---
+# defaults file for ms-linux-repo
+
+mssrcpath: "/opt/ms/"

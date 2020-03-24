@@ -1,0 +1,29 @@
+---
+# tasks file for ms-linux-repo
+
+
+- name: 'create dir'
+  file:
+    path: "{{ mssrcpath }}"
+    state: directory
+    owner: "root"
+    group: "root"
+    mode: '0775'
+  become: true
+
+
+- name: 'copy MS GPG Key'
+  copy:
+    src: 'microsoft.asc'
+    dest: "{{ mssrcpath }}/microsoft.asc"
+    mode: 0640
+  become: true
+
+
+- name: 'CentOS tasks'
+  include: CentOS.yml
+  when: ansible_distribution == "CentOS"
+
+- name: 'Ubuntu tasks'
+  include: Ubuntu.yml
+  when: ansible_distribution == "Ubuntu"

@@ -1,0 +1,17 @@
+---
+# tasks file for ms-linux-repo
+
+- name: 'add rpm key'
+  rpm_key:
+    key: "{{ mssrcpath }}/microsoft.asc"
+  become: true
+
+
+- name: 'Add MS Yum Repo'
+  yum_repository:
+    name: microsoft-com-prod
+    description: Microsoft YUM repo
+    baseurl: "https://packages.microsoft.com/rhel/{{ ansible_distribution_major_version }}/prod/"
+    gpgcheck: yes
+    gpgkey: "file://{{ mssrcpath }}/microsoft.asc"
+  become: true

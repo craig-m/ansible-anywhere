@@ -1,0 +1,11 @@
+---
+# tasks file for ms-linux-repo
+
+- name: 'add ms apt key'
+  apt_key:
+    id: "{{ msgpgkeyid }}"
+    file: "{{ mssrcpath }}/microsoft.asc"
+    state: present
+  become: true
+
+# ToDo

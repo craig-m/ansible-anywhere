@@ -1,9 +1,11 @@
-Role Name
+test role
 =========
 
 An ansible test-role. For testing ansible is working, that we can connect to the host and priv esc (create a temp file as root), and that we can use molecule.
 
-Created by: `[vagrant@ansibleanywhere roles]$ molecule init role test-role`
+Created by: `[vagrant@ansibleanywhere vagrant]$ invoke newrole test-role`
+
+Which is really an alias for: `[vagrant@ansibleanywhere vagrant]$ cd roles && molecule init role test-role`
 
 
 Requirements

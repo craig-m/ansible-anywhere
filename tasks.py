@@ -36,7 +36,7 @@ def aa_update(c):
         c.run('~/.local/bin/pip install --upgrade pip --user')
 
 @task
-def aa_run_del_art(c):
+def run_del_art(c):
     """ clean ansible-runner artifacts dir """
     path = "/vagrant/runner-output/artifacts/"
     print("cleaning up:",path)
@@ -46,7 +46,7 @@ def aa_run_del_art(c):
     print("done.")
 
 @task
-def aa_run_last_id(c):
+def run_last_id(c):
     """ find newest ansible-runner artifacts """
     path = "/vagrant/runner-output/artifacts/"
     os.chdir(path)
@@ -59,18 +59,19 @@ def aa_run_last_id(c):
         print("run id:",newest)
 
 
-@task(post=[aa_run_last_id])
+@task(post=[run_last_id])
 def aa_play(c):
-    """ run playbook that configures AnsibleAnywhere VM """
-    print("checking playbook-aa-vm.yml")
+    """ playbook that configures AnsibleAnywhere VM """
+    aarunplayyml = "playbook-aa-vm.yml"
+    print("checking " + aarunplayyml)
     with c.cd('/vagrant/'):
-        c.run('ansible-lint playbook-aa-vm.yml -v', pty=True)
-    print("Using ansible_runner py int to run playbook-aa-vm.yml on localhost")
+        c.run('ansible-lint ' + aarunplayyml + ' -v', pty=True)
+    print("Using ansible_runner py int with " + aarunplayyml + " on localhost")
     import ansible_runner
     r = ansible_runner.run(
         private_data_dir='/vagrant/runner-output/', 
         inventory='/vagrant/localhost.ini', 
-        playbook='/vagrant/playbook-aa-vm.yml',
+        playbook='/vagrant/' + aarunplayyml,
         quiet='true')
     print("\nFinal status:")
     import pprint
@@ -78,11 +79,12 @@ def aa_play(c):
     pp.pprint(r.stats)
     print('\n')
 
+
 # next 2 tasks run a role from "/vagrant/roles/<rolename>" on localhost
 
 # ansible-runner bin
 # https://ansible-runner.readthedocs.io/en/latest/standalone.html
-@task(post=[aa_run_last_id])
+@task(post=[run_last_id])
 def aa_role_run(c, rolename):
     """ Run a single role on localhost with ansible-runner bin """
     print("ansible-runner: /vagrant/roles/" + rolename + "/")
@@ -108,6 +110,9 @@ def aa_role_play(c, rolename):
             -v playbook-run-single-role.yml', pty=True)
 
 
+# Molecule tasks
+# https://molecule.readthedocs.io/en/latest/
+
 @task
 def mol(c, rolename):
     """ test an Ansible role with molecule """
@@ -115,3 +120,14 @@ def mol(c, rolename):
     print("testing " + rolename)
     with c.cd('/vagrant/roles/' + rolename):
         c.run('molecule test', pty=True)
+
+@task
+def newrole(c, rolename):
+    """ create a new role """
+    if not os.path.exists('/vagrant/roles/' + rolename):
+        print("creating " + rolename)
+        with c.cd('/vagrant/roles/'):
+            c.run('molecule init role ' + rolename, pty=True)
+    else:
+        print('ERROR ' + rolename + ' exists already')
+        sys.exit(1)

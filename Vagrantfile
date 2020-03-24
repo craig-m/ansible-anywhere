@@ -114,7 +114,6 @@ Vagrant.configure("2") do |config|
     config.vm.provision :shell, 
         :privileged => true, 
         :path => "vagrant_vm_setup.sh", 
-        :upload_path => "/root/vagrant_vm_setup.sh", 
         :binary => true, 
         name: "root setup script"
 
