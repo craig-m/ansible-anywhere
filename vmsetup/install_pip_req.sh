@@ -60,6 +60,8 @@ fi
 # install pip if missing
 if [ ! -f ~/.local/bin/pip ]; then
 
+    logit "missing pip will install"
+
     # vars
     pipget_file="get-pip.py"
     pipget_url="https://bootstrap.pypa.io/3.4/${pipget_file}"

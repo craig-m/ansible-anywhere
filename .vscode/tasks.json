@@ -62,7 +62,7 @@
             "isBackground": true,
             "label": "vm-ssh-websrv",
             "type": "shell",
-            "command": "vagrant ssh -c 'cd /vagrant && python3 -m http.server --bind 127.0.0.1 10888' -- -L 127.0.0.1:10888:127.0.0.1:10888",
+            "command": "vagrant ssh -c 'cd /vagrant && python3 -m http.server --bind 127.0.0.1 10888 | strings -n 2' -- -L 127.0.0.1:10888:127.0.0.1:10888",
             "problemMatcher": []
         }
     ]

@@ -34,6 +34,8 @@ Vagrant.configure("2") do |config|
     config.vm.boot_timeout = 300
     config.ssh.keep_alive = true
     config.ssh.forward_agent = false
+    config.ssh.insert_key = true
+    config.ssh.compression = false
 
 
     #
@@ -113,20 +115,20 @@ Vagrant.configure("2") do |config|
 
     config.vm.provision :shell, 
         :privileged => true, 
-        :path => "vagrant_vm_setup.sh", 
+        :path => "vmsetup/vagrant_vm_setup.sh", 
         :binary => true, 
         name: "root setup script"
 
     config.vm.provision :shell,
         :privileged => false,
         :binary => true,
-        :path => "install_pip_req.sh",
+        :path => "vmsetup/install_pip_req.sh",
         name: "use python to install pip and requirements.txt"
 
     config.vm.provision "ansible_local" do |ansible|
         ansible.compatibility_mode = "2.0"
         ansible.playbook = "playbook-aa-vm.yml"
-        ansible.config_file = "/vagrant/ansible_vagrant.cfg"
+        ansible.config_file = "/vagrant/vmsetup/ansible_vagrant.cfg"
         ansible.install = false
         ansible.verbose = false
     end

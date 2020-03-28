@@ -21,9 +21,9 @@ In 2015 Red Hat acquired Ansible for a significant amount of money [[1](https://
 
 ## Virtual Machines
 
-There are other tools I want to use Ansible with (like DB or Web servers), but I do not want to run these kinds of services on my host system.
+There are other tools I want to use Ansible with (like DB or Web servers), but I do not want to run these kinds of services on my host system 🏰
 
-I need to run these daemons in isolation, and have my different projects stay private from each other, while keeping my Desktop/Laptop as clean of crummy software as possible (all code is bad code).
+I need to run these daemons in isolation, and have my different projects stay private from each other 📦📦📦, while keeping my Desktop/Laptop as clean of crummy software as possible (all code is bad code).
 
 This is why I am using a VM, the offical [CentOS 7](https://app.vagrantup.com/centos/boxes/7/versions/1905.1) [Vagrant](https://github.com/hashicorp/vagrant) box, which is built for:
 
@@ -102,7 +102,7 @@ From the Synopsis _"This cache uses JSON formatted, per host records saved in Re
 
 #### molecule
 
-[Molecule](https://molecule.readthedocs.io/en/latest/) is really, increadibly, useful when working on roles. Initially started by the Ansible community, the project was officially adopted by the Ansible project ([src](https://www.ansible.com/practical-ansible-testing-with-molecule)).
+[Molecule](https://molecule.readthedocs.io/en/latest/) is really, increadibly, useful when working on roles. Initially started by the Ansible community, the project was officially adopted by the Ansible project ([1](https://www.ansible.com/practical-ansible-testing-with-molecule)) 🧪
 
 _"Molecule project is designed to aid in the development and testing of Ansible roles."_
 
@@ -140,3 +140,10 @@ Reasons to use Invoke:
 * easily create some magic alias like `invoke deploy staging` for a chain of commands.
 
 I tried makefiles and invoke suited my needs here so much better.
+
+
+#### Docker
+
+Molecule will run roles in containers to test them (by default - you can use VM too), via what they call a [driver](https://molecule.readthedocs.io/en/latest/configuration.html#driver).
+
+So having Docker setup inside the VM is very useful 🐳

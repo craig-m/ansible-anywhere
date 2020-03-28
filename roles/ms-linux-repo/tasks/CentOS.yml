@@ -1,9 +1,18 @@
 ---
 # tasks file for ms-linux-repo
 
+
+- name: 'copy MS GPG Key'
+  copy:
+    src: 'microsoft1.asc'
+    dest: "/etc/pki/rpm-gpg/microsoft.asc"
+    mode: 0640
+  become: true
+
+
 - name: 'add rpm key'
   rpm_key:
-    key: "{{ mssrcpath }}/microsoft.asc"
+    key: "/etc/pki/rpm-gpg/microsoft.asc"
   become: true
 
 
@@ -13,5 +22,5 @@
     description: Microsoft YUM repo
     baseurl: "https://packages.microsoft.com/rhel/{{ ansible_distribution_major_version }}/prod/"
     gpgcheck: yes
-    gpgkey: "file://{{ mssrcpath }}/microsoft.asc"
+    gpgkey: "file:///etc/pki/rpm-gpg/microsoft.asc"
   become: true

@@ -28,8 +28,8 @@ def aai_env_setup():
     if not os.path.exists(dirstore):
         os.makedirs(dirstore)
     # files in VM there? Will be mounted (eg vboxsf) or copied (eg rsync)
-    if not os.path.exists('/vagrant/roles/aa-base/'): 
-        print("Missing roles dir")
+    if not os.path.exists('/vagrant/vmsetup/'): 
+        print("Missing vmsetup dir")
         sys.exit(1)
 
 # AA-I

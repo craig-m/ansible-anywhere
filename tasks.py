@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 #-----------------------------------------------------------------------------
-# AnsibleAnywhere tasks.py
-# To list tasks run "invoke -l" in this file's directory. Usually "/vagrant/"
+# AnsibleAnywhere tasks.py (configuration in invoke.yml)
+# To list tasks run "invoke -l" in this file's directory (usually "/vagrant/")
 #-----------------------------------------------------------------------------
 
 # standard python functions
@@ -16,12 +16,6 @@ import aa
 # Invoke https://www.pyinvoke.org
 from invoke import *
 
-def aai_checkroledir(rolename):
-    """ check role exists before using it """
-    rolebase = '/vagrant/roles/'
-    if not os.path.exists(rolebase + rolename):
-        print("The role '" + rolename + "' in " + rolebase + " does not exist!")
-        sys.exit(1)
 
 # Tasks ----------------------------------------------------------------------
 
@@ -29,27 +23,30 @@ def aai_checkroledir(rolename):
 def aa_update(c):
     """ Update AnsibleAnywhere OS, packages and Pip programs """
     print("updating OS and packages")
-    c.run('sudo yum update -y')
+    c.sudo('yum update -y')
     print("updating python pip packages")
-    with c.cd('/vagrant/'):
+    codebase = c.aai.dir_base
+    with c.cd(codebase):
         c.run('python3 -m pip install update --user')
         c.run('~/.local/bin/pip install --upgrade pip --user')
 
 @task
 def run_del_art(c):
     """ clean ansible-runner artifacts dir """
-    path = "/vagrant/runner-output/artifacts/"
-    print("cleaning up:",path)
-    files = os.listdir(path)
+    import shutil
+    arts = c.aai.dir_art
+    print("cleaning up:",arts)
+    files = os.listdir(arts)
     for artrm in files:
-        c.run('rm -rf -- /vagrant/runner-output/artifacts/' + artrm )
+        shutil.rmtree(arts + '/' + artrm)
+        #print('removing ' + arts + '/' + artrm)
     print("done.")
 
 @task
 def run_last_id(c):
     """ find newest ansible-runner artifacts """
-    path = "/vagrant/runner-output/artifacts/"
-    os.chdir(path)
+    arts = c.aai.dir_art
+    os.chdir(arts)
     artdir = sorted(os.listdir(os.getcwd()), key=os.path.getmtime)
     if len(artdir) == 0:
         print("no folders found.")
@@ -64,14 +61,15 @@ def aa_play(c):
     """ playbook that configures AnsibleAnywhere VM """
     aarunplayyml = "playbook-aa-vm.yml"
     print("checking " + aarunplayyml)
-    with c.cd('/vagrant/'):
+    codebase = c.aai.dir_base
+    with c.cd(codebase):
         c.run('ansible-lint ' + aarunplayyml + ' -v', pty=True)
     print("Using ansible_runner py int with " + aarunplayyml + " on localhost")
     import ansible_runner
     r = ansible_runner.run(
-        private_data_dir='/vagrant/runner-output/', 
-        inventory='/vagrant/localhost.ini', 
-        playbook='/vagrant/' + aarunplayyml,
+        private_data_dir= codebase + '/runner-output/', 
+        inventory= codebase + '/localhost.ini', 
+        playbook= codebase + "/" + aarunplayyml,
         quiet='true')
     print("\nFinal status:")
     import pprint
@@ -87,15 +85,19 @@ def aa_play(c):
 @task(post=[run_last_id])
 def aa_role_run(c, rolename):
     """ Run a single role on localhost with ansible-runner bin """
-    print("ansible-runner: /vagrant/roles/" + rolename + "/")
-    aai_checkroledir(rolename)
-    with c.cd('/vagrant/'):
-        c.run('ansible-runner \
-            run --quiet --inventory /vagrant/localhost.ini \
-            --rotate-artifacts 20 -r ' + rolename + ' -v \
-            --roles-path /vagrant/roles/ \
-            --artifact-dir /vagrant/runner-output/artifacts/ \
-            /home/vagrant/tmp/', pty=True)
+    codebase = c.aai.dir_base
+    rolebase = c.aai.dir_roles
+    arts = c.aai.dir_art
+    print("ansible-runner: " + rolebase + "/" + rolename + "/")
+    if not os.path.exists(rolebase + "/" + rolename):
+        print("ERROR the role '" + rolename + "' does not exist!")
+        sys.exit(1)
+    c.run('ansible-runner \
+        run --quiet --inventory ' + codebase + '/localhost.ini \
+        --rotate-artifacts 20 -r ' + rolename + ' -v \
+        --roles-path ' + rolebase + ' \
+        --artifact-dir ' + arts + ' \
+        /home/vagrant/tmp/', pty=True)
 
 # ansible-playbook
 # https://docs.ansible.com/ansible/latest/cli/ansible-playbook.html
@@ -103,8 +105,12 @@ def aa_role_run(c, rolename):
 def aa_role_play(c, rolename):
     """ Run a single role on localhost with ansible-playbook bin """
     print("using '" + rolename + "' in playbook-run-single-role.yml")
-    aai_checkroledir(rolename)
-    with c.cd('/vagrant/'):
+    codebase = c.aai.dir_base
+    rolebase = c.aai.dir_roles
+    if not os.path.exists(rolebase + "/" + rolename):
+        print("ERROR the role '" + rolename + "' does not exist!")
+        sys.exit(1)
+    with c.cd(codebase):
         c.run('ansible-playbook -i localhost.ini \
             -e "runtherole=' + rolename + '" \
             -v playbook-run-single-role.yml', pty=True)
@@ -118,15 +124,17 @@ def mol(c, rolename):
     """ test an Ansible role with molecule """
     aai_checkroledir(rolename)
     print("testing " + rolename)
-    with c.cd('/vagrant/roles/' + rolename):
+    rolebase = c.aai.dir_roles
+    with c.cd(rolebase + "/" + rolename):
         c.run('molecule test', pty=True)
 
 @task
 def newrole(c, rolename):
     """ create a new role """
-    if not os.path.exists('/vagrant/roles/' + rolename):
+    rolebase = c.aai.dir_roles
+    if not os.path.exists(rolebase + "/" + rolename):
         print("creating " + rolename)
-        with c.cd('/vagrant/roles/'):
+        with c.cd(rolebase):
             c.run('molecule init role ' + rolename, pty=True)
     else:
         print('ERROR ' + rolename + ' exists already')

@@ -13,7 +13,7 @@ Supported on:
 You can install things like:
 
 * PowerShell
-* mdatp (Microsoft Defender Advanced Threat Protection for Endpoints)
+* [mdatp](https://docs.microsoft.com/en-us/windows/security/threat-protection/microsoft-defender-atp/microsoft-defender-atp-linux) (Microsoft Defender Advanced Threat Protection for Endpoints)
 
 
 ##### role
