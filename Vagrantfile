@@ -1,6 +1,7 @@
 #
 # AnsibleAnywhere Vagrantfile
 #
+
 Vagrant.require_version ">= 2.2.7"
 
 MY_VM_RAM = "2048"
@@ -28,6 +29,7 @@ Vagrant.configure("2") do |config|
     #
     # Box and VM config
     #
+
     config.vm.box = "centos/7"
     config.vm.box_check_update = false
     config.vm.hostname = "ansibleanywhere"
@@ -39,12 +41,13 @@ Vagrant.configure("2") do |config|
 
 
     #
-    # vm.provider specific configs
+    # VM provider specific configs
     #
-    # * we want to verify the integrity of the images, 
+
+    #   * we want to verify the integrity of the images, 
     #   using the command "vagrant box add centos/7" does not do this.
     #
-    # * need synced_folder flexibility for different OS / Provider combos.
+    #   * need synced_folder flexibility for different OS / Provider combos.
     #
     config.vm.synced_folder ".", "/vagrant", disabled: true
     #
@@ -60,7 +63,6 @@ Vagrant.configure("2") do |config|
         override.vm.synced_folder ".", MY_CODE_PATH, type: "virtualbox", mount_options: MY_MNT_OPT
     end
     # --- Windows Hyper-V ---
-    # Tested on: Windows 10 enterprise 1903
     config.vm.provider :hyperv do |hpv, override|
         override.vm.box_download_checksum_type = "sha256"
         override.vm.box_download_checksum = "8116101e3b56306626e848b4e4be3242480f0d30cf0a177e75bea3fbb51595bf"
@@ -96,18 +98,8 @@ Vagrant.configure("2") do |config|
 
 
     #
-    # Provisioning tasks for this VM.
+    # VM Provisioning tasks
     #
-
-    # If you let Vagrant handle the installation of Ansible for you, it first installs pip. Like this:
-    #
-    # DEFAULT_PIP_INSTALL_CMD = "curl https://bootstrap.pypa.io/get-pip.py | sudo python".freeze
-    #
-    # source: 
-    # https://github.com/hashicorp/vagrant/blob/master/plugins/provisioners/ansible/cap/guest/pip/pip.rb
-    # https://github.com/hashicorp/vagrant/issues/9584
-    #
-    # I would prefer not to "curl --[tls]--> sudo shell" and to use a set version of get-pip.
 
     config.vm.provision :shell,
         :privileged => false,
@@ -125,6 +117,16 @@ Vagrant.configure("2") do |config|
         :path => "vmsetup/install_pip_req.sh",
         name: "use python to install pip and requirements.txt"
 
+    # If you let Vagrant handle the installation of Ansible for you, it first installs pip. Like this:
+    #
+    # DEFAULT_PIP_INSTALL_CMD = "curl https://bootstrap.pypa.io/get-pip.py | sudo python".freeze
+    #
+    # source: 
+    # https://github.com/hashicorp/vagrant/blob/master/plugins/provisioners/ansible/cap/guest/pip/pip.rb
+    # https://github.com/hashicorp/vagrant/issues/9584
+    #
+    # I would prefer not to "curl --[tls]--> sudo shell" and to use a set version of get-pip.
+    #
     config.vm.provision "ansible_local" do |ansible|
         ansible.compatibility_mode = "2.0"
         ansible.playbook = "playbook-aa-vm.yml"
@@ -135,7 +137,7 @@ Vagrant.configure("2") do |config|
 
 
     #
-    # Triggers
+    # Triggers on VM actions
     #
 
     config.trigger.after [:up, :provision, :resume, :reload] do |t|
@@ -154,11 +156,13 @@ Vagrant.configure("2") do |config|
     #
     # SSH Port Forwards to VM
     #
-    config.vm.network :forwarded_port, guest: 10880, host: 8080, id: 'websrv'
+
+    #config.vm.network :forwarded_port, guest: 10880, host: 8080, id: 'websrv'
 
 
     #
     # Finished - VM Up message
     #
+
     config.vm.post_up_message = "----- AnsibleAnywhere VM is up -----"
 end

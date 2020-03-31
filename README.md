@@ -81,7 +81,7 @@ If you use [Visual Studio Code](https://code.visualstudio.com/) you can use [tas
 vagrant up
 vagrant ssh
 cd /vagrant/
-invoke -l
+inv -l
 ```
 
 

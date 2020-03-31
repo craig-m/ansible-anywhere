@@ -21,7 +21,7 @@ from invoke import *
 
 @task
 def aa_update(c):
-    """ Update AnsibleAnywhere OS, packages and Pip programs """
+    """ update AnsibleAnywhere OS, packages and Pip programs. """
     print("updating OS and packages")
     c.sudo('yum update -y')
     print("updating python pip packages")
@@ -31,21 +31,21 @@ def aa_update(c):
         c.run('~/.local/bin/pip install --upgrade pip --user')
 
 @task
-def run_del_art(c):
-    """ clean ansible-runner artifacts dir """
+def rm_art(c):
+    """ delete ansible-runner artifacts. """
     import shutil
-    arts = c.aai.dir_art
+    arts = c.aai.dir_base + "/runner-output/artifacts"
     print("cleaning up:",arts)
     files = os.listdir(arts)
     for artrm in files:
-        shutil.rmtree(arts + '/' + artrm)
-        #print('removing ' + arts + '/' + artrm)
+        #shutil.rmtree(arts + '/' + artrm)
+        print('removing ' + arts + '/' + artrm)
     print("done.")
 
 @task
 def run_last_id(c):
-    """ find newest ansible-runner artifacts """
-    arts = c.aai.dir_art
+    """ get UUID of most recent runner job. """
+    arts = c.aai.dir_base + "/runner-output/artifacts"
     os.chdir(arts)
     artdir = sorted(os.listdir(os.getcwd()), key=os.path.getmtime)
     if len(artdir) == 0:
@@ -58,7 +58,7 @@ def run_last_id(c):
 
 @task(post=[run_last_id])
 def aa_play(c):
-    """ playbook that configures AnsibleAnywhere VM """
+    """ playbook that configures AnsibleAnywhere VM. """
     aarunplayyml = "playbook-aa-vm.yml"
     print("checking " + aarunplayyml)
     codebase = c.aai.dir_base
@@ -82,12 +82,12 @@ def aa_play(c):
 
 # ansible-runner bin
 # https://ansible-runner.readthedocs.io/en/latest/standalone.html
-@task(post=[run_last_id])
+@task(aliases=['arp'], post=[run_last_id])
 def aa_role_run(c, rolename):
-    """ Run a single role on localhost with ansible-runner bin """
+    """ run a single role on localhost with ansible-runner bin. """
     codebase = c.aai.dir_base
     rolebase = c.aai.dir_roles
-    arts = c.aai.dir_art
+    arts = c.aai.dir_base + "/runner-output/artifacts"
     print("ansible-runner: " + rolebase + "/" + rolename + "/")
     if not os.path.exists(rolebase + "/" + rolename):
         print("ERROR the role '" + rolename + "' does not exist!")
@@ -96,14 +96,13 @@ def aa_role_run(c, rolename):
         run --quiet --inventory ' + codebase + '/localhost.ini \
         --rotate-artifacts 20 -r ' + rolename + ' -v \
         --roles-path ' + rolebase + ' \
-        --artifact-dir ' + arts + ' \
-        /home/vagrant/tmp/', pty=True)
+        --artifact-dir ' + arts + ' /home/vagrant/tmp/', pty=True)
 
 # ansible-playbook
 # https://docs.ansible.com/ansible/latest/cli/ansible-playbook.html
-@task
+@task(aliases=['aap'])
 def aa_role_play(c, rolename):
-    """ Run a single role on localhost with ansible-playbook bin """
+    """ run a single role on localhost with ansible-playbook bin. """
     print("using '" + rolename + "' in playbook-run-single-role.yml")
     codebase = c.aai.dir_base
     rolebase = c.aai.dir_roles
@@ -121,7 +120,7 @@ def aa_role_play(c, rolename):
 
 @task
 def mol(c, rolename):
-    """ test an Ansible role with molecule """
+    """ test an Ansible role with molecule. """
     aai_checkroledir(rolename)
     print("testing " + rolename)
     rolebase = c.aai.dir_roles
@@ -130,7 +129,7 @@ def mol(c, rolename):
 
 @task
 def newrole(c, rolename):
-    """ create a new role """
+    """ create a new ansible role. """
     rolebase = c.aai.dir_roles
     if not os.path.exists(rolebase + "/" + rolename):
         print("creating " + rolename)
