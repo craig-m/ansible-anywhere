@@ -38,8 +38,8 @@ def rm_art(c):
     print("cleaning up:",arts)
     files = os.listdir(arts)
     for artrm in files:
-        #shutil.rmtree(arts + '/' + artrm)
-        print('removing ' + arts + '/' + artrm)
+        shutil.rmtree(arts + '/' + artrm)
+        #print('removing ' + arts + '/' + artrm)
     print("done.")
 
 @task
@@ -67,10 +67,10 @@ def aa_play(c):
     print("Using ansible_runner py int with " + aarunplayyml + " on localhost")
     import ansible_runner
     r = ansible_runner.run(
-        private_data_dir= codebase + '/runner-output/', 
-        inventory= codebase + '/localhost.ini', 
-        playbook= codebase + "/" + aarunplayyml,
-        quiet='true')
+        private_data_dir = codebase + '/runner-output/', 
+        inventory = codebase + '/localhost.ini', 
+        playbook = codebase + "/" + aarunplayyml,
+        quiet = 'true')
     print("\nFinal status:")
     import pprint
     pp = pprint.PrettyPrinter(indent=4)

@@ -53,7 +53,7 @@ ${auditctl} -a exit,always -F arch=b64 -S mknod -S mknodat -k specialfiles
 
 ## Mount operations (only attributable)
 ${auditctl} -a always,exit -F arch=b64 -S mount -S umount2 -F auid!=-1 -k mount
--a always,exit -F arch=b32 -S mount -S umount -S umount2 -F auid!=-1 -k mount
+${auditctl} -a always,exit -F arch=b32 -S mount -S umount -S umount2 -F auid!=-1 -k mount
 
 # Change swap (only attributable)
 ${auditctl} -a always,exit -F arch=b64 -S swapon -S swapoff -F auid!=-1 -k swap
