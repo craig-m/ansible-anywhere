@@ -2,34 +2,34 @@
 # tasks file for epel
 
 
-- name: 'check our OS is supported'
+- name: check our OS is supported
   assert:
     that:
       - ansible_distribution == "CentOS"
 
 
-- name: 'check our vars are defined'
+- name: check our vars are defined
   assert:
     that:
     - epelrpm is defined
     - epelinstdir is defined
 
 
-- name: 'check we have setup rpm'
+- name: check we have setup rpm
   stat:
     path: "{{ epelinstdir }}/{{ epelrpm }}"
   register: epelhaverpm
   failed_when: false
 
 
-- name: 'setup epel'
+- name: setup epel
   block:
-    - name: 'get and check rpm'
+    - name: get and check rpm
       get_url:
         url: "{{ epelrpmdlurl }}{{ epelrpm }}"
         dest: "{{ epelinstdir }}"
         checksum:  "{{ lookup('vars', 'epelsha{{ ansible_distribution_major_version }}') }}"
-    - name: 'install the rpm'
+    - name: install the rpm
       yum:
         name: "{{ epelinstdir }}/{{ epelrpm }}"
         state: present
@@ -37,7 +37,7 @@
   when: not epelhaverpm.stat.exists
 
 
-- name: 'check epel files'
+- name: check epel files
   block:
     - name: 'yum yum.repos.d file '
       stat:
@@ -49,7 +49,7 @@
       register: epelcheck_gpg
 
 
-- name: 'check rpm installed ok'
+- name: check rpm installed ok
   assert:
     that:
         - epelcheck_repo.stat.exists

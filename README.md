@@ -68,14 +68,16 @@ vagrant up --provider=libvirt
 
 ## setup
 
-To bootstrap the environment 🚀
+To bootstrap your environment 🚀
 
 ```
 git clone https://github.com/craig-m/ansible-anywhere.git
 cd ansible-anywhere/
 ```
 
-If you use [Visual Studio Code](https://code.visualstudio.com/) you can use [tasks](https://code.visualstudio.com/docs/editor/tasks) to avoid typing these commands ⌨️
+Copy `aa-custom_vars.example.yml` to `aa-custom_vars.yml` and edit as needed (optional).
+
+If you use [Visual Studio Code](https://code.visualstudio.com/) you can use [tasks](https://code.visualstudio.com/docs/editor/tasks) to avoid typing these next commands ⌨️
 
 ```
 vagrant up

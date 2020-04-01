@@ -7,8 +7,9 @@
 **/__pycache__/
 aa.pyc
 
-# copy local_vars.example.yml to:
-local_vars.yml
+# copy aa-custom_vars.example.yml to aa-custom_vars.yml:
+aa-custom_vars.yml
+aa-custom_vars.bak
 
 gitignore/
 runner-output/artifacts/*

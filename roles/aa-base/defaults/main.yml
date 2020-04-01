@@ -1,7 +1,4 @@
 ---
 # defaults file for aa-base
 
-local_my_name: "default user"
-local_my_email: "default.user@localhost"
-
 aavm_timezone: "Australia/Sydney"

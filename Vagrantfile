@@ -44,9 +44,7 @@ Vagrant.configure("2") do |config|
     # VM provider specific configs
     #
 
-    #   * we want to verify the integrity of the images, 
-    #   using the command "vagrant box add centos/7" does not do this.
-    #
+    #   * we want to verify the integrity of the images, using the command "vagrant box add centos/7" does not do this.
     #   * need synced_folder flexibility for different OS / Provider combos.
     #
     config.vm.synced_folder ".", "/vagrant", disabled: true
@@ -72,8 +70,8 @@ Vagrant.configure("2") do |config|
         hpv.cpus = MY_VM_CPU
         hpv.vmname = "ansibleanywhere"
         hpv.enable_virtualization_extensions = true
-        override.vm.synced_folder ".", MY_CODE_PATH, type: "rsync", mount_options: MY_MNT_OPT
         #override.vm.synced_folder ".", MY_CODE_PATH, type: "smb", mount_options: MY_MNT_OPT, create: true
+        override.vm.synced_folder ".", MY_CODE_PATH, type: "rsync", mount_options: MY_MNT_OPT
     end
     # --- VMWare Fusion ---
     config.vm.provider :vmware_desktop do |vmd, override|

@@ -2,7 +2,7 @@
 # tasks file for aa-base
 
 
-- name: 'install these packages from default repo'
+- name: install these packages from default repo
   package:
     name: "{{ item.add_item }}"
     state: present
@@ -11,7 +11,7 @@
   become: true
 
 
-- name: 'no mail servers'
+- name: no mail servers
   package:
     state: absent
     name: "{{ item.remove_item }}"

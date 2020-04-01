@@ -3,7 +3,7 @@
 
 
 
-- name: 'add ms apt key'
+- name: add ms apt key
   apt_key:
     id: "{{ msgpgkeyid }}"
     file: "{{ mssrcpath }}/microsoft.asc"
@@ -11,7 +11,7 @@
   become: true
 
 
-#- name: 'add apt repo'
+#- name: add apt repo
 #  apt_repository:
 #    repo: [arch=amd64] https://packages.microsoft.com/ubuntu/16.04/prod xenial main
 #    state: present

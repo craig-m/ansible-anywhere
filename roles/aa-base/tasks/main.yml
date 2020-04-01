@@ -2,23 +2,23 @@
 # tasks file for aa-base
 
 
-- name: 'Running the role: '
+- name: Running the role
   debug: msg=" {{ role_path|basename }} "
 
 
-- name: 'change timezone'
+- name: change timezone
   timezone:
     name: "{{ aavm_timezone }}"
   become: true
 
 
-- name: 'setup folders'
+- name: setup folders
   block:
-    - name: 'check folder vars are set'
+    - name: check folder vars are set
       assert:
         that:
           - common_dir is defined
-    - name: 'Create common folders'
+    - name: Create common folders
       file:
         path: "{{ item.dir }}"
         state: directory
@@ -29,7 +29,7 @@
       become: true
 
 
-- name: 'copy dot files to home dir'
+- name: copy dot files to home dir
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -37,14 +37,18 @@
   with_items: "{{ dotfiles }}"
 
 
-- name: 'install and remove packages'
+- name: install and remove packages
   include: packages.yml
 
-- name: 'create a user for dev work'
-  include: devuser.yml
+
+  - name: Ensure group "developers" exists
+  group:
+    name: developers
+    state: present
+  become: true
 
 
-- name: 'readme.txt template'
+- name: readme.txt template
   template:
     src: readme_txt.j2
     dest: ~/readme.txt
@@ -52,5 +56,5 @@
   changed_when: false
 
 
-- name: 'custom fact scripts'
+- name: custom fact scripts
   include: aafacts.yml

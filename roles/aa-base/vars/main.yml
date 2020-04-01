@@ -25,20 +25,17 @@ dotfiles: [
 package_install: [
   {add_item: 'lsof'},
   {add_item: 'strace'},
-  {add_item: 'tcpdump'},
-  {add_item: 'tmux'},
-  {add_item: 'screen'},
   {add_item: 'git'},
   {add_item: 'curl'},
   {add_item: 'wget'},
+  {add_item: 'tmux'},
+  {add_item: 'screen'},
   {add_item: 'dos2unix'},
   {add_item: 'whois'},
   {add_item: 'socat'},
-  {add_item: 'vim'},
-  {add_item: 'nano'},
   {add_item: 'expect'},
-  {add_item: 'nmap'},
   {add_item: 'rsync'},
+  {add_item: 'tcpdump'},
   {add_item: 'traceroute'}
 ]
 

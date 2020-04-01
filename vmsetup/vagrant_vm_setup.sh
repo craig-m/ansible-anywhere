@@ -33,6 +33,7 @@ ${auditctl} -s | grep -q "enabled 1" || { echo 'ERROR auditd disabled'; exit 1; 
 # auditd monitoring of vagrant user activitiy. Not persistent. Reboot clears.
 # Thanks to https://github.com/Neo23x0/auditd !
 
+${auditctl} -D
 
 ## Kernel module loading and unloading
 ${auditctl} -a always,exit -F perm=x -F auid!=-1 -F path=/sbin/insmod -k modules

@@ -4,12 +4,6 @@ ansible_hostname: {{ ansible_hostname }}
 ansible_all_ipv4_addresses: {{ ansible_all_ipv4_addresses }}
 Groups: {{ group_names }}
 
-{% if local_my_name is defined %}
-Your details:
-    Name: {{ local_my_name }}
-    Email: {{ local_my_email }}
-{% endif %}
-
 connection: {{ ansible_connection }}
 {% if ansible_env.SSH_CLIENT is defined %}
 SSH client: {{ ansible_env.SSH_CLIENT }}

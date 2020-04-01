@@ -5,7 +5,7 @@
 - debug: msg="test role for ansible"
 
 
-- name: 'test file template'
+- name: test file template
   template:
     src: testfile_txt.j2
     dest: "{{ testfileloc }}"
@@ -16,7 +16,7 @@
   become: true
 
 
-- name: "Wait {{ testfileloc }}"
+- name: Wait {{ testfileloc }}
   wait_for:
     path: "{{ testfileloc }}"
     delay: 2

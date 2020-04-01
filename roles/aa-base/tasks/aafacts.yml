@@ -2,7 +2,7 @@
 # tasks file for aa-base
 
 
-- name: 'upload custom fact script'
+- name: upload custom fact script
   copy:
     dest: "/etc/ansible/facts.d/aainfo.fact"
     mode: 0755
@@ -26,11 +26,11 @@
       }))
 
 
-- name: "get new custom facts"
+- name: get new custom facts
   setup: ~
 
 
-- name: 'check aainfo fact set'
+- name: check aainfo fact set
   assert:
     that:
       - ansible_local.aainfo.areadmetext is defined

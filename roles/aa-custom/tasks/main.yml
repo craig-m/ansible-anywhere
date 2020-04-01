@@ -1,0 +1,40 @@
+---
+# tasks file for aa-custom
+
+- name: check setup file
+  stat:
+    path: "/vagrant/aa-custom_vars.yml"
+  register: aausevar
+  failed_when: false
+
+
+# uses first found
+- name: include custom vars
+  include_vars: "{{ lookup('first_found', possible_files) }}"
+  vars:
+    possible_files:
+      - /vagrant/aa-custom_vars.yml
+      - /vagrant/aa-custom_vars.example.yml
+
+
+- debug:
+    msg: "creating user {{ aa_user.username }} "
+
+- name: create user specified account
+  user:
+    name: "{{ aa_user.username }}"
+    comment: "{{ aa_user.name }}"
+    shell: /bin/bash
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
+    ssh_key_file: .ssh/id_rsa
+    create_home: true
+  become: true
+
+- name: install users packages
+  package:
+    name: "{{ item }}"
+    state: present
+  retries: 3
+  with_items: "{{ aa_yum_install }}"
+  become: true
