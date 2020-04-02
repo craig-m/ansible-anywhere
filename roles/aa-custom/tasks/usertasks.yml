@@ -1,0 +1,38 @@
+---
+# tasks file for aa-custom
+
+
+- name: change timezone
+  timezone:
+    name: "{{ aa_user.aavm_timezone }}"
+  become: true
+  when: aa_user.aavm_timezone is defined
+
+
+- debug:
+    msg: "creating user {{ aa_user.username }} "
+
+
+- name: create user specified account
+  user:
+    name: "{{ aa_user.username }}"
+    comment: "{{ aa_user.name }}"
+    shell: /bin/bash
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
+    ssh_key_file: .ssh/id_rsa
+    create_home: true
+  become: true
+  when:
+    - aa_user.username is defined
+    - aa_user.name is defined
+
+
+- name: install users packages
+  package:
+    name: "{{ item }}"
+    state: present
+  retries: 3
+  with_items: "{{ aa_yum_install }}"
+  become: true
+  when: aa_yum_install is defined

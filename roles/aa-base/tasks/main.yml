@@ -6,12 +6,6 @@
   debug: msg=" {{ role_path|basename }} "
 
 
-- name: change timezone
-  timezone:
-    name: "{{ aavm_timezone }}"
-  become: true
-
-
 - name: setup folders
   block:
     - name: check folder vars are set
@@ -41,7 +35,7 @@
   include: packages.yml
 
 
-  - name: Ensure group "developers" exists
+- name: Ensure group "developers" exists
   group:
     name: developers
     state: present
