@@ -8,7 +8,7 @@ ansible-runner
 ansible-lint
 molecule
 pytest
-python-vagrant
+testinfra
 redis
 docker
 dnspython

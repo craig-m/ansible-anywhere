@@ -1,2 +1,5 @@
 ---
 # vars file for docker-ce-centos
+
+dockergpgfile: "docker-rpm-gpg.1"
+dockergpgfinger: "060A 61C5 1B55 8A7F 742B 77AA C52F EB6B 621E 9F35"

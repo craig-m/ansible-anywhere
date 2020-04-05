@@ -1,0 +1,6 @@
+---
+#
+# AnsibleAnywhere group config
+#
+
+aacodepath: "/vagrant"

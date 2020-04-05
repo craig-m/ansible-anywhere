@@ -1,10 +1,12 @@
 ---
 # tasks file for docker-ce-centos
 
+
 - name: check our OS is supported
   assert:
     that:
       - ansible_distribution == "CentOS"
+
 
 - name: remove old docker if any exists
   yum:
@@ -32,8 +34,8 @@
 
 
 - name: copy yum repo folder
-  copy:
-    src: "docker-ce.repo"
+  template:
+    src: "docker-ce-repo.j2"
     dest: "/etc/yum.repos.d/docker-ce.repo"
     mode: 0644
     owner: root
@@ -43,7 +45,7 @@
 
 - name: copy gpg key
   copy:
-    src: "gpg"
+    src: "{{ dockergpgfile }}"
     dest: "/etc/pki/rpm-gpg/RPM-GPG-KEY-DockerCE"
   become: true
 
@@ -51,7 +53,7 @@
 - name: Verify the key using a fingerprint before importing
   rpm_key:
     key: "/etc/pki/rpm-gpg/RPM-GPG-KEY-DockerCE"
-    fingerprint: 060A 61C5 1B55 8A7F 742B 77AA C52F EB6B 621E 9F35
+    fingerprint: "{{ dockergpgfinger }}"
   become: true
 
 
@@ -78,6 +80,7 @@
   command: "docker --version"
   register: dockerver
   changed_when: false
+
 
 - name: check docker works
   assert:

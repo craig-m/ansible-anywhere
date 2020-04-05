@@ -1,11 +1,12 @@
 #
-# AnsibleAnywhere Vagrantfile
+# AnsibleAnywhere Vagrantfile 
+# https://www.vagrantup.com/docs/vagrantfile/
 #
 
 Vagrant.require_version ">= 2.2.7"
 
 MY_VM_RAM = "2048"
-MY_VM_CPU = "4"
+MY_VM_CPU = "2"
 MY_CODE_PATH = "/vagrant"
 MY_MNT_OPT = ["dmode=775,fmode=644"]
 VAGRANT_API_VER = "2"
@@ -34,6 +35,7 @@ Vagrant.configure("2") do |config|
     config.vm.box_check_update = false
     config.vm.hostname = "ansibleanywhere"
     config.vm.boot_timeout = 300
+    config.ssh.username = "vagrant"
     config.ssh.keep_alive = true
     config.ssh.forward_agent = false
     config.ssh.insert_key = true
@@ -128,7 +130,7 @@ Vagrant.configure("2") do |config|
     config.vm.provision "ansible_local" do |ansible|
         ansible.compatibility_mode = "2.0"
         ansible.playbook = "playbook-aa-vm.yml"
-        ansible.config_file = "/vagrant/vmsetup/ansible_vagrant.cfg"
+        ansible.config_file = "vmsetup/ansible_vagrant.cfg"
         ansible.install = false
         ansible.verbose = false
     end

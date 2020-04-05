@@ -1,6 +1,7 @@
 ---
 # vars file for epel
 
+epelrpmdlurl: "https://dl.fedoraproject.org/pub/epel/"
 epelrpm: "epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
 
 epelsha6: "sha256:e5ed9ecf22d0c4279e92075a64c757ad2b38049bcf5c16c4f2b75d5f6860dc0d"

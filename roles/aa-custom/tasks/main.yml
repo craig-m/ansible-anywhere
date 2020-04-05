@@ -4,9 +4,15 @@
 
 - name: check setup file
   stat:
-    path: "/vagrant/aa-custom_vars.example.yml"
+    path: "{{ aacodepath }}/aa-custom_vars.example.yml"
   register: aavardefault
   failed_when: false
+
+
+- name: check defaults vars exists
+  assert:
+    that:
+        - aavardefault.stat.exists
 
 
 # uses first vars file found
@@ -14,11 +20,9 @@
   include_vars: "{{ lookup('first_found', possible_files) }}"
   vars:
     possible_files:
-      - /vagrant/aa-custom_vars.yml
-      - /vagrant/aa-custom_vars.example.yml
+      - "{{ aacodepath }}/aa-custom_vars.yml"
+      - "{{ aacodepath }}/aa-custom_vars.example.yml"
 
 
 - name: include custom user tasks
   include: usertasks.yml
-  when:
-    - "{{ aa_user }} is defined"

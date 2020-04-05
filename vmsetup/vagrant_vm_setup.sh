@@ -1,19 +1,15 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 # The Virtual Machine image (Box) is an OS in a pre-installed (known) state.
 
-# If you have an automation system, and you want a reproducible outcome
-# then don't upgrade/patch to 'current'. Fixed verions are a trade off.
-# https://reproducible-builds.org/
-# https://www.kernel.org/doc/html/latest/kbuild/reproducible-builds.html
-
 
 if [[ root = "$(whoami)" ]]; then
-    echo "i am root";
+    echo "vagrant_vm_setup.sh running as root.";
 else
     echo "need to run as root"
     exit 1;
 fi
+
 
 # check SELinux is still enabled
 /usr/sbin/sestatus -b | head -n1 | awk '{print $3}' | grep -q "enabled" || { echo 'ERROR SELinux disabled'; exit 1; }
@@ -25,8 +21,19 @@ auditctl="/usr/sbin/auditctl"
 ${auditctl} -s | grep -q "enabled 1" || { echo 'ERROR auditd disabled'; exit 1; }
 
 
-# get patches - not a deterministic setup
-/usr/bin/yum upgrade -y
+# kernel ---------------------------------------------------------------------
+
+rmmod snd_intel8x0
+rmmod snd_ac97_codec
+rmmod snd_pcm
+rmmod snd_timer
+rmmod mmod pcspkr
+rmmod parport_pc
+rmmod i2c_piix4
+rmmod ppdev
+rmmod snd
+rmmod parport
+rmmod soundcore
 
 
 # Auditd rules ---------------------------------------------------------------
@@ -86,7 +93,7 @@ ${auditctl} -w /usr/bin/curl -p x -k net_tool_use
 ### These rules watch for code injection by the ptrace facility.
 ### This could indicate someone trying to do something bad or just debugging
 ${auditctl} -a always,exit -F arch=b32 -S ptrace -k tracing
-${auditctl} -a always,e xit -F arch=b64 -S ptrace -k tracing
+${auditctl} -a always,exit -F arch=b64 -S ptrace -k tracing
 ${auditctl} -a always,exit -F arch=b32 -S ptrace -F a0=0x4 -k code_injection
 ${auditctl} -a always,exit -F arch=b64 -S ptrace -F a0=0x4 -k code_injection
 ${auditctl} -a always,exit -F arch=b32 -S ptrace -F a0=0x5 -k data_injection
@@ -105,3 +112,14 @@ ${auditctl} -a always,exit -F arch=b32 -S rename -S renameat -S truncate -S chmo
 ${auditctl} -a always,exit -F arch=b64 -S rename -S renameat -S truncate -S chmod -S setxattr -S lsetxattr -S removexattr -S lremovexattr -F exit=-EACCES -k file_modification
 ${auditctl} -a always,exit -F arch=b32 -S rename -S renameat -S truncate -S chmod -S setxattr -S lsetxattr -S removexattr -S lremovexattr -F exit=-EPERM -k file_modification
 ${auditctl} -a always,exit -F arch=b64 -S rename -S renameat -S truncate -S chmod -S setxattr -S lsetxattr -S removexattr -S lremovexattr -F exit=-EPERM -k file_modification
+
+
+# patch ----------------------------------------------------------------------
+
+# If you have an automation system, and you want a reproducible outcome
+# then don't upgrade/patch to 'current'. Fixed verions are a trade off.
+
+# try x3 times to upgrade packages with security errata
+for n in {1..3}; do 
+    yum --security update && break || sleep 3s; 
+done

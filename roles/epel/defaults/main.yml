@@ -1,6 +1,4 @@
 ---
 # defaults file for epel
 
-epelrpmdlurl: "https://dl.fedoraproject.org/pub/epel/"
-
-epelinstdir: "/home/vagrant/downloads"
+epelpath: "/opt/epel/"

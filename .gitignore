@@ -5,7 +5,8 @@
 
 # python files
 **/__pycache__/
-aa.pyc
+*.pyc
+.pytest_cache/
 
 # copy aa-custom_vars.example.yml to aa-custom_vars.yml:
 aa-custom_vars.yml

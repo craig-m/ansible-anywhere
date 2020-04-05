@@ -4,7 +4,7 @@
 
 - name: copy MS GPG Key
   copy:
-    src: 'microsoft1.asc'
+    src: "{{ msgpgkeyname }}"
     dest: "/etc/pki/rpm-gpg/microsoft.asc"
     mode: 0640
   become: true
@@ -13,6 +13,7 @@
 - name: add rpm key
   rpm_key:
     key: "/etc/pki/rpm-gpg/microsoft.asc"
+    fingerprint: "{{ msgpgkeyid }}"
   become: true
 
 

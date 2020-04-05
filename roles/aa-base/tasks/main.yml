@@ -52,3 +52,11 @@
 
 - name: custom fact scripts
   include: aafacts.yml
+
+
+- name: copy ansible to system wide path
+  copy:
+    src: "{{ aacodepath }}/ansible.cfg"
+    dest: /etc/ansible/ansible.cfg
+    mode: 0644
+  become: true

@@ -11,6 +11,9 @@ import sys
 import platform
 import time
 import json
+import re
+import pprint
+import shutil
 # aa.py
 import aa
 # Invoke https://www.pyinvoke.org
@@ -33,13 +36,14 @@ def aa_update(c):
 @task
 def rm_art(c):
     """ delete ansible-runner artifacts. """
-    import shutil
     arts = c.aai.dir_base + "/runner-output/artifacts"
     print("cleaning up:",arts)
     files = os.listdir(arts)
     for artrm in files:
-        shutil.rmtree(arts + '/' + artrm)
-        #print('removing ' + arts + '/' + artrm)
+        # regex check folder has a uuid (rfc4122) name
+        if re.match(r'^[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}$', artrm):
+            #print('removing ' + arts + '/' + artrm)
+            shutil.rmtree(arts + '/' + artrm)
     print("done.")
 
 @task
@@ -67,12 +71,12 @@ def aa_play(c):
     print("Using ansible_runner py int with " + aarunplayyml + " on localhost")
     import ansible_runner
     r = ansible_runner.run(
-        private_data_dir = codebase + '/runner-output/', 
+        artifact_dir = codebase + '/runner-output/artifacts', 
+        private_data_dir = codebase, 
         inventory = codebase + '/localhost.ini', 
         playbook = codebase + "/" + aarunplayyml,
         quiet = 'true')
     print("\nFinal status:")
-    import pprint
     pp = pprint.PrettyPrinter(indent=4)
     pp.pprint(r.stats)
     print('\n')
@@ -93,7 +97,7 @@ def aa_role_run(c, rolename):
         print("ERROR the role '" + rolename + "' does not exist!")
         sys.exit(1)
     c.run('ansible-runner \
-        run --quiet --inventory ' + codebase + '/localhost.ini \
+        run --inventory ' + codebase + '/localhost.ini \
         --rotate-artifacts 20 -r ' + rolename + ' -v \
         --roles-path ' + rolebase + ' \
         --artifact-dir ' + arts + ' /home/vagrant/tmp/', pty=True)
@@ -121,9 +125,11 @@ def aa_role_play(c, rolename):
 @task
 def mol(c, rolename):
     """ test an Ansible role with molecule. """
-    aai_checkroledir(rolename)
     print("testing " + rolename)
     rolebase = c.aai.dir_roles
+    if not os.path.exists(rolebase + "/" + rolename):
+        print('ERROR role does not exist')
+        sys.exit(1)
     with c.cd(rolebase + "/" + rolename):
         c.run('molecule test', pty=True)
 
@@ -131,10 +137,17 @@ def mol(c, rolename):
 def newrole(c, rolename):
     """ create a new ansible role. """
     rolebase = c.aai.dir_roles
-    if not os.path.exists(rolebase + "/" + rolename):
-        print("creating " + rolename)
-        with c.cd(rolebase):
-            c.run('molecule init role ' + rolename, pty=True)
+    if len(rolename) >= 20:
+        print('ERROR must be under 20 char')
+        sys.exit(1)
+    if re.match(r'^[a-z0-9-]+$', rolename):
+        if not os.path.exists(rolebase + "/" + rolename):
+            print("creating " + rolename)
+            with c.cd(rolebase):
+                c.run('molecule init role ' + rolename, pty=True)
+        else:
+            print('ERROR ' + rolename + ' exists already')
+            sys.exit(1)
     else:
-        print('ERROR ' + rolename + ' exists already')
+        print('ERROR name of role must only contain: lowercase, numbers, and dash ("-").')
         sys.exit(1)

@@ -1,19 +1,4 @@
 ---
 # tasks file for ms-linux-repo
 
-
-
-- name: add ms apt key
-  apt_key:
-    id: "{{ msgpgkeyid }}"
-    file: "{{ mssrcpath }}/microsoft.asc"
-    state: present
-  become: true
-
-
-#- name: add apt repo
-#  apt_repository:
-#    repo: [arch=amd64] https://packages.microsoft.com/ubuntu/16.04/prod xenial main
-#    state: present
-#    filename: microsfot-dot-com
-#  become: true
+# ToDo

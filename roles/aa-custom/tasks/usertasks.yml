@@ -6,11 +6,6 @@
   timezone:
     name: "{{ aa_user.aavm_timezone }}"
   become: true
-  when: aa_user.aavm_timezone is defined
-
-
-- debug:
-    msg: "creating user {{ aa_user.username }} "
 
 
 - name: create user specified account
@@ -23,9 +18,6 @@
     ssh_key_file: .ssh/id_rsa
     create_home: true
   become: true
-  when:
-    - aa_user.username is defined
-    - aa_user.name is defined
 
 
 - name: install users packages
@@ -35,4 +27,3 @@
   retries: 3
   with_items: "{{ aa_yum_install }}"
   become: true
-  when: aa_yum_install is defined

@@ -75,6 +75,7 @@ if [ ! -f ~/.local/bin/pip ]; then
         logit "saved ${pipget_local}"
     else
         logit "ERROR: failed to get ${pipget_file}"
+        exit 1;
     fi
 
     # verify

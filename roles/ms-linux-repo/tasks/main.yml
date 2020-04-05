@@ -4,7 +4,7 @@
 
 - name: create dir
   file:
-    path: "{{ mssrcpath }}"
+    path: "{{ mspath }}"
     state: directory
     owner: "root"
     group: "root"
@@ -15,6 +15,7 @@
 - name: CentOS tasks
   include: CentOS.yml
   when: ansible_distribution == "CentOS"
+
 
 - name: Ubuntu tasks
   include: Ubuntu.yml
