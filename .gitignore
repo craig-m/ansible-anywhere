@@ -5,12 +5,14 @@
 
 # python files
 **/__pycache__/
-aa.pyc
+*.pyc
+.pytest_cache/
 
-# copy local_vars.example.yml to:
-local_vars.yml
+# copy aa-custom_vars.example.yml to aa-custom_vars.yml:
+aa-custom_vars.yml
+aa-custom_vars.bak
 
-gitignore/
+gitignore/*
 runner-output/artifacts/*
 
 # VS Code ignore

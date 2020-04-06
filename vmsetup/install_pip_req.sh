@@ -10,8 +10,8 @@
 # functions
 #
 logit() {
-  echo -e "$1 \\n";
-  logger "$1";
+    echo -e "$1 \\n";
+    logger "$1";
 }
 
 
@@ -27,6 +27,7 @@ if [ $? -eq 0 ]; then
     echo "can sudo ok"
 else
     logit "ERROR: no sudo"
+    exit 1;
 fi
 
 
@@ -59,7 +60,6 @@ fi
 
 # install pip if missing
 if [ ! -f ~/.local/bin/pip ]; then
-
     logit "missing pip will install"
 
     # vars
@@ -75,6 +75,7 @@ if [ ! -f ~/.local/bin/pip ]; then
         logit "saved ${pipget_local}"
     else
         logit "ERROR: failed to get ${pipget_file}"
+        exit 1;
     fi
 
     # verify
@@ -83,7 +84,7 @@ if [ ! -f ~/.local/bin/pip ]; then
         echo "good sha512 of get-pip.py"
     else
         echo "BAD checksum of get-pip.py"
-        exit 1
+        exit 1;
     fi
 
     # install pip with get-pip.py

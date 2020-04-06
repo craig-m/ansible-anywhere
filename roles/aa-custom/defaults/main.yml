@@ -1,0 +1,4 @@
+---
+# defaults file for aa-custom
+
+aacodepath: "/vagrant"

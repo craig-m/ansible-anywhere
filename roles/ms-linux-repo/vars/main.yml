@@ -1,4 +1,6 @@
 ---
 # vars file for ms-linux-repo
 
+msgpgkeyname: "microsoft1.asc"
+
 msgpgkeyid: "BC528686B50D79E339D3721CEB3E94ADBE1229CF"

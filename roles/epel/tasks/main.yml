@@ -2,42 +2,52 @@
 # tasks file for epel
 
 
-- name: 'check our OS is supported'
+- name: check our OS is supported
   assert:
     that:
       - ansible_distribution == "CentOS"
 
 
-- name: 'check our vars are defined'
+- name: check our vars are defined
   assert:
     that:
     - epelrpm is defined
-    - epelinstdir is defined
+    - epelpath is defined
 
 
-- name: 'check we have setup rpm'
+- name: create epel dir
+  file:
+    path: "{{ epelpath }}"
+    state: directory
+    owner: "root"
+    group: "{{ ansible_user_id }}"
+    mode: '0775'
+  become: true
+
+
+- name: check we have setup rpm
   stat:
-    path: "{{ epelinstdir }}/{{ epelrpm }}"
+    path: "{{ epelpath }}/{{ epelrpm }}"
   register: epelhaverpm
   failed_when: false
 
 
-- name: 'setup epel'
+- name: setup epel
   block:
-    - name: 'get and check rpm'
+    - name: get and check rpm
       get_url:
         url: "{{ epelrpmdlurl }}{{ epelrpm }}"
-        dest: "{{ epelinstdir }}"
+        dest: "{{ epelpath }}"
         checksum:  "{{ lookup('vars', 'epelsha{{ ansible_distribution_major_version }}') }}"
-    - name: 'install the rpm'
+    - name: install the rpm
       yum:
-        name: "{{ epelinstdir }}/{{ epelrpm }}"
+        name: "{{ epelpath }}/{{ epelrpm }}"
         state: present
       become: true
   when: not epelhaverpm.stat.exists
 
 
-- name: 'check epel files'
+- name: check epel files in place
   block:
     - name: 'yum yum.repos.d file '
       stat:
@@ -49,7 +59,7 @@
       register: epelcheck_gpg
 
 
-- name: 'check rpm installed ok'
+- name: check rpm installed ok
   assert:
     that:
         - epelcheck_repo.stat.exists

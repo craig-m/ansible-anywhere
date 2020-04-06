@@ -2,21 +2,22 @@
 # tasks file for ms-linux-repo
 
 
-- name: 'copy MS GPG Key'
+- name: copy MS GPG Key
   copy:
-    src: 'microsoft1.asc'
+    src: "{{ msgpgkeyname }}"
     dest: "/etc/pki/rpm-gpg/microsoft.asc"
     mode: 0640
   become: true
 
 
-- name: 'add rpm key'
+- name: add rpm key
   rpm_key:
     key: "/etc/pki/rpm-gpg/microsoft.asc"
+    fingerprint: "{{ msgpgkeyid }}"
   become: true
 
 
-- name: 'Add MS Yum Repo'
+- name: Add MS Yum Repo
   yum_repository:
     name: microsoft-com-prod
     description: Microsoft YUM repo

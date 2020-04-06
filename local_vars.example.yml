@@ -1,8 +1,0 @@
----
-#
-# A local config file (excluded from git). Use is optional.
-#
-# To use copy "local_vars.example.yml" to "local_vars.yml".
-#
-local_my_name: "random person"
-local_my_email: "random.person@example.com"

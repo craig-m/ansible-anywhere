@@ -10,7 +10,7 @@ Using Redis to hold ansible fact cache improves perfomance.
 Requirements
 ------------
 
-That redis is in your apt/yum/other repository. This role installs with the 'package' module.
+That redis is in your apt/yum/other repository (installs with ansible's generic 'package' module).
 
 On CentOS you can run `epel` role first.
 
