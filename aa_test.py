@@ -1,6 +1,7 @@
 import pytest
 import testinfra
 
+
 def test_redis_service(host):
     redis = host.service("redis")
     assert redis.is_running

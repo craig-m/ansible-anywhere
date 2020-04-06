@@ -14,11 +14,28 @@ import json
 import re
 import pprint
 import shutil
-# aa.py
-import aa
 # Invoke https://www.pyinvoke.org
 from invoke import *
 
+def aai_env_check():
+    """ check the environment is ok """
+    userid = os.getuid()
+    if userid == 0:
+        print ("ERROR do not run as root.")
+        sys.exit(1)
+    # check the x.x min version of python we can run under
+    # https://docs.python.org/3.6/contents.html
+    pyvmax = 3
+    pyvmin = 6
+    curpyvmax = sys.version_info.major
+    curpyvmin = sys.version_info.minor
+    if not (curpyvmax == pyvmax and curpyvmin >= pyvmin):
+        print("You have python: \t{}.{}".format(curpyvmax, curpyvmin))
+        print("Required at least: \t{}.{}".format(pyvmax, pyvmin))
+        print("ERROR. Bye!")
+        sys.exit(1)
+
+aai_env_check()
 
 # Tasks ----------------------------------------------------------------------
 

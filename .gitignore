@@ -12,7 +12,7 @@
 aa-custom_vars.yml
 aa-custom_vars.bak
 
-gitignore/
+gitignore/*
 runner-output/artifacts/*
 
 # VS Code ignore
