@@ -93,7 +93,7 @@ Vagrant.configure("2") do |config|
         libv.cpus = MY_VM_CPU
         libv.disk_bus = "virtio"
         #override.vm.synced_folder ".", MY_CODE_PATH, type: "rsync", mount_options: MY_MNT_OPT
-        config.vm.synced_folder ".", MY_CODE_PATH, type: "nfs", mount_options: MY_MNT_OPT
+        config.vm.synced_folder ".", MY_CODE_PATH, type: "nfs"
     end  
 
 
@@ -128,6 +128,12 @@ Vagrant.configure("2") do |config|
     # I would prefer not to "curl --[tls]--> sudo shell" and to use a set version of get-pip.
     #
     config.vm.provision "ansible_local" do |ansible|
+        ansible.groups = {
+            "ansibleanywhere" => ["ansibleanywhere"]
+        }
+        ansible.extra_vars = {
+            aacodepath: MY_CODE_PATH
+        }
         ansible.compatibility_mode = "2.0"
         ansible.playbook = "playbook-aa-vm.yml"
         ansible.config_file = "vmsetup/ansible_vagrant.cfg"
