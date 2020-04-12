@@ -23,17 +23,19 @@ ${auditctl} -s | grep -q "enabled 1" || { echo 'ERROR auditd disabled'; exit 1; 
 
 # kernel ---------------------------------------------------------------------
 
-rmmod snd_intel8x0
-rmmod snd_ac97_codec
-rmmod snd_pcm
-rmmod snd_timer
-rmmod mmod pcspkr
-rmmod parport_pc
-rmmod i2c_piix4
-rmmod ppdev
-rmmod snd
-rmmod parport
-rmmod soundcore
+cat <<EOF >/etc/modprobe.d/vm-blacklist.conf
+blacklist snd_intel8x0
+blacklist snd_ac97_codec
+blacklist snd_pcm
+blacklist snd_timer
+blacklist pcspkr
+blacklist parport_pc
+blacklist i2c_piix4
+blacklist ppdev
+blacklist snd
+blacklist parport
+blacklist soundcore
+EOF
 
 
 # Auditd rules ---------------------------------------------------------------
@@ -45,7 +47,7 @@ ${auditctl} -D
 ## Kernel module loading and unloading
 ${auditctl} -a always,exit -F perm=x -F auid!=-1 -F path=/sbin/insmod -k modules
 ${auditctl} -a always,exit -F perm=x -F auid!=-1 -F path=/sbin/modprobe -k modules
-${auditctl} -a always,exit -F perm=x -F auid!=-1 -F path=/sbin/rmmod -k modules
+${auditctl} -a always,exit -F perm=x -F auid!=-1 -F path=/sbin/blacklist -k modules
 ${auditctl} -a always,exit -F arch=b64 -S finit_module -S init_module -S delete_module -F auid!=-1 -k modules
 ${auditctl} -a always,exit -F arch=b32 -S finit_module -S init_module -S delete_module -F auid!=-1 -k modules
 ## Modprobe configuration
