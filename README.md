@@ -25,10 +25,12 @@ There are other tools I want to use Ansible with (like DB or Web servers), but I
 
 I need to run these daemons in isolation, and have my different projects stay private from each other 📦📦📦, while keeping my Desktop/Laptop as clean of crummy software as possible (all code is bad code).
 
-This is why I am using a VM, the offical [CentOS 7](https://app.vagrantup.com/centos/boxes/7/versions/1905.1) [Vagrant](https://github.com/hashicorp/vagrant) box, which is built for:
+This is why I am using a CentOS 8 VM.
+
+This box has been built for:
 
 * [VirtualBox](https://www.virtualbox.org/) (MacOS, Linux, Win, FreeBSD)
-* [VMwareFusion](https://www.vmware.com/au/products/fusion.html)
+* [VMware](https://www.vmware.com/au/products/fusion.html)
 * [libvirt](https://en.wikipedia.org/wiki/Libvirt) (Red Hat developed, manages KVM, Xen, VMware ESXi, QEMU)
 * [Hyper-V](https://docs.microsoft.com/en-us/windows-server/virtualization/hyper-v/hyper-v-technology-overview) (Win 8-10, Server 2012)
 
@@ -52,13 +54,15 @@ You can build a box and run it locally, then then build another box (with the sa
 
 ##### Vagrant plugins
 
-As per their [box release notes](https://blog.centos.org/2019/07/updated-centos-vagrant-images-available-v1905-01/) we also need this [plugin](https://www.vagrantup.com/docs/plugins/) if we use VirtualBox.
+You might also need to install one of these [plugins](https://www.vagrantup.com/docs/plugins/).
+
+For VirtualBox
 
 ```
 vagrant plugin install vagrant-vbguest
 ```
 
-If you use LibVirt you'll need a plugin:
+If you use LibVirt:
 
 ```
 vagrant plugin install vagrant-libvirt

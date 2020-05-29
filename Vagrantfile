@@ -31,7 +31,9 @@ Vagrant.configure("2") do |config|
     # Box and VM config
     #
 
-    config.vm.box = "centos/7"
+    config.vm.box = "generic/centos8"
+    config.vm.box_version = "2.0.6"
+
     config.vm.box_check_update = false
     config.vm.hostname = "ansibleanywhere"
     config.vm.boot_timeout = 300
@@ -51,22 +53,21 @@ Vagrant.configure("2") do |config|
     #
     config.vm.synced_folder ".", "/vagrant", disabled: true
     #
-    # --- Virtual Box ---
+    # --- VirtualBox ---
     config.vm.provider :virtualbox do |vbox, override|
         override.vm.box_download_checksum_type = "sha256"
-        override.vm.box_download_checksum = "de768cf0180d712a6eac1944bd78870c060999a8b6617f8f9af98ddbb9f2d271"
-        override.vm.box_url = "https://cloud.centos.org/centos/7/vagrant/x86_64/images/CentOS-7-x86_64-Vagrant-1905_01.VirtualBox.box"
+        override.vm.box_download_checksum = "fbd1cead041411b9d1ec55a5e7f5ac02a16d91a62fb9db2839a46bb4eeaee210"
         vbox.memory = MY_VM_RAM
         vbox.cpus = MY_VM_CPU
         vbox.gui = false
         vbox.name = "ansibleanywhere"
         override.vm.synced_folder ".", MY_CODE_PATH, type: "virtualbox", mount_options: MY_MNT_OPT
     end
-    # --- Windows Hyper-V ---
+    # --- HyperV ---
     config.vm.provider :hyperv do |hpv, override|
         override.vm.box_download_checksum_type = "sha256"
         override.vm.box_download_checksum = "8116101e3b56306626e848b4e4be3242480f0d30cf0a177e75bea3fbb51595bf"
-        override.vm.box_url = "https://cloud.centos.org/centos/7/vagrant/x86_64/images/CentOS-7-x86_64-Vagrant-1905_01.HyperV.box"
+        #override.vm.box_url = "https://vagrantcloud.com/generic/boxes/centos8/versions/2.0.6/providers/hyperv.box"
         hpv.memory = MY_VM_RAM
         hpv.maxmemory = MY_VM_RAM
         hpv.cpus = MY_VM_CPU
@@ -75,11 +76,11 @@ Vagrant.configure("2") do |config|
         #override.vm.synced_folder ".", MY_CODE_PATH, type: "smb", mount_options: MY_MNT_OPT, create: true
         override.vm.synced_folder ".", MY_CODE_PATH, type: "rsync", mount_options: MY_MNT_OPT
     end
-    # --- VMWare Fusion ---
+    # --- VMWare ---
     config.vm.provider :vmware_desktop do |vmd, override|
         override.vm.box_download_checksum_type = "sha256"
-        override.vm.box_download_checksum = "8749ba6b2d96e7ad861079113e30e78fa6d12ca17e2e1d78471b02d5d7fb35b2"
-        override.vm.box_url = "https://cloud.centos.org/centos/7/vagrant/x86_64/images/CentOS-7-x86_64-Vagrant-1905_01.VMwareFusion.box"
+        override.vm.box_download_checksum = ""
+        #override.vm.box_url = "https://vagrantcloud.com/generic/boxes/centos8/versions/2.0.6/providers/vmware_desktop.box"
         vmd.memory = MY_VM_RAM
         vmd.gui = false
         override.vm.synced_folder ".", MY_CODE_PATH, type: "rsync", mount_options: MY_MNT_OPT
@@ -87,8 +88,8 @@ Vagrant.configure("2") do |config|
     # --- Libvirt ---
     config.vm.provider :libvirt do |libv, override|
         override.vm.box_download_checksum_type = "sha256"
-        override.vm.box_download_checksum = "fb64ff0b466a897d457753c92485907f62f38ec9301ebf1cce1d4904272a5c34"
-        override.vm.box_url = "https://cloud.centos.org/centos/7/vagrant/x86_64/images/CentOS-7-x86_64-Vagrant-1905_01.Libvirt.box"
+        override.vm.box_download_checksum = ""
+        #override.vm.box_url = "https://vagrantcloud.com/generic/boxes/centos8/versions/2.0.6/providers/libvirt.box"
         libv.memory = MY_VM_RAM
         libv.cpus = MY_VM_CPU
         libv.disk_bus = "virtio"

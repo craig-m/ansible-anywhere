@@ -6,5 +6,4 @@
     - aa-base
     - epel
     - redis
-    - docker-ce-centos
     - aa-custom

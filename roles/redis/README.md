@@ -3,9 +3,9 @@ Redis
 
 Simple role to install [Redis](https://redis.io/), then start + enable + test the service.
 
-Created by: `[vagrant@ansibleanywhere roles]$  redis`
+Created by: `[vagrant@ansibleanywhere vagrant]$ invoke newrole redis`
 
-Using Redis to hold ansible fact cache improves perfomance.
+Using Redis [cache plugin](https://docs.ansible.com/ansible/latest/plugins/cache/redis.html) to hold ansible fact cache improves perfomance.
 
 Requirements
 ------------

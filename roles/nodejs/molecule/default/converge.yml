@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include nodejs"
+      include_role:
+        name: "nodejs"

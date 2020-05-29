@@ -1,0 +1,30 @@
+{
+  "name": "ansibleanywhere",
+  "version": "1.0.0",
+  "description": "Ansible Anywhere dev env",
+  "main": "index.html",
+  "scripts": {
+    "test": "true"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/craig-m/ansible-anywhere.git"
+  },
+  "keywords": [
+    "ansible",
+    "vagrant",
+    "infrastructure-as-code"
+  ],
+  "author": "crgm",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/craig-m/ansible-anywhere/issues"
+  },
+  "homepage": "https://github.com/craig-m/ansible-anywhere#readme",
+  "dependencies": {
+    "bootstrap": "^4.4.1",
+    "jquery": "^3.5.0",
+    "popper.js": "^1.16.1"
+  },
+  "devDependencies": {}
+}

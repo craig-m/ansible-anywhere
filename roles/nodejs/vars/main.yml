@@ -1,0 +1,9 @@
+---
+# vars file for nodejs
+
+nodejsver: "13.12.0"
+
+nodejsfile: "node-v{{ nodejsver }}-linux-x64.tar.xz"
+nodejsurl: "https://nodejs.org/dist/v{{ nodejsver }}/{{ nodejsfile }}"
+
+nodejssha: "sha256:95eb1188872e243323cbc31fc80048be3fdfdda91505c62c80c599281de357ed"

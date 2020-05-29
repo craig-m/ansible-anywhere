@@ -1,0 +1,35 @@
+---
+# tasks file for nodejs
+
+
+- name: create dir
+  file:
+    path: "{{ nodepath }}"
+    state: directory
+    owner: "root"
+    group: "{{ ansible_user_id }}"
+    mode: '0775'
+  become: true
+
+
+- name: get nodejs bin
+  get_url:
+    url: "{{ nodejsurl }}"
+    dest: "{{ nodepath }}{{ nodejsfile }}"
+    checksum: "{{ nodejssha }}"
+  register: nodejsdl
+
+
+- name: extract nodejs
+  unarchive:
+    src: "{{ nodepath }}{{ nodejsfile }}"
+    dest: "{{ nodepath }}"
+  when: nodejsdl.changed
+
+
+- name: add to path for all users
+  template:
+    src: nodejspath_sh.j2
+    dest: /etc/profile.d/nodejspath.sh
+    mode: 0644
+  become: true
