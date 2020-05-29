@@ -1,0 +1,41 @@
+---
+# tasks file for redis
+
+
+- name: install redis
+  package:
+    name: redis
+    state: present
+  become: true
+
+- name: install redis python lib
+  package:
+    name: python3-redis
+    state: present
+  become: true
+
+
+- name: enable redis
+  service:
+    name: redis
+    enabled: yes
+  become: true
+
+
+- name: start redis
+  service:
+    name: redis
+    state: started
+  become: true
+
+
+- name: do a redis ping to check
+  command: "redis-cli -h localhost -p 6379 ping"
+  register: redissrv
+  changed_when: false
+
+
+- name: check redis works
+  assert:
+    that:
+      - "'PONG' in redissrv.stdout"

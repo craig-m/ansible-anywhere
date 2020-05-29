@@ -1,0 +1,20 @@
+---
+# vars file for epel
+
+epelrpmdlurl: "https://dl.fedoraproject.org/pub/epel/"
+epelrpm: "epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
+
+
+# https://getfedora.org/security/
+
+# 6
+epelsha6: "sha256:e5ed9ecf22d0c4279e92075a64c757ad2b38049bcf5c16c4f2b75d5f6860dc0d"
+epelgpgprint6: "8C3BE96AF2309184DA5C0DAE3B49DF2A0608B895"
+
+# 7
+epelsha7: "sha256:d6bb83c00ab3af26ded56459e7d6fceabfef66efbe0780b4dedbe81d62c07cd5"
+epelgpgprint7: "91E97D7C4A5E96F17F3E888F6A2FAEA2352C64E5"
+
+# 8
+epelsha8: "sha256:cbbe021f2de1e48687c45c4830b38e8e08895ef362d12d83c990d7b60a8d3528"
+epelgpgprint8: "94E279EB8D8F25B21810ADF121EA45AB2F86D6A1"

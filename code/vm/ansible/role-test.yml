@@ -1,0 +1,36 @@
+---
+# A simple role for testing.
+
+
+- name: localhost play
+  hosts: localhost
+  gather_facts: yes
+  vars:
+    testmsg: "testing var OK"
+  tasks:
+
+    - name: 'check var is set'
+      assert:
+        that:
+          - 'testmsg is defined'
+
+- name: all hosts play
+  hosts: all
+  gather_facts: yes
+  tasks:
+
+  - name: host up
+    action: ping
+
+  - name: Display hostname
+    debug:
+      msg: "inventory_hostname {{ inventory_hostname }}"
+
+  - name: 'get ansible user $HOME'
+    command: "echo $HOME"
+    register: accounthomedir
+    changed_when: false
+
+  - name: Display ansible user
+    debug:
+      msg: "home dir {{ accounthomedir.stdout }}"

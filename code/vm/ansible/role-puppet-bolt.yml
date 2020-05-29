@@ -1,0 +1,39 @@
+---
+# Install Puppet Bolt on RHEL/CentOS 8
+# https://puppet.com/docs/bolt/
+#
+# To use on localhost:
+#
+# ansible-playbook --connection=local -i "127.0.0.1," role-puppet-bolt.yml
+
+- name: Install puppet bolt
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: check we have Puppet Labs setup rpm
+      stat:
+        path: "/etc/pki/rpm-gpg/RPM-GPG-KEY-puppet-tools-release"
+      register: havepupkey
+      failed_when: false
+    - name: get puppet rpm
+      block:
+        - name: get and check rpm
+          get_url:
+            url: "https://yum.puppet.com/puppet-tools-release-el-8.noarch.rpm"
+            dest: "/tmp/puppet-tools-release-el-8.noarch.rpm"
+            checksum: "sha256:b816e605a3024a122023916e82588f292071e2180366520e7d1383230f290965"
+        - name: install the rpm
+          yum:
+            name: "/tmp/puppet-tools-release-el-8.noarch.rpm"
+            state: present
+          become: true
+        - name: mark rpm key as trusted
+          rpm_key:
+            key: "/etc/pki/rpm-gpg/RPM-GPG-KEY-puppet-tools-release"
+            fingerprint: "6F6B15509CF8E59E6E469F327F438280EF8D349F"
+          become: true
+      when: not havepupkey.stat.exists
+    - name: install bolt
+      package:
+        name: puppet-bolt
+        state: present

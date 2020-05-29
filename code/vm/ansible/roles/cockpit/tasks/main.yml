@@ -1,0 +1,44 @@
+---
+# tasks file for cockpit
+
+- name: cockpit package
+  dnf:
+    name: cockpit
+    state: present
+
+- name: install these tools
+  package:
+    name: "{{ item.add_item }}"
+    state: present
+  with_items: "{{ package_install }}"
+
+
+- name: io.podman.service
+  service:
+    name: io.podman.service
+    state: started
+    enabled: yes
+
+- name: turn on socket
+  service:
+    name: cockpit.socket
+    state: started
+    enabled: yes
+
+
+- name: open firewall ports
+  firewalld:
+    port: 9090/tcp
+    zone: public
+    permanent: yes
+    state: enabled
+
+- name: Pause until web ui is up
+  uri:
+    url: "http://localhost:9090/"
+    follow_redirects: none
+    method: GET
+  register: _result
+  until: _result.status == 200
+  retries: 30
+  delay: 5 # seconds

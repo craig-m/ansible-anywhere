@@ -1,0 +1,224 @@
+---
+
+#
+# setup admin VM
+#
+
+- name: setup centos8vm
+  hosts: all
+  gather_facts: no
+
+  vars:
+
+    # create this user
+    cos8_user_name: "vmuser"
+    #cos8_user_pass: "1insecure1"
+    # install these packages if missing
+    package_install: [
+      { add_item: 'man-pages' },
+      { add_item: 'man-db' },
+      { add_item: 'man' },
+      { add_item: 'lsof' },
+      { add_item: 'tmux' },
+      { add_item: 'vim' },
+      { add_item: 'git' },
+      { add_item: 'nmap' },
+      { add_item: 'tcpdump' },
+      { add_item: 'socat' },
+      { add_item: 'expect' },
+      { add_item: 'jq' },
+      { add_item: 'net-tools' },
+      { add_item: 'python36-devel' },
+      { add_item: 'python3-dns' },
+      { add_item: 'python3-pip' },
+      { add_item: 'python3-virtualenv' },
+      { add_item: 'python3-setuptools' }
+    ]
+    # install these groups if missing
+    package_install_grp: [
+      { add_item: '@Development tools' }
+    ]
+    # ensure these packages are absent
+    package_remove: [
+      { del_item: 'python2' },
+      { del_item: 'telnet' }
+    ]
+    create_folders: [
+      { dir: '/root/tmp/', mode: '0700', owner: 'root', group: 'root' },
+      { dir: '/mnt/sshfs/', mode: '0775', owner: 'root', group: 'root' }
+    ]
+    # if cockpit is up, also install:
+    cockpit_podman_tool: [
+      { add_item: 'cockpit-podman' },
+      { add_item: 'buildah' },
+      { add_item: 'lorax-composer' },
+      { add_item: 'cockpit-composer' }
+    ]
+
+
+  tasks:
+
+    - name: OS user accounts
+      block:
+        - name: createaccount
+          user:
+            name: "{{ cos8_user_name }}"
+            comment: "cos 8 user"
+            groups: wheel
+            shell: /bin/bash
+            generate_ssh_key: yes
+            ssh_key_bits: 2048
+            ssh_key_file: .ssh/id_rsa
+            create_home: true
+            password: "{{ '1insecure1' | password_hash('sha512', 'salty') }}"
+            update_password: always
+
+
+    - name: packages
+      block:
+        - name: install rpm
+          package:
+            name: "{{ item.add_item }}"
+            state: present
+          retries: 3
+          with_items: "{{ package_install }}"
+        - name: remove rpm
+          package:
+            name: "{{ item.del_item }}"
+            state: absent
+          with_items: "{{ package_remove }}"
+        - name: install package groups
+          yum:
+            name: "{{ item.add_item }}"
+            state: present
+          with_items: "{{ package_install_grp }}"
+
+
+    - name: Create common folders
+      file:
+        path: "{{ item.dir }}"
+        state: directory
+        mode: "{{ item.mode }}"
+        owner: "{{ item.owner }}"
+        group: "{{ item.group }}"
+      with_items: "{{ create_folders }}"
+
+
+    - name: test dns lookup
+      debug: msg="some A records for centos.org are {{ item }}"
+      with_items: "{{ lookup('dig', 'centos.org./A', wantlist=False) }}"
+
+
+    - name: Python pip env
+      block:
+        - name: requirements file
+          copy:
+            dest: "/home/{{ cos8_user_name }}/requirements.txt"
+            mode: 0644
+            owner:  "{{ cos8_user_name }}"
+            group:  "{{ cos8_user_name }}"
+            content: |
+              #
+              # The tools/libs we want from The Python Package Index (PyPI).
+              # PyPI is hosted by the Python Software Foundation (psf).
+              #
+              invoke
+              ansible-runner
+              ansible-lint
+              molecule
+              docker
+              podman-compose
+              pytest
+              testinfra
+              redis
+              dnspython
+        - name: install requirements
+          pip:
+            requirements: "/home/{{ cos8_user_name }}/requirements.txt"
+            virtualenv: "/home/{{ cos8_user_name }}/venv/"
+          become: true
+          become_user: "{{ cos8_user_name }}"
+
+
+    - name: ansible setup
+      block:
+        - name: check if ansible is installed
+          stat:
+            path: "/etc/ansible/ansible.cfg"
+          register: ansible_inst
+        - name: make facts dir
+          file:
+            path: /etc/ansible/facts.d/
+            state: directory
+        - name: custom fact script
+          copy:
+            dest: "/etc/ansible/facts.d/cos8vm.fact"
+            mode: 0755
+            owner: root
+            group: root
+            content: |
+              #!/usr/bin/env python3
+              # example of ansible custom fact script
+              import os
+              import sys
+              import platform
+              import datetime
+              import json
+              # var:
+              date = str(datetime.datetime.now())
+              centos8vm_dir = str(os.path.isdir('/etc/centos8vm/'))
+              # build ID
+              bid_file = open("/etc/centos8vm/build_id.txt")
+              bid_line = bid_file.read().replace("\n", "")
+              bid_file.close()
+              # VM ID
+              vid_file = open("/etc/centos8vm/vm_id.txt")
+              vid_line = vid_file.read().replace("\n", "")
+              vid_file.close()
+              # output
+              print(json.dumps({
+                  "time" : date,
+                  "build_id" : bid_line,
+                  "vm_id" : vid_line,
+                  "centos8vmdir" : centos8vm_dir
+              }))
+        - name: refresh ansible facts
+          setup: ~
+        - name: check centos8vmdir fact set
+          assert:
+            that:
+              - ansible_local.cos8vm.build_id is defined
+              - ansible_local.cos8vm.vm_id is defined
+        - name: Display build_id
+          debug:
+            msg: "build_id {{ ansible_local.cos8vm.build_id }}"
+        - name: Display vm_id
+          debug:
+            msg: "vm_id {{ ansible_local.cos8vm.vm_id }}"
+
+
+    - name: cockpit and podman tasks
+      block:
+        - name: check if cockpit is up
+          uri:
+            url: "http://localhost:9090/"
+            follow_redirects: none
+            method: GET
+          failed_when:
+          register: cp_result
+        - name: install cockpit tools
+          dnf:
+            name: "{{ item.add_item }}"
+            state: present
+          with_items: "{{ cockpit_podman_tool }}"
+          when: cp_result.status == 200
+        - name: start lorax
+          service:
+            name: cockpit.socket
+            state: started
+            enabled: yes
+
+
+    - name: Finished
+      debug:
+        msg: "Finished."

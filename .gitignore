@@ -9,8 +9,6 @@
 .pytest_cache/
 
 # copy aa-custom_vars.example.yml to aa-custom_vars.yml:
-aa-custom_vars.yml
-aa-custom_vars.bak
 
 gitignore/*
 runner-output/artifacts/*

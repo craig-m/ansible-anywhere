@@ -1,0 +1,10 @@
+---
+# vars file for podman
+
+package_install: [
+  { add_item: 'podman' },
+  { add_item: 'podman-docker' },
+  { add_item: 'podman-manpages' },
+  { add_item: 'composer-cli' },
+  { add_item: 'bash-completion' }
+]

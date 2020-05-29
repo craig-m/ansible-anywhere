@@ -1,0 +1,29 @@
+---
+# tasks file for podman
+
+- name: install podman and tools
+  dnf:
+    name: "{{ item.add_item }}"
+    state: present
+  with_items: "{{ package_install }}"
+
+- name: turn on io.podman.service
+  service:
+    name: io.podman.service
+    state: started
+    enabled: yes
+
+- name: turn on io.podman.socket
+  service:
+    name: io.podman.socket
+    state: started
+    enabled: yes
+
+- name: remove nondocker warning
+  copy:
+    dest: "/etc/containers/nodocker"
+    mode: 0644
+    owner:  "root"
+    group:  "root"
+    content: |
+          # no

@@ -1,0 +1,13 @@
+{
+    "description": "My Dev Env.",
+    "short_description": "My Dev Env.",
+    "name": "crgm/centos8vm",
+    "iso_checksum_type": "sha256",
+    "checksum": "3ee3f4ea1538e026fff763e2b284a6f20b259d91d1ad5688f5783a67d279423b",
+    "isofilename": "CentOS-8.1.1911-x86_64-dvd1.iso",
+    "url": "centos/8.1.1911/isos/x86_64/",
+    "mirror": "http://mirror.internode.on.net/pub/",
+    "packer_webroot": "packer-http",
+    "pack_cos8vm_id": "{{env `cos8vm_id`}}",
+    "box_version": "0.1.16"
+}

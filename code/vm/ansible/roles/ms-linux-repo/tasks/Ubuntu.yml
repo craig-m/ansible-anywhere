@@ -1,0 +1,4 @@
+---
+# tasks file for ms-linux-repo
+
+- debug: msg="setup on Ubuntu"

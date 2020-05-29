@@ -1,0 +1,9 @@
+---
+
+- name: run roles on admin VM
+  hosts: vmnodes
+  roles:
+    - epel
+    - ms-linux-repo
+    - podman
+    - cockpit

@@ -1,0 +1,59 @@
+{
+    "_comment_m": "CentOS 6 Vulnerable VM",
+    "min_packer_version": "1.5.5",
+    "builders": [
+      {
+        "type": "hyperv-iso",
+        "name": "cento6-hyperv",
+        "vm_name": "centos6-hv-build",
+        "output_directory": "output-centos6/",
+        "iso_url": "http://mirror.nsc.liu.se/centos-store/6.0/isos/i386/CentOS-6.0-i386-bin-DVD.iso",
+        "iso_checksum": "fcf49e875cd4494f2af68cf257ab9e93523c9427",
+        "iso_target_path": "iso/CentOS-6.0-i386-bin-DVD.iso",
+        "iso_checksum_type": "sha1",
+        "ssh_username": "root",
+        "ssh_password": "hackme123",
+        "ssh_port": 22,
+        "ssh_timeout": "1h",
+        "http_directory": "./packer-http",
+        "headless": false,
+        "first_boot_device": "CD",
+        "boot_wait": "10s",
+        "boot_command": [ "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos6.ks<enter>" ],
+        "shutdown_command": "sudo shutdown -P now",
+        "generation": 1,
+        "switch_name": "PackerSwitch",
+        "memory": 2048,
+        "enable_dynamic_memory": false,
+        "cpus": 1,
+        "disk_size": "6000",
+        "guest_additions_mode": true,
+        "mac_address": "0000deadbeef",
+        "use_legacy_network_adapter": true,
+        "enable_secure_boot": false
+      }
+    ],
+    "provisioners": [
+      {
+        "type": "shell",
+        "inline": [
+          "reboot now"
+        ],
+        "expect_disconnect": true,
+        "pause_before": "10s",
+        "timeout": "30s"
+      }
+    ],
+    "post-processors": [
+      {
+        "type": "vagrant",
+        "keep_input_artifact": true,
+        "output": "boxes/centos6.{{.Provider}}.{{user `box_version`}}.box"
+      },
+      {
+        "type": "checksum",
+        "checksum_types": "sha256",
+        "output": "boxes/{{.BuildName}}.{{user `box_version`}}.{{.ChecksumType}}.checksum"
+      }
+    ]
+  }

@@ -1,0 +1,14 @@
+---
+# vars file for cockpit
+
+package_install: [
+  { add_item: 'lsof' },
+  { add_item: 'sos' },
+  { add_item: 'yum-utils' },
+  { add_item: 'cockpit-dashboard' },
+  { add_item: 'cockpit-packagekit' },
+  { add_item: 'cockpit-system' },
+  { add_item: 'cockpit-storaged' },
+  { add_item: 'cockpit-podman' },
+  { add_item: 'cockpit-session-recording' }
+]

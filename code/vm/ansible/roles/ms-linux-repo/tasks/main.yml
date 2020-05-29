@@ -1,0 +1,7 @@
+---
+# tasks file for ms-linux-repo
+
+
+- name: CentOS tasks
+  include: CentOS.yml
+  when: ansible_distribution == "CentOS"

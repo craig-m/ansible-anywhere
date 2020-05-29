@@ -1,0 +1,17 @@
+{
+    "Author": "crgm",
+    "Website": "crgm.net",
+    "Artifacts": "https://github.com/craig-m/",
+    "Repository": "https://github.com/craig-m/",
+    "Description": "CentOS 8 Base image.",
+    "versions": [
+    {
+        "version": "0.1.0",
+        "providers": [
+        {
+            "name": "hyperv"
+        }
+        ]
+    }
+    ]
+}
