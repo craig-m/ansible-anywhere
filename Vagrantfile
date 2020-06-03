@@ -53,6 +53,11 @@ Vagrant.configure("2") do |config|
                 hpv.maxmemory = MY_VM_RAM
                 hpv.cpus = MY_VM_CPU
                 hpv.vmname = "centos8vm"
+                # network
+                config.vm.network "public_network",
+                    bridge: "PackerSwitch"
+                config.vm.network "private_network",
+                    bridge: "PackerSwitch"
                 # file shares
                 override.vm.synced_folder MY_VM_CODE, CODE_MNT,
                     type: "rsync",
@@ -116,6 +121,11 @@ Vagrant.configure("2") do |config|
                         hpv.vmname = "centos8node#{i}"
                         hpv.memory = NODE_RAM
                         hpv.cpus = NODE_CPU
+                        # network
+                        config.vm.network "public_network",
+                            bridge: "PackerSwitch"
+                        config.vm.network "private_network",
+                            bridge: "PackerSwitch"
                         # file shares
                         override.vm.synced_folder NODE_CODE, CODE_MNT,
                             type: "rsync",
