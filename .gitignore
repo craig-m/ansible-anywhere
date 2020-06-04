@@ -1,17 +1,20 @@
 # files we do NOT want in git.
 
+gitignore/*
+
+temp/
+logs/*.log
+iso/*.iso
+iso/*.checksum
+
 # the Vagrant VM
+boxes/
 .vagrant/
 
 # python files
 **/__pycache__/
 *.pyc
 .pytest_cache/
-
-# copy aa-custom_vars.example.yml to aa-custom_vars.yml:
-
-gitignore/*
-runner-output/artifacts/*
 
 # VS Code ignore
 .vscode/*

@@ -135,8 +135,8 @@ Vagrant.configure("2") do |config|
                     config.vm.provider :libvirt do |libv, override|
                         # file shares
                         override.vm.synced_folder NODE_CODE, CODE_MNT,
-                        type: "rsync",
-                        mount_options: CODE_MNT_OPT
+                            type: "rsync",
+                            mount_options: CODE_MNT_OPT
                     end
             end
         end
