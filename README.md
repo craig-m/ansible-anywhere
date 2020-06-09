@@ -98,3 +98,8 @@ What I have had time for so far.
 | Mac OS     | Virtual Box  | to start  | to test   |
 | Linux      | Virtual Box  | to start  | to test   |
 | Linux      | Lib Virt     | done      | good      |
+
+
+### use
+
+See the doc/ directory.
