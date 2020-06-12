@@ -94,10 +94,10 @@ What I have had time for so far.
 | Host OS    | Hypervisor   | Status    | Tested    |
 |------------|:------------:|:---------:|----------:|
 | Win 10 Ent | Hyper-V      | done      | good      |
-| Win 10 Ent | Virtual Box  | to start  | to test   |
-| Mac OS     | Virtual Box  | to start  | to test   |
-| Linux      | Virtual Box  | to start  | to test   |
 | Linux      | Lib Virt     | done      | good      |
+| Linux      | Virtual Box  | in prog   | to test   |
+| Win 10 Ent | Virtual Box  | in prog   | to test   |
+| Mac OS     | Virtual Box  | in prog   | to test   |
 
 
 ### use

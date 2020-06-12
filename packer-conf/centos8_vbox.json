@@ -1,0 +1,83 @@
+{
+  "_comment_m": "CentOS 8 VM",
+  "builders": [
+    {
+      "boot_command": [
+        "<tab>inst.stage2=hd:LABEL=CentOS-8-1-1911-x86_64-dvd inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.centos8.cfg<enter><wait>boot<enter>"
+      ],
+      "boot_wait": "10s",
+      "cpus": 8,
+      "disk_size": "8000",
+      "guest_additions_mode": "disable",
+      "headless": false,
+      "http_directory": "{{user `packer_webroot`}}",
+      "iso_checksum": "sha256:{{user `checksum`}}",
+      "iso_target_path": "./iso/{{user `isofilename`}}",
+      "iso_url": "{{user `mirror`}}{{user `url`}}{{user `isofilename`}}",
+      "memory": 4096,
+      "name": "centos8-vbox",
+      "output_directory": "temp/output-centos8/",
+      "shutdown_command": "shutdown -P now",
+      "ssh_handshake_attempts": 5,
+      "ssh_password": "1root2pass3word4",
+      "ssh_port": 22,
+      "ssh_timeout": "15m",
+      "ssh_username": "root",
+      "type": "virtualbox-iso",
+      "vm_name": "centos8-vb-build"
+    }
+  ],
+  "min_packer_version": "1.5.5",
+  "post-processors": [
+    {
+      "include": [
+        "templates/info.json",
+        "scripts/clean-vm.sh",
+        "scripts/test.sh"
+      ],
+      "keep_input_artifact": true,
+      "output": "boxes/CentOS8.{{.Provider}}.{{user `box_version`}}.box",
+      "type": "vagrant",
+      "vagrantfile_template": "templates/vagrantfile.centos8.rb"
+    },
+    {
+      "checksum_types": "sha256",
+      "output": "boxes/{{.BuildName}}.{{user `box_version`}}.{{.ChecksumType}}.checksum",
+      "type": "checksum"
+    }
+  ],
+  "provisioners": [
+    {
+      "environment_vars": [
+        "s_cos8vm_id={{user `pack_cos8vm_id`}}",
+        "s_cos8vm_boxv={{user `box_version`}}"
+      ],
+      "execute_command": "{{.Vars}} bash '{{.Path}}'",
+      "expect_disconnect": false,
+      "scripts": [
+        "scripts/packer/base.sh",
+        "scripts/packer/update.sh",
+        "scripts/packer/cleanup.sh"
+      ],
+      "type": "shell"
+    },
+    {
+      "expect_disconnect": true,
+      "inline": [
+        "reboot now"
+      ],
+      "pause_before": "5s",
+      "timeout": "30s",
+      "type": "shell"
+    },
+    {
+      "execute_command": "bash '{{.Path}}'",
+      "expect_disconnect": false,
+      "pause_before": "5s",
+      "scripts": [
+        "scripts/test.sh"
+      ],
+      "type": "shell"
+    }
+  ]
+}

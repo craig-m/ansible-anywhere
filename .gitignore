@@ -5,9 +5,11 @@ gitignore/*
 temp/
 logs/*.log
 iso/*.iso
+iso/*.lock
 iso/*.checksum
 
-# the Vagrant VM
+# Vagrant and packer
+packer_cache/
 boxes/
 .vagrant/
 
