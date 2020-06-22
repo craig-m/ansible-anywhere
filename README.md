@@ -87,7 +87,7 @@ NODE_CODE = "./code/node/"
 
 ### Status
 
-Currently using [CentOS](https://www.centos.org/) version [8.1.1911](https://wiki.centos.org/Manuals/ReleaseNotes/CentOS8.1911) (released 15 January 2020).
+Currently using [CentOS](https://www.centos.org/) version [8.2.2004](https://wiki.centos.org/Manuals/ReleaseNotes/CentOS8.1911). Released 15 June 2020, [notes](https://wiki.centos.org/Manuals/ReleaseNotes/CentOS8.2004).
 
 What I have had time for so far.
 
