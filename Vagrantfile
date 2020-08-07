@@ -15,7 +15,7 @@ MY_VM_CODE = "./code/vm/"
 # Enable the multi-machine setup? yes/no
 MULTIVM = "yes"
 # Number of Node VMs to create?
-NODES = 2
+NODES = 3
 # centos8node{i} options:
 NODE_CPU = "2"
 NODE_RAM = "4096"
@@ -43,9 +43,11 @@ Vagrant.configure("2") do |config|
     # Virtual machines
     #
 
-    # centos8vm
+
+    # centos8vm (admin)
     config.vm.define "centos8vm" do |mainvm|
         config.vm.hostname = "centos8vm"
+
         # provider specific conf
             # --- Windows Hyper-V ---
             mainvm.vm.provider :hyperv do |hpv, override|
@@ -70,6 +72,7 @@ Vagrant.configure("2") do |config|
                     type: "rsync",
                     mount_options: CODE_MNT_OPT
             end
+
         # provision tasks (run AFTER the section below)
         mainvm.vm.provision :shell,
             :privileged => true, 
@@ -107,6 +110,7 @@ Vagrant.configure("2") do |config|
             id: 'cockpit'
     end
 
+
     # centos8node{i}
     if MULTIVM == "yes"
         # loop over nodes
@@ -115,6 +119,7 @@ Vagrant.configure("2") do |config|
             config.vm.define "centos8node#{i}" do |node|
                 # VM config
                 node.vm.hostname = "centos8node#{i}"
+
                 # provider specific conf
                     # --- Windows Hyper-V ---
                     node.vm.provider :hyperv do |hpv, override|
@@ -138,6 +143,7 @@ Vagrant.configure("2") do |config|
                             type: "rsync",
                             mount_options: CODE_MNT_OPT
                     end
+
             end
         end
     end

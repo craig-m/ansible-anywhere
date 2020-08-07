@@ -2,7 +2,7 @@
 # The options in here are combined with those in 
 # ../Vagrantfile during vagrant runtime.
 
-Vagrant.require_version ">= 2.2.7"
+Vagrant.require_version ">= 2.2.9"
 
 
 # inline script used by action trigger

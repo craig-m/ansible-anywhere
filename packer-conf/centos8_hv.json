@@ -18,13 +18,11 @@
       "ssh_password": "1root2pass3word4",
       "ssh_handshake_attempts": 5,
       "http_directory": "{{user `packer_webroot`}}",
-      "headless": false,
+      "headless": true,
       "boot_wait": "5s",
       "boot_command": [ 
         "c setparams 'kickstart'<wait><enter>",
-        "linuxefi /images/pxeboot/vmlinuz text headless inst.stage2=hd:LABEL=CentOS-8-1-1911-x86_64-dvd inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.centos8.cfg<wait><enter>",
-        "initrdefi /images/pxeboot/initrd.img<wait><enter>",
-        "boot<wait><enter>"
+        "linuxefi /images/pxeboot/vmlinuz text noipv6 modprobe.blacklist=floppy inst.stage2=hd:LABEL=CentOS-8-2-2004-x86_64-dvd inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.centos8.cfg<enter> initrdefi /images/pxeboot/initrd.img<wait><enter> boot<wait><enter>"
       ],
       "shutdown_command": "shutdown -P now",
       "generation": 2,
@@ -33,7 +31,7 @@
       "enable_dynamic_memory": false,
       "cpus": 8,
       "disk_size": "8000",
-      "guest_additions_mode": "none",
+      "guest_additions_mode": false,
       "first_boot_device": "SCSI:0:1",
       "enable_secure_boot": false,
       "secure_boot_template": "MicrosoftUEFICertificateAuthority"
