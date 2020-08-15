@@ -1,12 +1,10 @@
 # readme.md
 
-This dir contains scripts.
+Where the scripts in this dir are being run from:
 
-Where they are being run from:
-
-* ./packer/ - run by packer.
-* ./vagrant/ - run by vagrant.
-* ./ - run by both packer and vagrant.
+* ./packer - run by packer build.
+* ./vagrant - run by vagrant up/provision.
+* . - run by both packer and vagrant.
 
 Docs:
 

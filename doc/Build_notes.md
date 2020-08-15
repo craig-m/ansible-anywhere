@@ -24,8 +24,9 @@ On Windows Docker-Deskop runs a VM under HV, so it will already be enabled and r
 
 ## setup
 
-Before using Packer you must make an external switch first.
+Before using Packer you must make an external switch that Packer can use.
 
+In the file `centos8_hv.json` edit `"switch_name": "PackerSwitch",` to the name of your Switch.
 
 ## use
 
@@ -37,7 +38,7 @@ On Win 10 launch PowerShell as Administrator:
 & .\build_hv_box.ps1
 ```
 
-A useful packer option is `vagrant.exe rsync-auto`.
+A useful packer command (after running `vagrant up` to start the VMs) is `vagrant.exe rsync-auto` to keep the code in the vm in sync.
 
 
 VirtualBox

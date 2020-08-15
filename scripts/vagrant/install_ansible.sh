@@ -20,11 +20,11 @@ ansible_install() {
         echo "error running ansible";
         exit 1;
     fi
-    
+
     # custom facts dir
-    mkdir -v /etc/ansible/facts.d/
-    chmod 0755 /etc/ansible/facts.d/
-    chown root:root /etc/ansible/facts.d/
+    mkdir -v /etc/ansible/{facts.d,roles}/
+    chmod -v 0755 /etc/ansible/{facts.d,roles}/
+    chown -v root:root /etc/ansible/{facts.d,roles}/
 
     echo "ansible installed"
 }
@@ -43,6 +43,7 @@ ansible_remove() {
 
 ansible_test() {
     echo "testing"
+    ansible --version
 }
 
 
@@ -54,4 +55,5 @@ ansible_test() {
 if [ ! -x "$(command -v ansible)" ];
 then
     ansible_install
+    ansible_test
 fi

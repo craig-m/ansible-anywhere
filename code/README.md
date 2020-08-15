@@ -1,9 +1,9 @@
 # readme.md
 
-The code in these folders is copied into the Virtual Machines.
+The code in these folders is copied into the Virtual Machines:
 
-* node    --> centos8node[N]
-* vm      --> centos8vm
+* vm/      --> centos8vm        (/opt/code/)
+* node/    --> centos8node[N]   (/opt/code/)
 
 This is done by Vagrant.
 

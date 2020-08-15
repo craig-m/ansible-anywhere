@@ -1,4 +1,4 @@
-# CentOS 8 build script
+# CentOS 8 packer build script
 # https://docs.microsoft.com/en-us/powershell/module/hyper-v/?view=win10-ps
 
 

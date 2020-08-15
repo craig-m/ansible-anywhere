@@ -26,8 +26,8 @@ Vagrant.configure("2") do |config|
 
     config.vm.box = "{{ .BoxName }}"
 
-    config.vm.box_check_update = false
     config.vm.hostname = "centos8vm"
+    config.vm.box_check_update = false
     config.vm.boot_timeout = 300
     config.ssh.username = "root"
     config.ssh.guest_port = 22
@@ -35,7 +35,6 @@ Vagrant.configure("2") do |config|
     config.ssh.keep_alive = true
     config.ssh.forward_agent = false
     config.ssh.compression = false
-    config.vm.synced_folder ".", "/vagrant", disabled: true
 
     def is_windows
         RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/
@@ -52,6 +51,7 @@ Vagrant.configure("2") do |config|
         hpv.memory = 4096
         hpv.maxmemory = 4096
         hpv.cpus = 4
+        hpv.linked_clone = false
         # allows for nested VMs
         hpv.enable_virtualization_extensions = true
     end

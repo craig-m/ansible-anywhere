@@ -18,7 +18,7 @@ MULTIVM = "yes"
 NODES = 3
 # centos8node{i} options:
 NODE_CPU = "2"
-NODE_RAM = "4096"
+NODE_RAM = "2096"
 NODE_CODE = "./code/node/"
 
 # vagrant options
@@ -37,6 +37,7 @@ Vagrant.configure("2") do |config|
     config.vm.box = "centos8vm"
     config.ssh.username = "root"
     config.ssh.insert_key = true
+    config.vm.synced_folder ".", "/vagrant", disabled: true
 
 
     #
@@ -44,9 +45,11 @@ Vagrant.configure("2") do |config|
     #
 
 
-    # centos8vm (admin)
-    config.vm.define "centos8vm" do |mainvm|
-        config.vm.hostname = "centos8vm"
+    # centos8admin
+    config.vm.define "centos8admin" do |mainvm|
+
+        config.vm.hostname = "centos8admin"
+        config.ssh.forward_agent = false
 
         # provider specific conf
             # --- Windows Hyper-V ---
@@ -54,7 +57,7 @@ Vagrant.configure("2") do |config|
                 hpv.memory = MY_VM_RAM
                 hpv.maxmemory = MY_VM_RAM
                 hpv.cpus = MY_VM_CPU
-                hpv.vmname = "centos8vm"
+                hpv.vmname = "centos8admin"
                 # network
                 config.vm.network "public_network",
                     bridge: "PackerSwitch"
@@ -73,16 +76,19 @@ Vagrant.configure("2") do |config|
                     mount_options: CODE_MNT_OPT
             end
 
-        # provision tasks (run AFTER the section below)
+        # provision tasks (these run AFTER the provision tasks below)
         mainvm.vm.provision :shell,
             :privileged => true, 
             :path => "scripts/vagrant/install_ansible.sh",
+            :upload_path => "/etc/centos8vm/install_ansible.sh",
             :binary => true, 
             name: "install ansible"
+
         # run centos8-admin-playbook.yml
+        # (generic ansible roles used on admin vm)
         mainvm.vm.provision "ansible_local" do |ansible|
             ansible.groups = {
-                "localhost" => ["centos8vm"]
+                "localhost" => ["centos8admin"]
             }
             ansible.compatibility_mode = "2.0"
             ansible.config_file = "ansible_vagrant.cfg"
@@ -91,10 +97,12 @@ Vagrant.configure("2") do |config|
             ansible.install = false
             ansible.verbose = false
         end
+
         # run centos8-admin-role.yml
+        # (single file playbook - tasks specific to the admin vm)
         mainvm.vm.provision "ansible_local" do |ansible|
             ansible.groups = {
-                "localhost" => ["centos8vm"]
+                "localhost" => ["centos8admin"]
             }
             ansible.compatibility_mode = "2.0"
             ansible.config_file = "ansible.cfg"
@@ -103,6 +111,7 @@ Vagrant.configure("2") do |config|
             ansible.install = false
             ansible.verbose = true
         end
+
         # port forward
         config.vm.network :forwarded_port,
             guest: 9090, host: 9090,
@@ -117,7 +126,7 @@ Vagrant.configure("2") do |config|
         (1..NODES).each do |i|
             # create the VM
             config.vm.define "centos8node#{i}" do |node|
-                # VM config
+
                 node.vm.hostname = "centos8node#{i}"
 
                 # provider specific conf
@@ -159,6 +168,7 @@ Vagrant.configure("2") do |config|
     config.vm.provision :shell,
         :privileged => true, 
         :path => "scripts/vagrant/setup.sh",
+        :upload_path => "/etc/centos8vm/setup.sh",
         :binary => true, 
         name: "vagrant vm setup.sh"
 

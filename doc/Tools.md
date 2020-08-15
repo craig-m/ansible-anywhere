@@ -59,27 +59,3 @@ A container system, like Docker or Podman, is useful.
 Molecule will run roles in containers to test them (by default - you can use VM too), via what they call a [driver](https://molecule.readthedocs.io/en/latest/configuration.html#driver).
 
 So having a container setup inside the VM is very useful 🐳
-
-
-# using
-
-First build the VM image, see "Build_doc.md".
-
-To use these tools:
-
-```
-vagrant up
-vagrant ssh centos8vm
-sudo su -l vmuser
-source ~/venv/bin/activate
-cd /opt/code
-invoke -l
-```
-
-Test this role with Molecule:
-
-```
-cd ansible/roles/test-role/
-molecule list
-molecule test
-```

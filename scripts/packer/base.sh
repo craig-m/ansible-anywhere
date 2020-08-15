@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # setup the freshly installed system
 

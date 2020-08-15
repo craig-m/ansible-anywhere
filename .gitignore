@@ -1,6 +1,8 @@
 # files we do NOT want in git.
 
-gitignore/*
+# ignore what is in this dir (keep local conf here)
+local_file/*
+!local_file/.gitkeep
 
 temp/
 logs/*.log
@@ -10,7 +12,8 @@ iso/*.checksum
 
 # Vagrant and packer
 packer_cache/
-boxes/
+boxes/*.box
+boxes/*.checksum
 .vagrant/
 
 # python files

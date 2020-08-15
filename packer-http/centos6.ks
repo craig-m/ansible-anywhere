@@ -36,7 +36,7 @@ rsync
 
 
 %post
-yum -y update
+#yum -y update
 
 # vagrant
 groupadd vagrant -g 999
