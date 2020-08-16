@@ -45,6 +45,7 @@ molecule test
 after a build to clean up:
 
 ```
+vagrant destroy -f
 rm logs\*.log
 rm .\temp\
 rm .\boxes\*.box

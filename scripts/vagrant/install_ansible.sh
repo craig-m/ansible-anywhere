@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # https://wiki.centos.org/SpecialInterestGroup/ConfigManagementSIG
 # https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html
 

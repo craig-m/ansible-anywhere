@@ -28,6 +28,8 @@
       { add_item: 'expect' },
       { add_item: 'jq' },
       { add_item: 'net-tools' },
+      { add_item: 'mdns-scan' },
+      { add_item: 'nss-mdns' },
       { add_item: 'python36-devel' },
       { add_item: 'python3-dns' },
       { add_item: 'python3-pip' },

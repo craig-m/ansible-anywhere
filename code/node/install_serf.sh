@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Serf, by HashiCorp, is a decentralized solution for cluster 
+# membership, failure detection, and orchestration.
+# Docs: https://www.serf.io/docs/index.html
+
 # vars
 serf_file="serf_0.8.2_linux_amd64.zip"
 serf_url="https://releases.hashicorp.com/serf/0.8.2/$serf_file"
@@ -12,7 +16,7 @@ getserf() {
     my_pwd=$(pwd)
     cd $my_temp_dir
     echo "my_temp_dir install $my_temp_dir"
-    wget $serf_url
+    wget -q $serf_url
     file $serf_file | grep archive || exit 1
     sum_have=$(sha256sum $serf_file | awk '{print $1}')
     if [ $serf_sha == $sum_have ]; then
@@ -35,6 +39,12 @@ if [ -f /usr/local/bin/serf ]; then
     echo "have serf already"
 else
     getserf
+    firewall-cmd --zone=public --add-port=7946/tcp --permanent;
+    firewall-cmd --zone=public --add-port=7946/udp --permanent;
+    firewall-cmd --reload;
+    firewall-cmd --list-ports;
 fi
+
+#nohup /usr/local/bin/serf agent discover=cluster -syslog > /tmp/serf.log &
 
 echo "finished install_serf.sh"

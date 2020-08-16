@@ -62,7 +62,7 @@ def role_run(c, rolename):
         print("ERROR the role '" + rolename + "' does not exist!")
         sys.exit(1)
     c.run('ansible-runner \
-        run --inventory /etc/ansible/nodes.ini \
+        run --inventory ' + ansiblebase + '/nodes.ini \
         --rotate-artifacts 20 -r ' + rolename + ' -v \
         --roles-path ' + rolebase + ' \
         --artifact-dir /tmp/arts /tmp/', pty=True)
@@ -75,6 +75,6 @@ def role_play(c, rolename):
     """ run a single role with ansible-playbook bin. """
     print("using '" + rolename + "' in playbook-run-single-role.yml")
     with c.cd(ansiblebase):
-        c.run('ansible-playbook -i /etc/ansible/nodes.ini \
+        c.run('ansible-playbook -i ' + ansiblebase + '/nodes.ini \
             -e "runtherole=' + rolename + '" \
             -v playbook-run-single-role.yml', pty=True)

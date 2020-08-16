@@ -15,7 +15,7 @@ MY_VM_CODE = "./code/vm/"
 # Enable the multi-machine setup? yes/no
 MULTIVM = "yes"
 # Number of Node VMs to create?
-NODES = 3
+NODES = 4
 # centos8node{i} options:
 NODE_CPU = "2"
 NODE_RAM = "2096"
@@ -85,7 +85,7 @@ Vagrant.configure("2") do |config|
             name: "install ansible"
 
         # run centos8-admin-playbook.yml
-        # (generic ansible roles used on admin vm)
+        # (generic ansible roles used on adminvm)
         mainvm.vm.provision "ansible_local" do |ansible|
             ansible.groups = {
                 "localhost" => ["centos8admin"]
@@ -99,7 +99,7 @@ Vagrant.configure("2") do |config|
         end
 
         # run centos8-admin-role.yml
-        # (single file playbook - tasks specific to the admin vm)
+        # (single file playbook - tasks specific to the adminvm)
         mainvm.vm.provision "ansible_local" do |ansible|
             ansible.groups = {
                 "localhost" => ["centos8admin"]
@@ -171,6 +171,13 @@ Vagrant.configure("2") do |config|
         :upload_path => "/etc/centos8vm/setup.sh",
         :binary => true, 
         name: "vagrant vm setup.sh"
+
+    config.vm.provision :shell,
+        :privileged => true, 
+        :path => "scripts/vagrant/install_avahi.sh",
+        :upload_path => "/etc/centos8vm/install_avahi.sh",
+        :binary => true, 
+        name: "vagrant vm install_avahi.sh"
 
     config.vm.provision :shell,
         :privileged => true,
