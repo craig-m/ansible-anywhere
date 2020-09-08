@@ -23,7 +23,7 @@ vagrant rsync-auto
 
 ## Using
 
-When in the VM
+When in the VM:
 
 ```
 sudo su -l vmuser
@@ -42,7 +42,7 @@ molecule test
 
 ### cleanup
 
-after a build to clean up:
+after a build to _really_ clean up:
 
 ```
 vagrant destroy -f

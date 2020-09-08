@@ -2,9 +2,9 @@
 
 Where the scripts in this dir are being run from:
 
-* ./packer - run by packer build.
-* ./vagrant - run by vagrant up/provision.
-* . - run by both packer and vagrant.
+* `./packer` - run by packer build.
+* `./vagrant` - run by vagrant up/provision.
+* `.` - run by both packer and vagrant.
 
 Docs:
 

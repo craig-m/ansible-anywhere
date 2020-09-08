@@ -6,7 +6,7 @@
     "Description": "CentOS 8 Base image.",
     "versions": [
     {
-        "version": "0.2.0",
+        "version": "0.2.12",
         "providers": [
         {
             "name": "hyperv"

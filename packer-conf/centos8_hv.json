@@ -18,7 +18,7 @@
       "ssh_password": "1root2pass3word4",
       "ssh_handshake_attempts": 5,
       "http_directory": "{{user `packer_webroot`}}",
-      "headless": true,
+      "headless": false,
       "boot_wait": "5s",
       "boot_command": [ 
         "c setparams 'kickstart'<wait><enter>",
@@ -48,6 +48,7 @@
       "scripts": [
         "scripts/packer/base.sh",
         "scripts/packer/update.sh",
+        "scripts/packer/install_ansible.sh",
         "scripts/packer/cleanup.sh"
       ],
       "expect_disconnect": false

@@ -54,7 +54,8 @@
         "scripts": [
             "scripts/packer/base.sh",
             "scripts/packer/update.sh",
-            "scripts/packer/fin-and-cleanup.sh"
+            "scripts/packer/install_ansible.sh",
+            "scripts/packer/cleanup.sh"
         ],
         "expect_disconnect": false
         },

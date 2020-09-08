@@ -9,5 +9,5 @@
     "mirror": "http://mirror.internode.on.net/pub/",
     "packer_webroot": "packer-http",
     "pack_cos8vm_id": "{{env `cos8vm_id`}}",
-    "box_version": "0.2.10"
+    "box_version": "0.2.11"
 }
