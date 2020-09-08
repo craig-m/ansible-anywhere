@@ -26,13 +26,15 @@ if ($userhasadmin -eq $false) {
     Write-Host "[*] NO Administrator priv" -ForegroundColor red -BackgroundColor black;
     exit 1;
 }
+
 # check files exist
 $FileExists = Test-Path packer-conf\centos8_hv.json
 If ($FileExists -eq $False) {
     Write-Host "[*] missing: $FileExists" -ForegroundColor red -BackgroundColor black;
     exit 1;
 }
-# check commands in path
+
+# check vagrant and packer are in path
 if(!(Get-Command vagrant.exe -ErrorAction SilentlyContinue)) {
     Add-Content $BuildLog "ERROR vagrant.exe not in path"
     Write-Host "[*] vagrant.exe not in path" -ForegroundColor red -BackgroundColor black;
@@ -113,11 +115,14 @@ $Outmsg = "Clean old builds"
 Write-Host  "[*] $Outmsg" -ForegroundColor green -BackgroundColor black;
 Add-Content $BuildLog $Outmsg
 
-#vagrant box remove file://boxes/CentOS8.box
-
+# delete old build items
+Remove-Item -LiteralPath ".\temp\" -Force -Recurse
 Remove-Item -LiteralPath ".\boxes\" -Force -Recurse -ErrorAction SilentlyContinue
 Remove-Item -LiteralPath ".\output-centos8\" -Force -Recurse -ErrorAction SilentlyContinue
 Remove-Item -LiteralPath ".\packer_cache\" -Force -Recurse -ErrorAction SilentlyContinue
+
+# remove box
+#vagrant box remove file://boxes/CentOS8.box
 
 
 #
@@ -216,9 +221,6 @@ catch {
 #
 # done
 #
-
-# clean up
-$Env:cos8vm_id = "x"
 
 $timefinish = (Get-Date)
 $timetaken = $(($timefinish - $timestart).totalseconds)

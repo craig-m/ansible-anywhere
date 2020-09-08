@@ -74,7 +74,54 @@
             create_home: true
             password: "{{ '1insecure1' | password_hash('sha512', 'salty') }}"
             update_password: always
-
+        - name: tmux config
+          copy:
+            dest: "/home/{{ cos8_user_name }}/.tmux.conf"
+            mode: 0644
+            owner:  "{{ cos8_user_name }}"
+            group:  "{{ cos8_user_name }}"
+            content: |
+              set -g default-terminal "screen-256color"
+              set -g mouse on
+              set -g base-index 1
+        - name: vim config
+          copy:
+            dest: "/home/{{ cos8_user_name }}/.vimrc"
+            mode: 0644
+            owner:  "{{ cos8_user_name }}"
+            group:  "{{ cos8_user_name }}"
+            content: |
+              " vimrc
+              :set smartindent
+              :syntax on
+              :set nobackup                  " no backup files
+              :set backupdir=/tmp            " backup files here to be sure
+              :set dir=/tmp                  " save vim temp files here
+              " disable autopaste
+              let &t_SI .= "\<Esc>[?2004h"
+              let &t_EI .= "\<Esc>[?2004l"
+              inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
+              function! XTermPasteBegin()
+                set pastetoggle=<Esc>[201~
+                set paste
+                return ""
+              endfunction
+              " status line config
+              set statusline=%t               " tail of the filename
+              set statusline+=%m              " modified flag
+              set statusline+=%r              " read only flag
+              set statusline+=%h              " help file flag
+              set statusline+=%w
+              set statusline+=\ [%{strlen(&fenc)?&fenc:'enc'}] " file encoding
+              set statusline+=\ [%{&ff}]      " file format
+              set statusline+=\ %y            " filetype
+              set statusline+=\ [ASCII=\%03.3b]
+              set statusline+=\ [HEX=\%02.2B]
+              set statusline+=\ [Line\ %l\/%L]        " cursor line/total lines
+              hi StatusLine ctermfg=Black ctermbg=White
+              au InsertEnter * hi StatusLine ctermbg=DarkBlue
+              au InsertLeave * hi StatusLine ctermfg=Black ctermbg=White
+              set laststatus=2
 
     - name: packages
       block:
@@ -134,6 +181,7 @@
               testinfra
               redis
               dnspython
+              serfclient
         - name: install requirements
           pip:
             requirements: "/home/{{ cos8_user_name }}/requirements.txt"
@@ -148,42 +196,6 @@
           stat:
             path: "/etc/ansible/ansible.cfg"
           register: ansible_inst
-        - name: make facts dir
-          file:
-            path: /etc/ansible/facts.d/
-            state: directory
-        - name: custom fact script
-          copy:
-            dest: "/etc/ansible/facts.d/cos8vm.fact"
-            mode: 0755
-            owner: root
-            group: root
-            content: |
-              #!/usr/bin/env python3
-              # example of ansible custom fact script
-              import os
-              import sys
-              import platform
-              import datetime
-              import json
-              # var:
-              date = str(datetime.datetime.now())
-              centos8vm_dir = str(os.path.isdir('/etc/centos8vm/'))
-              # build ID
-              bid_file = open("/etc/centos8vm/build_id.txt")
-              bid_line = bid_file.read().replace("\n", "")
-              bid_file.close()
-              # VM ID
-              vid_file = open("/etc/centos8vm/vm_id.txt")
-              vid_line = vid_file.read().replace("\n", "")
-              vid_file.close()
-              # output
-              print(json.dumps({
-                  "time" : date,
-                  "build_id" : bid_line,
-                  "vm_id" : vid_line,
-                  "centos8vmdir" : centos8vm_dir
-              }))
         - name: refresh ansible facts
           setup: ~
         - name: check centos8vmdir fact set

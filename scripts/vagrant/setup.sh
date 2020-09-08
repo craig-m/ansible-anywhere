@@ -22,18 +22,16 @@ logit "started $(basename -- "$0")"
 sed -ri 's/PermitRootLogin yes/PermitRootLogin prohibit-password/g' /etc/ssh/sshd_config
 
 
-# turn off IPv6
-cat <<EOF >/etc/sysctl.d/no-ipv6.conf
-# no ipv6 - vagrant provision
-net.ipv6.conf.all.disable_ipv6 = 1
-net.ipv6.conf.default.disable_ipv6 = 1
-net.ipv6.conf.lo.disable_ipv6 = 1
-EOF
+# gen SSH key pair for root
+if [ ! -f /root/.ssh/vm_ecdsa.key ];
+then
+    ssh-keygen -b 521 -t ecdsa -f /root/.ssh/vm_ecdsa.key -q -N ""
+fi
 
-sysctl net.ipv6.conf.all.disable_ipv6=1
-
-
-mkdir -pv /opt/aa/
+if [ ! -d /opt/aa/ ];
+then
+    mkdir -pv /opt/aa/
+fi
 
 
 #

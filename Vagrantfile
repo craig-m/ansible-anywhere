@@ -7,10 +7,10 @@
 # Vars
 #
 
-# centos8vm "admin vm" options
+# centos8admin options:
 MY_VM_RAM = "4096"
-MY_VM_CPU = "4"
-MY_VM_CODE = "./code/vm/"
+MY_VM_CPU = "2"
+MY_VM_CODE = "./vm-code-admin/"
 
 # Enable the multi-machine setup? yes/no
 MULTIVM = "yes"
@@ -18,8 +18,8 @@ MULTIVM = "yes"
 NODES = 4
 # centos8node{i} options:
 NODE_CPU = "2"
-NODE_RAM = "2096"
-NODE_CODE = "./code/node/"
+NODE_RAM = "2048"
+NODE_CODE = "./vm-code-node/"
 
 # vagrant options
 VAGRANT_API_VER = "2"
@@ -50,6 +50,7 @@ Vagrant.configure("2") do |config|
 
         config.vm.hostname = "centos8admin"
         config.ssh.forward_agent = false
+        config.vm.disk :disk, size: "50GB", primary: true
 
         # provider specific conf
             # --- Windows Hyper-V ---
@@ -75,14 +76,6 @@ Vagrant.configure("2") do |config|
                     type: "rsync",
                     mount_options: CODE_MNT_OPT
             end
-
-        # provision tasks (these run AFTER the provision tasks below)
-        mainvm.vm.provision :shell,
-            :privileged => true, 
-            :path => "scripts/vagrant/install_ansible.sh",
-            :upload_path => "/etc/centos8vm/install_ansible.sh",
-            :binary => true, 
-            name: "install ansible"
 
         # run centos8-admin-playbook.yml
         # (generic ansible roles used on adminvm)
@@ -128,6 +121,7 @@ Vagrant.configure("2") do |config|
             config.vm.define "centos8node#{i}" do |node|
 
                 node.vm.hostname = "centos8node#{i}"
+                node.vm.disk :disk, size: "2GB", name: "node_storage"
 
                 # provider specific conf
                     # --- Windows Hyper-V ---
@@ -163,7 +157,7 @@ Vagrant.configure("2") do |config|
     #
 
     config.vm.provision :shell,
-        inline: "echo 'Hello, vm.provision tasks running.'"
+        inline: "echo 'Hello, First vm.provision task running.'"
 
     config.vm.provision :shell,
         :privileged => true, 
@@ -173,11 +167,25 @@ Vagrant.configure("2") do |config|
         name: "vagrant vm setup.sh"
 
     config.vm.provision :shell,
-        :privileged => true, 
+        :privileged => true,
         :path => "scripts/vagrant/install_avahi.sh",
         :upload_path => "/etc/centos8vm/install_avahi.sh",
-        :binary => true, 
+        :binary => true,
         name: "vagrant vm install_avahi.sh"
+
+    config.vm.provision :shell,
+        :privileged => true,
+        :path => "scripts/vagrant/serf_install.sh",
+        :upload_path => "/etc/centos8vm/serf_install.sh",
+        :binary => true,
+        name: "vagrant vm serf_install.sh"
+
+    config.vm.provision :shell,
+        :privileged => true,
+        :path => "scripts/vagrant/serf_join-nodes.sh",
+        :upload_path => "/etc/centos8vm/serf_join-nodes.sh",
+        :binary => true,
+        name: "vagrant vm serf_join-nodes.sh"
 
     config.vm.provision :shell,
         :privileged => true,

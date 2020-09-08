@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# setup the freshly installed system
+# packer base.sh script - setup the newly installed system
 
 # exit on error
 set -e
@@ -30,7 +30,6 @@ logit() {
 #
 # start / dump debug info
 #
-
 logit "started $(basename -- "$0")"
 
 # dump info for debugging
@@ -50,9 +49,9 @@ echo "======================================================================"
 
 
 #
-# Sanity checks
+# environment/safety checks
 #
-logit "doing sanity checks"
+logit "doing safety checks"
 
 # root user
 if [[ root = "$(whoami)" ]];
@@ -66,7 +65,7 @@ fi
 # check hostname
 hostname | grep --quiet "centos8.localdomain" || { logit 'hostname not set'; exit 1; }
 
-logit "sanity checks passed"
+logit "safety checks passed"
 
 
 #
@@ -86,9 +85,8 @@ cat -v -- /etc/centos8vm/vm_id.txt
 #
 # sys / net / os
 #
-
-# blacklist kernel modules
-cat <<EOF >/etc/modprobe.d/vm-blacklist.conf
+# do not load these kernel modules
+cat <<EOF >/etc/modprobe.d/vm-noload.conf
 #
 # do not load these kernel modules
 #
@@ -106,7 +104,7 @@ blacklist joydev
 EOF
 
 # turn off IPv6
-cat <<EOF >/etc/sysctl.d/no-ipv6.conf
+cat <<EOF >/etc/sysctl.d/noipv6.conf
 # no ipv6 - ks.cfg
 net.ipv6.conf.all.disable_ipv6 = 1
 net.ipv6.conf.default.disable_ipv6 = 1
@@ -161,15 +159,18 @@ then
     echo $inseckey >> /root/.ssh/authorized_keys
 fi
 
-# gen key pair
-if [ ! -f /root/.ssh/vm_id_dsa ];
-then
-    ssh-keygen -b 521 -t ecdsa -f /root/.ssh/vm_id_dsa -q -N ""
-fi
-
 chown -v -R root:root /root/*
 chmod -v 700 /root/
 restorecon -R /root/.ssh/
+
+
+#
+# EPEL
+# https://fedoraproject.org/wiki/EPEL
+#
+dnf config-manager --set-enabled PowerTools
+yum install epel-release -y
+rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-8
 
 
 #

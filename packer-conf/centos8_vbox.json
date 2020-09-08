@@ -57,6 +57,7 @@
       "scripts": [
         "scripts/packer/base.sh",
         "scripts/packer/update.sh",
+        "scripts/packer/install_ansible.sh",
         "scripts/packer/cleanup.sh"
       ],
       "type": "shell"
