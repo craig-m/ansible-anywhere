@@ -3,7 +3,7 @@
   "builders": [
     {
       "boot_command": [
-        "<tab>inst.stage2=hd:LABEL=CentOS-8-1-1911-x86_64-dvd inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.centos8.cfg<enter><wait>boot<enter>"
+        "<tab>inst.stage2=hd:LABEL={{user `isolable`}} inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.centos8.cfg<enter><wait>boot<enter>"
       ],
       "boot_wait": "10s",
       "cpus": 8,

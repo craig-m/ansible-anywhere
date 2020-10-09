@@ -1,2 +1,3 @@
 # packer build logs
 *.log
+*.txt

@@ -12,7 +12,7 @@
             "iso_checksum_type": "sha256",
             "boot_wait": "5s",
             "boot_command": [ 
-                "<tab>inst.stage2=hd:LABEL=CentOS-8-1-1911-x86_64-dvd inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.centos8.cfg<enter><wait>boot<enter>"
+                "<tab>inst.stage2=hd:LABEL={{user `isolable`}} inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.centos8.cfg<enter><wait>boot<enter>"
             ],
             "headless": true,
             "use_default_display": true,

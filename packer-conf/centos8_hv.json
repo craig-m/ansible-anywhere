@@ -22,7 +22,7 @@
       "boot_wait": "5s",
       "boot_command": [ 
         "c setparams 'kickstart'<wait><enter>",
-        "linuxefi /images/pxeboot/vmlinuz text noipv6 modprobe.blacklist=floppy inst.stage2=hd:LABEL=CentOS-8-2-2004-x86_64-dvd inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.centos8.cfg<enter> initrdefi /images/pxeboot/initrd.img<wait><enter> boot<wait><enter>"
+        "linuxefi /images/pxeboot/vmlinuz text noipv6 modprobe.blacklist=floppy inst.stage2=hd:LABEL={{user `isolable`}} inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.centos8.cfg<enter> initrdefi /images/pxeboot/initrd.img<wait><enter> boot<wait><enter>"
       ],
       "shutdown_command": "shutdown -P now",
       "generation": 2,
