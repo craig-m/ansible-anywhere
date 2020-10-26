@@ -11,6 +11,7 @@ iso/*.lock
 iso/*.checksum
 
 # Vagrant and packer
+output-centos6
 packer_cache/
 boxes/*.box
 boxes/*.checksum

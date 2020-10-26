@@ -28,7 +28,7 @@ if ($userhasadmin -eq $false) {
 }
 
 # check files exist
-$FileExists = Test-Path packer-conf\centos8_hv.json
+$FileExists = Test-Path packer-conf\centos8.json
 If ($FileExists -eq $False) {
     Write-Host "[*] missing: $FileExists" -ForegroundColor red -BackgroundColor black;
     exit 1;
@@ -138,7 +138,7 @@ $Outmsg = "validate packer json"
 Write-Host  "[*] $Outmsg" -ForegroundColor green -BackgroundColor black;
 Add-Content $BuildLog $Outmsg
 try {
-    packer.exe validate -var-file="packer-conf/centos8.var.json" "packer-conf/centos8_hv.json"
+    packer.exe validate -var-file="packer-conf/centos8.var.json" "packer-conf/centos8.json"
 }
 catch {
     $Outmsg = "invalid packer json"
@@ -152,7 +152,7 @@ $Outmsg = "start packer build"
 Write-Host  "[*] $Outmsg" -ForegroundColor green -BackgroundColor black;
 Add-Content $BuildLog $Outmsg
 try {
-    packer.exe build -var-file="packer-conf/centos8.var.json" "packer-conf/centos8_hv.json"
+    packer.exe build -only=centos8-hyperv -var-file="packer-conf/centos8.var.json" "packer-conf/centos8.json"
 }
 catch {
     $Outmsg = "error building"
@@ -214,7 +214,6 @@ catch {
     Add-Content $BuildLog $Outmsg
     exit 1;
 }
-
 
 
 
