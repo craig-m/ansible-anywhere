@@ -2,12 +2,17 @@
     "description": "AnsibleAnywhere Dev Env",
     "short_description": "My Dev Env",
     "name": "crgm/centos8vm",
-    "iso_checksum_type": "sha256",
-    "checksum": "c87a2d81d67bbaeaf646aea5bedd70990078ec252fc52f5a7d65ff609871e255",
     "isofilename": "CentOS-8.2.2004-x86_64-dvd1.iso",
+    "isolable": "CentOS-8-2-2004-x86_64-dvd",
+    "checksum": "sha256:c87a2d81d67bbaeaf646aea5bedd70990078ec252fc52f5a7d65ff609871e255",
     "url": "centos/8.2.2004/isos/x86_64/",
     "mirror": "http://mirror.internode.on.net/pub/",
     "packer_webroot": "packer-http",
     "pack_cos8vm_id": "{{env `cos8vm_id`}}",
-    "box_version": "0.2.11"
+    "ssh_user_name": "root",
+    "ssh_user_pass": "1root2pass3word4",
+    "ssh_port": "22",
+    "http_dir": "packer-http/",
+    "box_version": "0.2.12",
+    "shutdown_cmd": "shutdown -P now"
 }

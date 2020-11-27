@@ -60,6 +60,7 @@ Vagrant.configure("2") do |config|
     config.vm.provider :virtualbox do |vbox, override|
         vbox.gui = false
         vbox.name = "centos8vm"
+        vbox.network "private_network", type: "dhcp", name: "vboxnet3"
     end
 
     # --- Libvirt ---
@@ -70,14 +71,14 @@ Vagrant.configure("2") do |config|
 
     # --- VMWare ---
     ["vmware_fusion", "vmware_workstation", "vmware_desktop"].each do |provider|
-        config.vm.provider provider do |vmw, override|
-            vmw.ssh_info_public = true
-            vmw.whitelist_verified = true
-            vmw.gui = false
-            vmw.vmx["cpuid.coresPerSocket"] = "1"
-            vmw.vmx["memsize"] = "2048"
-            vmw.vmx["numvcpus"] = "2"
-        end
+    config.vm.provider provider do |vmw, override|
+        vmw.ssh_info_public = true
+        vmw.whitelist_verified = true
+        vmw.gui = false
+        vmw.vmx["cpuid.coresPerSocket"] = "1"
+        vmw.vmx["memsize"] = "2048"
+        vmw.vmx["numvcpus"] = "2"
+    end
     end
 
 
@@ -100,15 +101,16 @@ Vagrant.configure("2") do |config|
     #
 
     config.trigger.after [:up, :provision, :resume, :reload] do |t|
-        t.run_remote = {inline: $inlinescript_post, 
-            :privileged => false}
+        t.run_remote = {inline: $inlinescript_post, :privileged => false}
     end
 
 
     #
     # Finished
     #
+
     config.vm.post_up_message = "----- CentOS 8 box -----"
+
 end
 
 # -*- mode: ruby -*-

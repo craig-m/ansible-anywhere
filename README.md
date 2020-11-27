@@ -3,7 +3,6 @@ Overview
 
 One of my development environments 🏭
 
-
 # Linux
 
 RHEL is usually "the work Linux", but running Red Hat Enterprise Linux (RHEL) incurs a cost [[1](https://access.redhat.com/articles/11258), [2](https://www.redhat.com/en/resources/Linux-rhel-subscription-guide)]. Thankfully there are some [derivativate distributions](https://en.wikipedia.org/wiki/Red_Hat_Enterprise_Linux_derivatives) that are built from this same source code (without the non-free parts). We can use these for learning, development and testing as they are almost the same as RHEL.
@@ -11,7 +10,6 @@ RHEL is usually "the work Linux", but running Red Hat Enterprise Linux (RHEL) in
 The [CentOS project](https://en.wikipedia.org/wiki/CentOS) is one of these and has been around for about 15 years. They even offically partnered [[1](https://www.redhat.com/en/about/press-releases/red-hat-and-centos-join-forces)] with [Red Hat](https://en.wikipedia.org/wiki/Red_Hat) back in 2014, whose parent company as of 2019 is [IBM](https://en.wikipedia.org/wiki/IBM). In 2015 Red Hat acquired [Ansible](https://www.ansible.com/) (a small startup at the time) for a cool $100/150 million [[1](https://www.redhat.com/en/about/press-releases/red-hat-acquire-it-automation-and-devops-leader-ansible)].
 
 Ansible (written in [python](https://www.python.org/)) cannot run on a Windows host natively, you need A macOS, Linux or *BSD operating system - so running Ansible from CentOS seems like a good idea.
-
 
 ## Linux setup
 
@@ -27,7 +25,6 @@ Use cases of CM tools are broard:
 
 Doing things in Ansible can be better ⚙️
 
-
 ## Virtual Machines
 
 There are other tools I want to use Ansible with (like DB or Web servers), but I do not want to run these kinds of services on my host system 🏰 (whatever that might be - Mac / Lin / Win).
@@ -36,13 +33,11 @@ I need to run these daemons in isolation, and have my different projects stay pr
 
 This is why I am using a VM. I also want to run my Ansible roles against other machines, and have a real test system.
 
-
 ### packer
 
 [packer](https://packer.io/) will take an [ISO image](https://en.wikipedia.org/wiki/ISO_image) and create Virtual Machine image from it. This is how Vagrant "boxes" are made 📦
 
 You can build a box and run it locally, then then build another box (with the same base config) for a cloud hosting provider (Azure, AWS EC2, Google) - if you have the need. This saves us from having to manually install our OS (RHEL).
-
 
 ### vagrant
 
@@ -51,7 +46,6 @@ This tool [Vagrant](https://www.vagrantup.com/downloads.html) is an abstraction 
 _"Vagrant is a tool for building and distributing development environments."_
 
 So we can interface with Vagrant to have a similar experience, no matter our host OS or hypervisor.
-
 
 Requirements
 ============
@@ -64,7 +58,6 @@ What you need:
 * Lots of Ram and disk help
 
 Packer and Vagrant are cross platform (MacOS, Win, Linux, BSD), you can download pre-made binaries courtesy of [Hashicorp](https://www.hashicorp.com/https://www.hashicorp.com/) or compile them from [source](https://github.com/hashicorp).
-
 
 You can adjust the amount of Virtual Machines you need, and the specs for them, by editing the Vagrantfile:
 
@@ -84,7 +77,6 @@ NODE_RAM = "2048"
 NODE_CODE = "./code/node/"
 ```
 
-
 ### Status
 
 Currently using [CentOS](https://www.centos.org/) version [8.2.2004](https://wiki.centos.org/Manuals/ReleaseNotes/CentOS8.1911). Released 15 June 2020, [notes](https://wiki.centos.org/Manuals/ReleaseNotes/CentOS8.2004).
@@ -98,7 +90,6 @@ What I have had time for so far.
 | Linux      | Virtual Box  | in prog   | to test   |
 | Win 10 Ent | Virtual Box  | in prog   | to test   |
 | Mac OS     | Virtual Box  | in prog   | to test   |
-
 
 ### use
 

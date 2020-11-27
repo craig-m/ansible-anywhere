@@ -2,7 +2,7 @@ install
 cdrom
 lang en_US.UTF-8
 keyboard us
-network --onboot yes --device eth0 --bootproto dhcp --noipv6 
+network --onboot yes --device eth0 --bootproto dhcp --noipv6
 rootpw hackme123
 firewall --disabled
 authconfig --enableshadow --passalgo=sha512

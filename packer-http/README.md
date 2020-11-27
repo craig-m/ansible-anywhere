@@ -1,3 +1,3 @@
 # readme.md
 
-Packe webserver directory root.
+Packer webserver directory root.
