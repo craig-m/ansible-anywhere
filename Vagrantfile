@@ -9,7 +9,7 @@
 
 # centos8admin options:
 MY_VM_RAM = "4096"
-MY_VM_CPU = "2"
+MY_VM_CPU = "4"
 MY_VM_CODE = "./vm-code-admin/"
 
 # Enable the multi-machine setup? yes/no
@@ -61,9 +61,9 @@ Vagrant.configure("2") do |config|
                 hpv.vmname = "centos8admin"
                 # network
                 config.vm.network "public_network",
-                    bridge: "PackerSwitch"
+                    bridge: "PackerSwitch1"
                 config.vm.network "private_network",
-                    bridge: "PackerSwitch"
+                    bridge: "PackerSwitch1"
                 # file shares
                 override.vm.synced_folder MY_VM_CODE, CODE_MNT,
                     type: "rsync",
@@ -131,9 +131,9 @@ Vagrant.configure("2") do |config|
                         hpv.cpus = NODE_CPU
                         # network
                         config.vm.network "public_network",
-                            bridge: "PackerSwitch"
+                            bridge: "PackerSwitch1"
                         config.vm.network "private_network",
-                            bridge: "PackerSwitch"
+                            bridge: "PackerSwitch1"
                         # file shares
                         override.vm.synced_folder NODE_CODE, CODE_MNT,
                             type: "rsync",
@@ -172,20 +172,6 @@ Vagrant.configure("2") do |config|
         :upload_path => "/etc/centos8vm/install_avahi.sh",
         :binary => true,
         name: "vagrant vm install_avahi.sh"
-
-    config.vm.provision :shell,
-        :privileged => true,
-        :path => "scripts/vagrant/serf_install.sh",
-        :upload_path => "/etc/centos8vm/serf_install.sh",
-        :binary => true,
-        name: "vagrant vm serf_install.sh"
-
-    config.vm.provision :shell,
-        :privileged => true,
-        :path => "scripts/vagrant/serf_join-nodes.sh",
-        :upload_path => "/etc/centos8vm/serf_join-nodes.sh",
-        :binary => true,
-        name: "vagrant vm serf_join-nodes.sh"
 
     config.vm.provision :shell,
         :privileged => true,

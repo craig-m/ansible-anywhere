@@ -126,10 +126,10 @@ logit "ssh config start"
 sed -ri 's/#AddressFamily any/AddressFamily inet/g' /etc/ssh/sshd_config
 sed -ri 's/#ListenAddress 0.0.0.0/ListenAddress 0.0.0.0/g' /etc/ssh/sshd_config
 sed -ri 's/#UseDNS no/UseDNS no/g' /etc/ssh/sshd_config
-# password auth
+# enable password auth
 #sed -ri 's/#PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
 # remove env vars
-#sed -i /AcceptEnv/d /etc/ssh/sshd_config
+sed -i /AcceptEnv/d /etc/ssh/sshd_config
 # test sshd
 sshd -t -f /etc/ssh/sshd_config
 # reload sshd
@@ -168,7 +168,7 @@ restorecon -R /root/.ssh/
 # EPEL
 # https://fedoraproject.org/wiki/EPEL
 #
-dnf config-manager --set-enabled PowerTools
+dnf config-manager --set-enabled powertools
 yum install epel-release -y
 rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-8
 

@@ -22,7 +22,7 @@
         "boot_command": [ "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos6.ks<enter>" ],
         "shutdown_command": "sudo shutdown -P now",
         "generation": 1,
-        "switch_name": "PackerSwitch",
+        "switch_name": "PackerSwitch1",
         "memory": 2048,
         "enable_dynamic_memory": false,
         "cpus": 2,
