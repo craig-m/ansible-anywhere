@@ -96,7 +96,7 @@ if (!$VMname) {
 }
 
 # check HyperV switch used by Packer exists
-$VMswitch = Get-VMSwitch -SwitchType External -Name PackerSwitch1
+$VMswitch = Get-VMSwitch -SwitchType External -Name PackerSwitch
 if (!$VMswitch) { 
     $Outmsg = "ERROR Hyper-V Switch $VMswitch is missing"
     Write-Host  "[*] $Outmsg" -ForegroundColor red -BackgroundColor black;

@@ -26,7 +26,7 @@ On Windows Docker-Deskop runs a VM under HV, so it will already be enabled and r
 
 Before using Packer you must make an external switch that Packer can use.
 
-In the file `centos8.json` edit `"switch_name": "PackerSwitch1",` to the name of your Switch.
+In the file `centos8.json` edit `"switch_name": "PackerSwitch",` to the name of your Switch.
 
 ## use
 

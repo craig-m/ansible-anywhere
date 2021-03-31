@@ -61,9 +61,9 @@ Vagrant.configure("2") do |config|
                 hpv.vmname = "centos8admin"
                 # network
                 config.vm.network "public_network",
-                    bridge: "PackerSwitch1"
+                    bridge: "PackerSwitch"
                 config.vm.network "private_network",
-                    bridge: "PackerSwitch1"
+                    bridge: "PackerSwitch"
                 # file shares
                 override.vm.synced_folder MY_VM_CODE, CODE_MNT,
                     type: "rsync",
@@ -131,9 +131,9 @@ Vagrant.configure("2") do |config|
                         hpv.cpus = NODE_CPU
                         # network
                         config.vm.network "public_network",
-                            bridge: "PackerSwitch1"
+                            bridge: "PackerSwitch"
                         config.vm.network "private_network",
-                            bridge: "PackerSwitch1"
+                            bridge: "PackerSwitch"
                         # file shares
                         override.vm.synced_folder NODE_CODE, CODE_MNT,
                             type: "rsync",

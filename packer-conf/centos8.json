@@ -27,7 +27,7 @@
       "shutdown_command": "{{user `shutdown_cmd`}}",
       "guest_additions_mode": false,
       "generation": 2,
-      "switch_name": "PackerSwitch1",
+      "switch_name": "PackerSwitch",
       "memory": 4096,
       "enable_dynamic_memory": false,
       "cpus": 8,
