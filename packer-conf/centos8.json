@@ -1,7 +1,7 @@
 {
 
   "_comment_m": "CentOS 8 VM",
-  "min_packer_version": "1.5.5",
+  "min_packer_version": "1.7.0",
   "builders": [
     {
       "type": "hyperv-iso",
@@ -149,6 +149,11 @@
         "scripts/clean-vm.sh",
         "scripts/test.sh"
       ]
+    },
+    {
+      "type": "manifest",
+      "output": "boxes/manifest.json",
+      "strip_path": true
     },
     {
       "type": "checksum",

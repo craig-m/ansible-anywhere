@@ -8,14 +8,14 @@
 #
 
 # centos8admin options:
-MY_VM_RAM = "4096"
+MY_VM_RAM = "2048"
 MY_VM_CPU = "4"
 MY_VM_CODE = "./vm-code-admin/"
 
 # Enable the multi-machine setup? yes/no
 MULTIVM = "yes"
 # Number of Node VMs to create?
-NODES = 2
+NODES = 3
 # centos8node{i} options:
 NODE_CPU = "2"
 NODE_RAM = "2048"
@@ -78,7 +78,7 @@ Vagrant.configure("2") do |config|
             end
 
         # run centos8-admin-playbook.yml
-        # (generic ansible roles used on adminvm)
+        # generic ansible roles used on adminvm
         mainvm.vm.provision "ansible_local" do |ansible|
             ansible.groups = {
                 "localhost" => ["centos8admin"]
@@ -92,7 +92,7 @@ Vagrant.configure("2") do |config|
         end
 
         # run centos8-admin-role.yml
-        # (single file playbook - tasks specific to the adminvm)
+        # single file playbook - tasks specific to the adminvm
         mainvm.vm.provision "ansible_local" do |ansible|
             ansible.groups = {
                 "localhost" => ["centos8admin"]

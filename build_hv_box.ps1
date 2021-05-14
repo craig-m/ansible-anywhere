@@ -116,7 +116,7 @@ Write-Host  "[*] $Outmsg" -ForegroundColor green -BackgroundColor black;
 Add-Content $BuildLog $Outmsg
 
 # delete old build items
-Remove-Item -LiteralPath ".\temp\" -Force -Recurse
+Remove-Item -LiteralPath ".\temp\" -Force -Recurse -ErrorAction SilentlyContinue
 Remove-Item -LiteralPath ".\boxes\" -Force -Recurse -ErrorAction SilentlyContinue
 Remove-Item -LiteralPath ".\output-centos8\" -Force -Recurse -ErrorAction SilentlyContinue
 Remove-Item -LiteralPath ".\packer_cache\" -Force -Recurse -ErrorAction SilentlyContinue
@@ -196,7 +196,7 @@ catch {
 }
 
 # remove old box
-vagrant.exe box remove centos8vm
+# vagrant.exe box remove centos8vm
 
 # add new box
 try {
@@ -206,7 +206,7 @@ try {
     # get box name
     $newhvbox = Get-ChildItem .\boxes\ -Name *.box
     # add
-    vagrant.exe box add ./boxes/$newhvbox --name centos8vm   
+    vagrant.exe box add .\boxes\$newhvbox --name centos8vm
 }
 catch {
     $Outmsg = "failed to add box to vagrant store"
