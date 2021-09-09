@@ -63,7 +63,7 @@ else
 fi
 
 # check hostname
-hostname | grep --quiet "centos8.localdomain" || { logit 'hostname not set'; exit 1; }
+hostname | grep --quiet -e "centos8.localdomain" -e "rocky.localdomain" || { logit 'hostname not set'; exit 1; }
 
 logit "safety checks passed"
 

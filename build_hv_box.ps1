@@ -3,7 +3,7 @@
 
 
 # vars
-$packerinput = "packer-conf/centos8.pkr.hcl"
+$packerinput = "packer-conf/rocky.pkr.hcl"
 
 $timestart = (Get-Date)
 $LogStamp = (Get-date -Format ddMMyy) + "_" + (get-date -format hhmmsstt)
@@ -148,7 +148,7 @@ $Outmsg = "start packer build"
 Write-Host  "[*] $Outmsg" -ForegroundColor green -BackgroundColor black;
 Add-Content $BuildLog $Outmsg
 try {
-    Start-Process -NoNewWindow -Wait -ArgumentList 'build', "$packerinput" packer.exe
+    Start-Process -NoNewWindow -Wait -ArgumentList 'build', "-only=hyperv-iso.rocky-hyperv", "$packerinput" packer.exe
 }
 catch {
     $Outmsg = "error building"
@@ -202,7 +202,7 @@ try {
     # get box name
     $newhvbox = Get-ChildItem .\boxes\ -Name *.box
     # add
-    Start-Process -NoNewWindow -Wait -ArgumentList "box", "add", ".\boxes\$newhvbox" vagrant.exe
+    Start-Process -NoNewWindow -Wait -ArgumentList "box", "add", ".\boxes\$newhvbox", "-name", "centos8vm" vagrant.exe
 
 }
 catch {

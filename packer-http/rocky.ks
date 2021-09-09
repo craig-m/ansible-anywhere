@@ -1,9 +1,5 @@
 #
-# CentOS KickStart config
-#
-# https://docs.centos.org/en-US/centos/install-guide/Kickstart2/
-# https://wiki.centos.org/TipsAndTricks/KickStart
-# https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/performing_an_advanced_rhel_installation/performing_an_automated_installation_using_kickstart
+# Rocky Linux KickStart config
 #
 
 # use CDROM to install from
@@ -28,7 +24,7 @@ selinux --enforcing
 firewall --enabled --port=22:tcp,9090:tcp
 
 # network setup
-network --bootproto dhcp --noipv6 --hostname=centos8.localdomain --nameserver=1.1.1.1 --nameserver=1.0.0.1
+network --bootproto dhcp --noipv6 --hostname=rocky.localdomain --nameserver=1.1.1.1 --nameserver=1.0.0.1
 
 # partitions and booting
 zerombr
