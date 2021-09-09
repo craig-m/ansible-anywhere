@@ -79,7 +79,7 @@ NODE_CODE = "./code/node/"
 
 ### Status
 
-Currently using [CentOS](https://www.centos.org/) version [8.3.2011](https://wiki.centos.org/action/show/Manuals/ReleaseNotes/CentOS8.2011)
+Currently using [CentOS](https://www.centos.org/) version [8.4.2105](https://wiki.centos.org/action/show/Manuals/ReleaseNotes/CentOS8.2011)
 
 What I have had time for so far.
 

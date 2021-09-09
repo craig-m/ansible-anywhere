@@ -13,11 +13,11 @@
   with_items: "{{ package_install }}"
 
 
-- name: io.podman.service
-  service:
-    name: io.podman.service
-    state: started
-    enabled: yes
+#- name: io.podman.service
+#  service:
+#    name: io.podman.service
+#    state: started
+#    enabled: yes
 
 - name: turn on socket
   service:

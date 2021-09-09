@@ -14,6 +14,7 @@ iso/*.checksum
 output-centos6
 packer_cache/
 boxes/manifest.json
+boxes/*.lock
 boxes/*.box
 boxes/*.checksum
 .vagrant/

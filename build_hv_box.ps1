@@ -3,6 +3,8 @@
 
 
 # vars
+$packerinput = "packer-conf/centos8.pkr.hcl"
+
 $timestart = (Get-Date)
 $LogStamp = (Get-date -Format ddMMyy) + "_" + (get-date -format hhmmsstt)
 $BuildLog = ".\logs\build." + $LogStamp + ".log"
@@ -27,12 +29,6 @@ if ($userhasadmin -eq $false) {
     exit 1;
 }
 
-# check files exist
-$FileExists = Test-Path packer-conf\centos8.json
-If ($FileExists -eq $False) {
-    Write-Host "[*] missing: $FileExists" -ForegroundColor red -BackgroundColor black;
-    exit 1;
-}
 
 # check vagrant and packer are in path
 if(!(Get-Command vagrant.exe -ErrorAction SilentlyContinue)) {
@@ -134,14 +130,14 @@ $env:PACKER_LOG_PATH = "$packerlogloc"
 $env:PACKER_CACHE_DIR = "./temp/cache/"
 Add-Content $BuildLog "packer log: packer_$LogStamp.log"
 # validate
-$Outmsg = "validate packer json"
+$Outmsg = "validate packer HCL"
 Write-Host  "[*] $Outmsg" -ForegroundColor green -BackgroundColor black;
 Add-Content $BuildLog $Outmsg
 try {
-    packer.exe validate -var-file="packer-conf/centos8.var.json" "packer-conf/centos8.json"
+    Start-Process -NoNewWindow -Wait -ArgumentList "validate", "-syntax-only", "$packerinput" packer.exe
 }
 catch {
-    $Outmsg = "invalid packer json"
+    $Outmsg = "invalid packer HCL"
     Write-Host  "[*] $Outmsg" -ForegroundColor red -BackgroundColor black;
     Add-Content $BuildLog $Outmsg
     exit 1;
@@ -152,7 +148,7 @@ $Outmsg = "start packer build"
 Write-Host  "[*] $Outmsg" -ForegroundColor green -BackgroundColor black;
 Add-Content $BuildLog $Outmsg
 try {
-    packer.exe build -only=centos8-hyperv -var-file="packer-conf/centos8.var.json" "packer-conf/centos8.json"
+    Start-Process -NoNewWindow -Wait -ArgumentList 'build', "$packerinput" packer.exe
 }
 catch {
     $Outmsg = "error building"
@@ -186,7 +182,7 @@ $Outmsg = "validate the Vagrantfile"
 Write-Host  "[*] $Outmsg" -ForegroundColor green -BackgroundColor black;
 Add-Content $BuildLog $Outmsg
 try {
-    vagrant.exe validate .\Vagrantfile
+    Start-Process -NoNewWindow -Wait -ArgumentList "validate", ".\Vagrantfile" vagrant.exe
 }
 catch {
     $Outmsg = "Vagrantfile validation falied"
@@ -206,7 +202,8 @@ try {
     # get box name
     $newhvbox = Get-ChildItem .\boxes\ -Name *.box
     # add
-    vagrant.exe box add .\boxes\$newhvbox --name centos8vm
+    Start-Process -NoNewWindow -Wait -ArgumentList "box", "add", ".\boxes\$newhvbox" vagrant.exe
+
 }
 catch {
     $Outmsg = "failed to add box to vagrant store"

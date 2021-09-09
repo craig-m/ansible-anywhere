@@ -15,7 +15,7 @@ MY_VM_CODE = "./vm-code-admin/"
 # Enable the multi-machine setup? yes/no
 MULTIVM = "yes"
 # Number of Node VMs to create?
-NODES = 3
+NODES = 2
 # centos8node{i} options:
 NODE_CPU = "2"
 NODE_RAM = "2048"

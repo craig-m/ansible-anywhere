@@ -7,17 +7,17 @@
     state: present
   with_items: "{{ package_install }}"
 
-- name: turn on io.podman.service
-  service:
-    name: io.podman.service
-    state: started
-    enabled: yes
+#- name: turn on io.podman.service
+#  service:
+#    name: io.podman.service
+#    state: started
+#    enabled: yes
 
-- name: turn on io.podman.socket
-  service:
-    name: io.podman.socket
-    state: started
-    enabled: yes
+#- name: turn on io.podman.socket
+#  service:
+#    name: io.podman.socket
+#    state: started
+#    enabled: yes
 
 - name: remove nondocker warning
   copy:
