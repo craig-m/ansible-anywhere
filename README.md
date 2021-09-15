@@ -3,6 +3,8 @@ Overview
 
 One of my development environments 🏭
 
+Note: In the middle of adding support for Rocky Linux (work in progress but `Rocky-8.4-x86_64-dvd1.iso` runs).
+
 # Linux
 
 RHEL is usually "the work Linux", but running Red Hat Enterprise Linux (RHEL) incurs a cost [[1](https://access.redhat.com/articles/11258), [2](https://www.redhat.com/en/resources/Linux-rhel-subscription-guide)]. Thankfully there are some [derivativate distributions](https://en.wikipedia.org/wiki/Red_Hat_Enterprise_Linux_derivatives) that are built from this same source code (without the non-free parts). We can use these for learning, development and testing as they are almost the same as RHEL.
@@ -71,25 +73,11 @@ MY_VM_CODE = "./code/vm/"
 MULTIVM = "yes"
 # Number of Node VMs to create?
 NODES = 4
-# centos8node{i} options:
+# el8node{i} options:
 NODE_CPU = "2"
 NODE_RAM = "2048"
 NODE_CODE = "./code/node/"
 ```
-
-### Status
-
-Currently using [CentOS](https://www.centos.org/) version [8.4.2105](https://wiki.centos.org/action/show/Manuals/ReleaseNotes/CentOS8.2011)
-
-What I have had time for so far.
-
-| Host OS    | Hypervisor   | Status    | Tested    |
-|------------|:------------:|:---------:|----------:|
-| Win 10 Ent | Hyper-V      | done      | good      |
-| Linux      | Lib Virt     | done      | good      |
-| Linux      | Virtual Box  | in prog   | to test   |
-| Win 10 Ent | Virtual Box  | in prog   | to test   |
-| Mac OS     | Virtual Box  | in prog   | to test   |
 
 ### use
 

@@ -1,5 +1,5 @@
 #
-# CentOS 8 Vagrantfile
+# Dev lab Vagrantfile
 #
 
 
@@ -7,8 +7,8 @@
 # Vars
 #
 
-# centos8admin options:
-MY_VM_RAM = "2048"
+# el8admin options:
+MY_VM_RAM = "4096"
 MY_VM_CPU = "4"
 MY_VM_CODE = "./vm-code-admin/"
 
@@ -16,7 +16,7 @@ MY_VM_CODE = "./vm-code-admin/"
 MULTIVM = "yes"
 # Number of Node VMs to create?
 NODES = 2
-# centos8node{i} options:
+# el8node{i} options:
 NODE_CPU = "2"
 NODE_RAM = "2048"
 NODE_CODE = "./vm-code-node/"
@@ -45,10 +45,10 @@ Vagrant.configure("2") do |config|
     #
 
 
-    # centos8admin
-    config.vm.define "centos8admin" do |mainvm|
+    # el8admin
+    config.vm.define "el8admin" do |mainvm|
 
-        config.vm.hostname = "centos8admin"
+        config.vm.hostname = "el8admin"
         config.ssh.forward_agent = false
         config.vm.disk :disk, size: "50GB", primary: true
 
@@ -58,7 +58,7 @@ Vagrant.configure("2") do |config|
                 hpv.memory = MY_VM_RAM
                 hpv.maxmemory = MY_VM_RAM
                 hpv.cpus = MY_VM_CPU
-                hpv.vmname = "centos8admin"
+                hpv.vmname = "el8admin"
                 # network
                 config.vm.network "public_network",
                     bridge: "PackerSwitch"
@@ -81,7 +81,7 @@ Vagrant.configure("2") do |config|
         # generic ansible roles used on adminvm
         mainvm.vm.provision "ansible_local" do |ansible|
             ansible.groups = {
-                "localhost" => ["centos8admin"]
+                "localhost" => ["el8admin"]
             }
             ansible.compatibility_mode = "2.0"
             ansible.config_file = "ansible_vagrant.cfg"
@@ -95,7 +95,7 @@ Vagrant.configure("2") do |config|
         # single file playbook - tasks specific to the adminvm
         mainvm.vm.provision "ansible_local" do |ansible|
             ansible.groups = {
-                "localhost" => ["centos8admin"]
+                "localhost" => ["el8admin"]
             }
             ansible.compatibility_mode = "2.0"
             ansible.config_file = "ansible.cfg"
@@ -113,20 +113,20 @@ Vagrant.configure("2") do |config|
     end
 
 
-    # centos8node{i}
+    # Node machines
     if MULTIVM == "yes"
         # loop over nodes
         (1..NODES).each do |i|
             # create the VM
-            config.vm.define "centos8node#{i}" do |node|
+            config.vm.define "el8node#{i}" do |node|
 
-                node.vm.hostname = "centos8node#{i}"
+                node.vm.hostname = "el8node#{i}"
                 node.vm.disk :disk, size: "2GB", name: "node_storage"
 
                 # provider specific conf
                     # --- Windows Hyper-V ---
                     node.vm.provider :hyperv do |hpv, override|
-                        hpv.vmname = "centos8node#{i}"
+                        hpv.vmname = "el8node#{i}"
                         hpv.memory = NODE_RAM
                         hpv.cpus = NODE_CPU
                         # network
@@ -155,9 +155,6 @@ Vagrant.configure("2") do |config|
     #
     # provision tasks (all VMs)
     #
-
-    config.vm.provision :shell,
-        inline: "echo 'Hello, First vm.provision task running.'"
 
     config.vm.provision :shell,
         :privileged => true, 

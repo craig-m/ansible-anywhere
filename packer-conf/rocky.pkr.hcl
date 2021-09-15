@@ -1,3 +1,9 @@
+# Rock Linux Packer HCL
+
+#
+# ------ Varibles ------
+#
+
 packer {
   required_version = ">= 1.7.0"
 }
@@ -72,9 +78,18 @@ variable "ssh_user_name" {
   default = "root"
 }
 
-variable "ssh_user_pass" {
+variable "ssh_root_pass" {
   type    = string
   default = "1root2pass3word4"
+}
+
+variable "iso_add_user_name" {
+  type    = string
+  default = "sysadmin"
+}
+variable "iso_add_user_pass" {
+  type    = string
+  default = "testing123obvs"
 }
 
 variable "url" {
@@ -82,8 +97,12 @@ variable "url" {
   default = "linux/rocky/8.4/isos/x86_64/"
 }
 
+#
+# ------ Source blocks ------
+#
+
 source "hyperv-iso" "rocky-hyperv" {
-  boot_command           = ["<wait5>c<wait10><wait10>setparams 'kickstart'<wait><enter>", "linuxefi /images/pxeboot/vmlinuz text noipv6 modprobe.blacklist=floppy inst.stage2=hd:LABEL=Rocky-8-4-x86_64-dvd inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/rocky.ks<enter> initrdefi /images/pxeboot/initrd.img<wait><enter> boot<wait><enter>"]
+  boot_command           = ["<wait5>c<wait5><wait5>setparams 'kickstart'<wait><enter>", "linuxefi /images/pxeboot/vmlinuz text noipv6 modprobe.blacklist=floppy inst.stage2=hd:LABEL=Rocky-8-4-x86_64-dvd inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/rocky.ks<enter> initrdefi /images/pxeboot/initrd.img<wait><enter> boot<wait><enter>"]
   boot_wait              = "15s"
   cpus                   = 8
   disk_size              = "8000"
@@ -92,7 +111,9 @@ source "hyperv-iso" "rocky-hyperv" {
   generation             = 2
   guest_additions_mode   = false
   headless               = false
-  http_directory         = "${var.packer_webroot}"
+  http_content           = {
+    "/rocky.ks"          = templatefile( "./rocky.ks.pkrtpl", { root_pass = var.ssh_root_pass, new_user_name = var.iso_add_user_name, new_user_pass = var.iso_add_user_pass } )
+  }
   iso_checksum           = "${var.checksum}"
   iso_target_path        = "./iso/${var.isofilename}"
   iso_url                = "${var.mirror}${var.url}${var.isofilename}"
@@ -100,7 +121,7 @@ source "hyperv-iso" "rocky-hyperv" {
   output_directory       = "temp/output-rocky/"
   shutdown_command       = "${var.shutdown_cmd}"
   ssh_handshake_attempts = 10
-  ssh_password           = "${var.ssh_user_pass}"
+  ssh_password           = "${var.ssh_root_pass}"
   ssh_port               = "${var.ssh_port}"
   ssh_timeout            = "120m"
   ssh_username           = "${var.ssh_user_name}"
@@ -109,9 +130,10 @@ source "hyperv-iso" "rocky-hyperv" {
   vm_name                = "rocky-hv-build"
 }
 
+# not tested yet:
 source "qemu" "rocky-libvirt" {
   accelerator            = "kvm"
-  boot_command           = ["<wait5><tab>inst.stage2=hd:LABEL=${var.isolable} inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/rocky.ks<enter><wait>boot<enter>"]
+  boot_command           = ["<wait5>c<wait10>inst.stage2=hd:LABEL=${var.isolable} inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/rocky.ks<enter><wait>boot<enter>"]
   boot_wait              = "25s"
   cpus                   = 4
   disk_cache             = "unsafe"
@@ -122,7 +144,9 @@ source "qemu" "rocky-libvirt" {
   display                = "none"
   format                 = "qcow2"
   headless               = true
-  http_directory         = "${var.packer_webroot}"
+  http_content           = {
+    "/rocky.ks"          = templatefile( "./rocky.ks.pkrtpl", { my_pass = var.ssh_user_pass, my_user = var.ssh_user_name, root_pass = var.ssh_root_pass } )
+  }
   iso_checksum           = "${var.checksum}"
   iso_url                = "${var.mirror}${var.url}${var.isofilename}"
   memory                 = 4096
@@ -132,7 +156,7 @@ source "qemu" "rocky-libvirt" {
   qemuargs               = [["-drive", "if=none,file=output-rocky/rocky-libvirt,id=drive0,cache=unsafe,discard=unmap,detect-zeroes=unmap,format=qcow2"]]
   shutdown_command       = "${var.shutdown_cmd}"
   ssh_handshake_attempts = 5
-  ssh_password           = "${var.ssh_user_pass}"
+  ssh_password           = "${var.ssh_root_pass}"
   ssh_port               = "${var.ssh_port}"
   ssh_timeout            = "15m"
   ssh_username           = "${var.ssh_user_name}"
@@ -142,14 +166,17 @@ source "qemu" "rocky-libvirt" {
   vnc_port_min           = 5900
 }
 
+# not tested yet:
 source "virtualbox-iso" "rocky-vb" {
-  boot_command           = ["<wait5><tab>inst.stage2=hd:LABEL=${var.isolable} inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/rocky.ks<enter><wait>boot<enter>"]
+  boot_command           = ["<wait5>c<wait10><wait10>inst.stage2=hd:LABEL=${var.isolable} inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/rocky.ks<enter><wait>boot<enter>"]
   boot_wait              = "25s"
   cpus                   = 8
   disk_size              = "8000"
   guest_additions_mode   = "disable"
   headless               = false
-  http_directory         = "${var.packer_webroot}"
+  http_content           = {
+    "/rocky.ks"          = templatefile( "./rocky.ks.pkrtpl", { my_pass = var.ssh_user_pass, my_user = var.ssh_user_name, root_pass = var.ssh_root_pass } )
+  }
   iso_checksum           = "${var.checksum}"
   iso_target_path        = "./iso/${var.isofilename}"
   iso_url                = "${var.mirror}${var.url}${var.isofilename}"
@@ -157,21 +184,37 @@ source "virtualbox-iso" "rocky-vb" {
   output_directory       = "temp/output-rocky/"
   shutdown_command       = "${var.shutdown_cmd}"
   ssh_handshake_attempts = 5
-  ssh_password           = "${var.ssh_user_pass}"
+  ssh_password           = "${var.ssh_root_pass}"
   ssh_port               = "${var.ssh_port}"
   ssh_timeout            = "15m"
   ssh_username           = "${var.ssh_user_name}"
   vm_name                = "rocky-vb"
 }
 
+#
+# ------ Building ------
+#
+
 build {
-  sources = ["source.hyperv-iso.rocky-hyperv", "source.qemu.rocky-libvirt", "source.virtualbox-iso.rocky-vb"]
+  sources = [ 
+    "source.hyperv-iso.rocky-hyperv", 
+    "source.qemu.rocky-libvirt", 
+    "source.virtualbox-iso.rocky-vb"
+  ]
 
   provisioner "shell" {
-    environment_vars  = ["s_cos8vm_id=${var.pack_cos8vm_id}", "s_cos8vm_boxv=${var.box_version}"]
+    environment_vars  = [ 
+      "s_cos8vm_id=${var.pack_cos8vm_id}", 
+      "s_cos8vm_boxv=${var.box_version}"
+    ]
     execute_command   = "{{ .Vars }} bash '{{ .Path }}'"
     expect_disconnect = false
-    scripts           = ["scripts/packer/base.sh", "scripts/packer/update.sh", "scripts/packer/install_ansible.sh", "scripts/packer/cleanup.sh"]
+    scripts           = [
+      "scripts/packer/base.sh", 
+      "scripts/packer/update.sh", 
+      "scripts/packer/install_ansible.sh", 
+      "scripts/packer/cleanup.sh"
+    ]
   }
 
   provisioner "shell" {
@@ -190,9 +233,14 @@ build {
 
   post-processor "vagrant" {
     keep_input_artifact  = true
-    include              = ["templates/info.json", "scripts/clean-vm.sh", "scripts/test.sh"]
+    include              = [
+      "templates/info.json",
+      "scripts/clean-vm.sh",
+      "scripts/test.sh"
+    ]
     output               = "boxes/rocky.${var.box_version}.box"
     vagrantfile_template = "templates/vagrantfile.rocky.rb"
+    vagrantfile_template_generated = false
   }
   post-processor "manifest" {
     output     = "boxes/manifest.json"

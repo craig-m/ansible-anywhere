@@ -4,7 +4,7 @@
 # including a system for multicast DNS/DNS-SD service discovery.
 #
 # we can resolve <hostname>.local domains with in on our LAN.
-# example: ping centos8node2.local
+# example: ping el8node2.local
 #
 # Docs: https://www.avahi.org/
 

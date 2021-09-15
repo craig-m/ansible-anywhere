@@ -10,7 +10,7 @@ Then start the VMs and login to the main one:
 
 ```
 vagrant up
-vagrant ssh centos8admin
+vagrant ssh el8admin
 ```
 
 Note: Windows/HV you must run your terminal as administrator.

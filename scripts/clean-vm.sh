@@ -3,7 +3,7 @@
 
 rm -fv /root/original-ks.cfg
 rm -fv /root/anaconda-ks.cfg
-rm -fv /root/readme.txt
+rm -fv /root/readme.txt /root/kspost.log /root/kspre.log
 
 rm -rfv /etc/centos8vm/
 

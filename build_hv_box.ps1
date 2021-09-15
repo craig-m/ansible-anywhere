@@ -1,10 +1,13 @@
-# CentOS 8 packer build script
+# packer HV build script
 # https://docs.microsoft.com/en-us/powershell/module/hyper-v/?view=win10-ps
 
 
 # vars
 $packerinput = "packer-conf/rocky.pkr.hcl"
+$CheckVM = "centos8-hv-build"
+$packertemplatef = "hyperv-iso.rocky-hyperv"
 
+# log start date
 $timestart = (Get-Date)
 $LogStamp = (Get-date -Format ddMMyy) + "_" + (get-date -format hhmmsstt)
 $BuildLog = ".\logs\build." + $LogStamp + ".log"
@@ -79,7 +82,6 @@ Enable-WindowsOptionalFeature -Online -FeatureName  Microsoft-Hyper-V-Tools-All 
 
 
 # check Packer VM is not already running
-$CheckVM = "centos8-hv-build"
 $VMName = Get-VM -name $CheckVM -ErrorAction SilentlyContinue
 if ($VMname) {
     $Outmsg = "ERROR Hyper-V VM $CheckVM is running"
@@ -98,7 +100,7 @@ if (!$VMswitch) {
     Write-Host  "[*] $Outmsg" -ForegroundColor red -BackgroundColor black;
     Add-Content $BuildLog $Outmsg
     exit 1;
-} 
+}
 if ($VMswitch) {
     Write-Host "[*] Hyper-V PackerSwtich good" -ForegroundColor green -BackgroundColor black;
 }
@@ -148,7 +150,7 @@ $Outmsg = "start packer build"
 Write-Host  "[*] $Outmsg" -ForegroundColor green -BackgroundColor black;
 Add-Content $BuildLog $Outmsg
 try {
-    Start-Process -NoNewWindow -Wait -ArgumentList 'build', "-only=hyperv-iso.rocky-hyperv", "$packerinput" packer.exe
+    Start-Process -NoNewWindow -Wait -ArgumentList 'build', "-only=$packertemplatef", "$packerinput" packer.exe
 }
 catch {
     $Outmsg = "error building"
@@ -202,7 +204,7 @@ try {
     # get box name
     $newhvbox = Get-ChildItem .\boxes\ -Name *.box
     # add
-    Start-Process -NoNewWindow -Wait -ArgumentList "box", "add", ".\boxes\$newhvbox", "-name", "centos8vm" vagrant.exe
+    Start-Process -NoNewWindow -Wait -ArgumentList "box", "add", "centos8vm", ".\boxes\$newhvbox" vagrant.exe
 
 }
 catch {

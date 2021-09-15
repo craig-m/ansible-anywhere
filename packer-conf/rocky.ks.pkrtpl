@@ -1,5 +1,5 @@
 #
-# Rocky Linux KickStart config
+# Rocky Linux KickStart config Template file
 # https://anaconda-installer.readthedocs.io/en/latest/boot-options.html
 #
 
@@ -34,11 +34,11 @@ bootloader --location=mbr --append="net.ifnames=0 biosdevname=0 no_timer_check"
 ignoredisk --only-use=sda
 autopart --type=lvm
 
-# root account
-rootpw --plaintext 1root2pass3word4
+# add root account
+rootpw --plaintext ${root_pass}
 
-# non-root user account
-user --name=sysops --shell=/bin/bash --homedir=/home/sysops --plaintext --password=1user2pass3word4 --uid=5050 --gid=5050
+# add user account
+user --name=${new_user_name} --shell=/bin/bash --homedir=/home/${new_user_name} --plaintext --password=${new_user_pass} --uid=5050 --gid=5050
 
 # auth options
 authconfig --enableshadow --passalgo=sha512
@@ -65,6 +65,9 @@ rsync
 dos2unix
 authconfig
 unzip
+lsof
+strace
+tmux
 setools
 gnupg2
 # do not install unnecessary firmware

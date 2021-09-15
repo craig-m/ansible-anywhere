@@ -4,13 +4,13 @@
 local_file/*
 !local_file/.gitkeep
 
-temp/
 logs/*.log
 iso/*.iso
 iso/*.lock
 iso/*.checksum
 
 # Vagrant and packer
+temp/
 output-centos6
 packer_cache/
 boxes/manifest.json

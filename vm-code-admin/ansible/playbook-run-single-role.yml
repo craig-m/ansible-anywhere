@@ -8,7 +8,7 @@
 # First deal with inventory. Your inventory file could look something like:
 #
 # [vmnodes]
-# centos8node1 ansible_ssh_host=x.x.x.x ansible_become_method=su ansible_become_user=root ansible_become_password=password ansible_user=vagrant ansible_password=vagrant ansible_ssh_common_args='-o StrictHostKeyChecking=no -o PubkeyAuthentication=no'
+# el8node1 ansible_ssh_host=x.x.x.x ansible_become_method=su ansible_become_user=root ansible_become_password=password ansible_user=vagrant ansible_password=vagrant ansible_ssh_common_args='-o StrictHostKeyChecking=no -o PubkeyAuthentication=no'
 #
 #
 # And then run Ansible:
