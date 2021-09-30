@@ -145,7 +145,7 @@ source "qemu" "rocky-libvirt" {
   format                 = "qcow2"
   headless               = true
   http_content           = {
-    "/rocky.ks"          = templatefile( "./rocky.ks.pkrtpl", { my_pass = var.ssh_user_pass, my_user = var.ssh_user_name, root_pass = var.ssh_root_pass } )
+    "/rocky.ks"          = templatefile( "./rocky.ks.pkrtpl", { root_pass = var.ssh_root_pass, new_user_name = var.iso_add_user_name, new_user_pass = var.iso_add_user_pass } )
   }
   iso_checksum           = "${var.checksum}"
   iso_url                = "${var.mirror}${var.url}${var.isofilename}"
@@ -166,16 +166,17 @@ source "qemu" "rocky-libvirt" {
   vnc_port_min           = 5900
 }
 
-# not tested yet:
+# Vbox: work in progress
 source "virtualbox-iso" "rocky-vb" {
-  boot_command           = ["<wait5>c<wait10><wait10>inst.stage2=hd:LABEL=${var.isolable} inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/rocky.ks<enter><wait>boot<enter>"]
-  boot_wait              = "25s"
-  cpus                   = 8
+  guest_os_type          = "RedHat_64"
+  boot_command           = ["<tab><space> text noipv6 modprobe.blacklist=floppy inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/rocky.ks<enter>"]
+  boot_wait              = "20s"
+  cpus                   = 4
   disk_size              = "8000"
   guest_additions_mode   = "disable"
   headless               = false
   http_content           = {
-    "/rocky.ks"          = templatefile( "./rocky.ks.pkrtpl", { my_pass = var.ssh_user_pass, my_user = var.ssh_user_name, root_pass = var.ssh_root_pass } )
+    "/rocky.ks"          = templatefile( "./rocky.ks.pkrtpl", { root_pass = var.ssh_root_pass, new_user_name = var.iso_add_user_name, new_user_pass = var.iso_add_user_pass } )
   }
   iso_checksum           = "${var.checksum}"
   iso_target_path        = "./iso/${var.isofilename}"
@@ -186,7 +187,7 @@ source "virtualbox-iso" "rocky-vb" {
   ssh_handshake_attempts = 5
   ssh_password           = "${var.ssh_root_pass}"
   ssh_port               = "${var.ssh_port}"
-  ssh_timeout            = "15m"
+  ssh_timeout            = "45m"
   ssh_username           = "${var.ssh_user_name}"
   vm_name                = "rocky-vb"
 }
